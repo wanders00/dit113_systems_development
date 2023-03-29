@@ -1,10 +1,8 @@
 
 <div align="center">
 
-![Locus Imperium](https://cdn.discordapp.com/attachments/1087688674650624140/1090589685153288283/ezgif.com-crop.gif)
+![Locus Imperium](/media/LocusImperium.gif)
 <!-- Used Adobe Express to create the logo -->
-
-<!-- TODO: fix link  -->
 
 ### Locus Imperium reads room data attributes such as carbon dioxide level (TBD), temperature, humidity and estimates how many people are currently in the room.
 
