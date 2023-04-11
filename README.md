@@ -3,7 +3,7 @@
 
 ![Locus Imperium](/media/LocusImperium.gif)
 
-### A room controlling device that reads room data attributes such as carbon dioxide level (TBD), temperature, humidity and estimates how many people are currently in the room.
+### A room controlling device that reads room data attributes such as temperature, humidity and estimates how many people are currently in the room.
 
 <!-- TODO: improve text here ^ -->
 
@@ -33,8 +33,6 @@
 # Introduction
 
 ## Why the project is useful
-
-- By knowing the carbon dioxide level you are able to determine the air quality. If the quality is bad, you are suggested to ventilate.
 
 - By knowing the room temperature you are able to tell if the temperature is too high or not.
 
