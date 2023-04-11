@@ -1,7 +1,7 @@
 
 <div align="center">
 
-![Locus Imperium](/media/locusimperium.gif)
+![Locus Imperium](/media/LocusImperium.gif)
 
 ### A room controlling device that reads room data attributes such as carbon dioxide level (TBD), temperature, humidity and estimates how many people are currently in the room.
 
