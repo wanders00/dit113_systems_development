@@ -1,3 +1,4 @@
+#include"TFT_eSPI.h"
 #include <Ultrasonic.h>
 #include "Arduino.h"
 #include <DHT.h>
