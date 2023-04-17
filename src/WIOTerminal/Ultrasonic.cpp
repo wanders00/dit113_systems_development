@@ -10,12 +10,12 @@ int time2 = 0;
 
 int threshHold = 200;
 
-/**
- * Detect the movement of a person.
- *
- * @param count Number of people counted so far.
- * @return UltrasonicData The new number of people counted.
- */
+// **
+//  * Detect the movement of a person.
+//  *
+//  * @param count Number of people counted so far.
+//  * @return UltrasonicData The new number of people counted.
+//  */
 UltrasonicData detectMovement(int count) {
     UltrasonicData data;
 
@@ -59,5 +59,7 @@ UltrasonicData detectMovement(int count) {
 
     data.count = count;
 
+    return data;
+}
     return data;
 }
