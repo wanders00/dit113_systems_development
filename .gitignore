@@ -3,6 +3,8 @@
 bin/*/
 src/WIOTerminal/*build-*
 src/WIOTerminal/*build*
+src/WIOTerminal/*build-*
+src/WIOTerminal/*build*
 *~
 build-tmp/
 Makefile
