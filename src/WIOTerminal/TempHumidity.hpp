@@ -3,8 +3,10 @@
 
 #include "DHT.h"
 
-void tempInit();
+void tempHumidInit();
 
 int measureTemperature();
+
+int measureHumidity();
 
 #endif
