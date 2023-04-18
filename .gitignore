@@ -1,9 +1,6 @@
 # Arduino
 .DS_Store
 bin/*/
-src/WIOTerminal/*build-*
-src/WIOTerminal/*build*
-src/WIOTerminal/*build-*
 src/WIOTerminal/*build*
 *~
 build-tmp/
@@ -103,4 +100,4 @@ google-services.json
 *.hprof
 
 # WIOTerminal mqtt
-WifiDetails.h
+/src/WIOTerminal/WifiDetails.h
