@@ -1,4 +1,5 @@
 #include "DHT.h"
+#include "Temp.hpp"
 
 #define DHTPIN D4
 
