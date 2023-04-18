@@ -1,3 +1,6 @@
+#include "Loudness.hpp"
+#include "Arduino.h"
+
 void initializeLoudness() {
     pinMode(WIO_MIC, INPUT);
 }
