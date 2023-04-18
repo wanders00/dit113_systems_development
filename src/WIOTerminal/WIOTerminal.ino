@@ -19,8 +19,9 @@ void loop()
 {
     UltrasonicData data = detectMovement(countMain);
     countMain = data.count;
-    displayPeopleCountDebug(data.count, data.distance1, data.distance2);
-
+    // displayPeopleCountDebug(data.count, data.distance1, data.distance2);
+    displayPeopleCount(data.count);
+    
     measureTemperature();
     
     delay(delayTime);
