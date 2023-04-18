@@ -1,5 +1,4 @@
 #include "DHT.h"
-#include "Temp.hpp"
 
 #define DHTPIN D4
 
@@ -12,6 +11,9 @@ void tempInit() {
     tempSensor.begin();     //Initialize the sensor
 }
 
+int measureTemperature() { 
+    return tempSensor.readTemperature(false);    //Measure temperature in celsius
+}
 int measureTemperature() { 
     return tempSensor.readTemperature(false);    //Measure temperature in celsius
 }
