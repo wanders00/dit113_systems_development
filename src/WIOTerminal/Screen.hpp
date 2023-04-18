@@ -3,7 +3,7 @@
 
 #include"TFT_eSPI.h"
 
-void initialize();
+void screenInit();
 
 void displayPeopleCount(int count);
 

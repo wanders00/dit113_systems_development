@@ -8,7 +8,7 @@ TFT_eSPI tft;
  *
  * @return void
  */
-void initialize() {
+void screenInit() {
     // Screen setup
     tft.begin();
     tft.setRotation(3);
