@@ -5,7 +5,7 @@
 
 void tempInit();
 
-void measureTemperature();
+int measureTemperature();
 
 #endif
 #endif
