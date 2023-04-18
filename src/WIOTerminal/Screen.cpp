@@ -1,5 +1,8 @@
+// Fonts taken from https://github.com/lakshanthad/Wio_Terminal_Classroom_Arduino/blob/main/Classroom%203/Free_Fonts_Example/Free_Fonts.h
+
 #include "Screen.hpp"
 #include"TFT_eSPI.h"
+#include "../../fonts/Free_Fonts.h"
 
 TFT_eSPI tft;
 
@@ -16,7 +19,7 @@ void screenInit() {
     tft.fillScreen(TFT_WHITE); //background
 
     tft.setTextColor(TFT_BLUE);
-    tft.setTextSize(5);
+    tft.setFreeFont(FMO24);
     tft.drawString("INIT", 50, 50);
 }
 
@@ -29,6 +32,7 @@ void screenInit() {
 void displayPeopleCount(int count) {
     tft.fillScreen(TFT_WHITE); //background
     tft.drawString(String(count), 50, 70);
+    tft.drawString("People", 50, 120);
 }
 
 /**
