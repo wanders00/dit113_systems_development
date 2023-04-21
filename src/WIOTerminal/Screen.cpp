@@ -1,8 +1,8 @@
 // Fonts taken from https://github.com/lakshanthad/Wio_Terminal_Classroom_Arduino/blob/main/Classroom%203/Free_Fonts_Example/Free_Fonts.h
 
 #include "Screen.hpp"
-#include"TFT_eSPI.h"
-#include "../../fonts/Free_Fonts.h"
+#include "TFT_eSPI.h"
+#include "Free_Fonts.h"
 
 TFT_eSPI tft;
 
