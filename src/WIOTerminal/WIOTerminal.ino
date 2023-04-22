@@ -3,18 +3,25 @@
 #include "Arduino.h"
 #include <DHT.h>
 
+// Local header files
 #include "Ultrasonic.hpp"
 #include "Screen.hpp"
 #include "TempHumidity.hpp"
+#include "MqttClient.hpp"
+#include "WifiDetails.h"
 
 int countMain = 0;
-
 int delayTime = 500;
 
 void setup()
 {
     screenInit();
+
+    mqttInit();
+
     tempHumidInit();
+
+    flashScreen();
 }
 void loop()
 {
@@ -28,4 +35,12 @@ void loop()
     measureHumidity();
     
     delay(delayTime);
+
+
+    if (mqttLoop())
+    {
+        UltrasonicData data = detectMovement(countMain);
+        countMain = data.count;
+        delay(delayTime);
+    }
 }

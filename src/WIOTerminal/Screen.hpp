@@ -9,4 +9,8 @@ void displayPeopleCount(int count);
 
 void displayPeopleCountDebug(int count, int dis1, int dis2);
 
+void displayMessage(String message);
+
+void flashScreen();
+
 #endif

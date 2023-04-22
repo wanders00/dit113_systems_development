@@ -1,8 +1,12 @@
 // Fonts taken from https://github.com/lakshanthad/Wio_Terminal_Classroom_Arduino/blob/main/Classroom%203/Free_Fonts_Example/Free_Fonts.h
 
 #include "Screen.hpp"
-#include"TFT_eSPI.h"
-#include "../../fonts/Free_Fonts.h"
+#include "TFT_eSPI.h"
+#include "fonts/Free_Fonts.h"
+
+const uint32_t BACKGROUND_COLOR = TFT_WHITE;
+const uint32_t TEXT_COLOR = TFT_BLUE;
+const GFXfont *TEXT_FONT_STYLE = FMO12;
 
 TFT_eSPI tft;
 
@@ -11,16 +15,16 @@ TFT_eSPI tft;
  *
  * @return void
  */
-void screenInit() {
+void screenInit()
+{
     // Screen setup
     tft.begin();
     tft.setRotation(3);
-
-    tft.fillScreen(TFT_WHITE); //background
-
-    tft.setTextColor(TFT_BLUE);
-    tft.setFreeFont(FMO24);
-    tft.drawString("INIT", 50, 50);
+    tft.setCursor(0, 0);
+    tft.fillScreen(BACKGROUND_COLOR);
+    tft.setTextColor(TEXT_COLOR);
+    tft.setFreeFont(TEXT_FONT_STYLE);
+    tft.drawString("SCREEN INIT", 50, 50);
 }
 
 /**
@@ -29,8 +33,9 @@ void screenInit() {
  * @param count Number of people counted.
  * @return void
  */
-void displayPeopleCount(int count) {
-    tft.fillScreen(TFT_WHITE); //background
+void displayPeopleCount(int count)
+{
+    flashScreen();
     tft.drawString(String(count), 50, 70);
     tft.drawString("People", 50, 120);
 }
@@ -43,9 +48,33 @@ void displayPeopleCount(int count) {
  * @param dis2 Distance measured by the second sensor.
  * @return void
  */
-void displayPeopleCountDebug(int count, int dis1, int dis2) {
-    tft.fillScreen(TFT_WHITE); //background
+void displayPeopleCountDebug(int count, int dis1, int dis2)
+{
+    flashScreen();
     tft.drawString(String(count), 50, 50);
     tft.drawString(String(dis1), 50, 100);
     tft.drawString(String(dis2), 50, 160);
+}
+
+/**
+ * Displays the message argumennt on the screen.
+ *
+ * @param message the message to be displayed
+ * @return void
+ */
+void displayMessage(String message)
+{
+    flashScreen();
+    tft.drawString(message, 0, 0);
+}
+
+/**
+ * Removes all content on the screen.
+ *
+ * @return void
+ * @note calls tft.fillScreen(TFT_WHITE)
+ */
+void flashScreen()
+{
+    tft.fillScreen(TFT_WHITE);
 }

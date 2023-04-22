@@ -18,12 +18,13 @@ public enum ValueSubtopic {
 
     /**
      * Inputs a topic as a String and loops through all ValueSubtopic and returns it if it's subtopic equals the input.
+     *
      * @param inputTopic The topic to input to the method
      * @return Corresponding ValueSubtopic object, if none, null.
      */
     public static ValueSubtopic whichSubTopic(String inputTopic) {
         for (ValueSubtopic currentSubtopic : ValueSubtopic.values()) {
-            if(currentSubtopic.getSubtopic().equals(inputTopic)) {
+            if (currentSubtopic.getSubtopic().equals(inputTopic)) {
                 return currentSubtopic;
             }
         }
@@ -33,6 +34,7 @@ public enum ValueSubtopic {
     /**
      * Returns the total topic of the ValueSubtopic which is a combination of the super topic and the object subtopic.
      * See BrokerConnection.SUBSCRIPTION_TOPIC attribute for super topic.
+     *
      * @return Corresponding ValueSubtopics subtopic with the super topic before it.
      * @see BrokerConnection
      */

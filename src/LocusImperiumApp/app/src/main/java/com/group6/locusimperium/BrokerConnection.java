@@ -1,4 +1,12 @@
+/****************************************************************************
+ Code base on "DIT113MqttWorkshop".
+ Author: Nicole Quinstedt
+ Source: https://github.com/Quinstedt/DIT113MqttWorkshop/blob/main/SpeechToText/app/src/main/java/com/quinstedt/speechtotext/BrokerConnection.java
+ *****************************************************************************/
+
 package com.group6.locusimperium;
+
+import static com.group6.locusimperium.MainActivity.PUB_TOPIC;
 
 import android.content.Context;
 import android.util.Log;
@@ -44,6 +52,10 @@ public class BrokerConnection extends AppCompatActivity {
         connectToMqttBroker();
     }
 
+    /**
+     * Establishes connection to the mqtt broker.
+     * @see MqttClient
+     */
     public void connectToMqttBroker() {
         if (!isConnected) {
             mqttClient.connect(CLIENT_ID, "", new IMqttActionListener() {
@@ -73,8 +85,7 @@ public class BrokerConnection extends AppCompatActivity {
                     Toast.makeText(context, connectionLost, Toast.LENGTH_LONG).show();
                 }
                 /**
-                 * @param topic The topic of the mqtt message.
-                 * @param message The message of the mqtt message.
+                 * @see ValueSubtopic
                  */
                 @Override
                 public void messageArrived(String topic, MqttMessage message) {
@@ -120,33 +131,12 @@ public class BrokerConnection extends AppCompatActivity {
         }
     }
 
-    // Methods to link TextView object to actual element on the screen on startup.
-    public void setConnectionMessage(TextView textView) {
-        this.connectionMessage = textView;
-    }
-    public void setPeopleCount(TextView textView) {
-        this.peopleCount = textView;
-    }
-    public void setTemperatureValue(TextView textView) {
-        this.temperatureValue = textView;
-    }
-    public void setHumidityValue(TextView textView) {
-        this.humidityValue = textView;
-    }
-    public void setLoudnessValue(TextView textView) { this.loudnessValue = textView; }
-    public void setMaxPeopleCount(TextView textView) {
-        this.maxPeopleCount = textView;
-    }
-    public void setMaxTemperatureValue(TextView textView) {
-        this.maxTemperatureValue = textView;
-    }
-    public void setMaxHumidityValue(TextView textView) {
-        this.maxHumidityValue = textView;
-    }
-    public void setMaxLoudnessValue(TextView textView) { this.maxLoudnessValue = textView; }
-
     /**
-     * @param message           - the message that we send to the broker
+     * Publishes a message to the mqtt broker. Topic defined in MainActivity.java
+     * @param message the payload of the message.
+     * @param actionDescription what caused the publish.
+     * @return void
+     * @see MainActivity
      */
     public void publishMqttMessage(String message, String actionDescription) {
         if (!isConnected) {
@@ -156,8 +146,83 @@ public class BrokerConnection extends AppCompatActivity {
             return;
         }
         Log.i(CLIENT_ID, actionDescription);
+        mqttClient.publish(PUB_TOPIC, message, QOS, null);
     }
 
+    // Methods to link TextView object to actual element on the screen on startup.
+
+    /**
+     * Updates the text of the connectionMessage TextView.
+     * @param textView the new text
+     */
+    public void setConnectionMessage(TextView textView) {
+        this.connectionMessage = textView;
+    }
+
+    /**
+     * Updates the text of the peopleCount TextView.
+     * @param textView the new text
+     */
+    public void setPeopleCount(TextView textView) {
+        this.peopleCount = textView;
+    }
+
+    /**
+     * Updates the text of the temperatureValue TextView.
+     * @param textView the new text
+     */
+    public void setTemperatureValue(TextView textView) {
+        this.temperatureValue = textView;
+    }
+
+    /**
+     * Updates the text of the humidityValue TextView.
+     * @param textView the new text
+     */
+    public void setHumidityValue(TextView textView) {
+        this.humidityValue = textView;
+    }
+
+    /**
+     * Updates the text of the loudnessValue TextView.
+     * @param textView the new text
+     */
+    public void setLoudnessValue(TextView textView) { this.loudnessValue = textView; }
+
+    /**
+     * Updates the text of the maxPeopleCount TextView.
+     * @param textView the new text
+     */
+    public void setMaxPeopleCount(TextView textView) {
+        this.maxPeopleCount = textView;
+    }
+
+    /**
+     * Updates the text of the maxTemperatureValue TextView.
+     * @param textView the new text
+     */
+    public void setMaxTemperatureValue(TextView textView) {
+        this.maxTemperatureValue = textView;
+    }
+
+    /**
+     * Updates the text of the maxHumidityValue TextView.
+     * @param textView the new text
+     */
+    public void setMaxHumidityValue(TextView textView) {
+        this.maxHumidityValue = textView;
+    }
+
+    /**
+     * Updates the text of the maxLoudnessValue TextView.
+     * @param textView the new text
+     */
+    public void setMaxLoudnessValue(TextView textView) { this.maxLoudnessValue = textView; }
+
+    /**
+     * Gets the corresponding MqttClient object of the BrokerConnection object.
+     * @return MqttClient object
+     */
     public MqttClient getMqttClient() {
         return mqttClient;
     }

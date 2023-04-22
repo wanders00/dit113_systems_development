@@ -101,4 +101,4 @@ google-services.json
 *.hprof
 
 # WIOTerminal mqtt
-/src/WIOTerminal/WifiDetails.h
+WifiDetails.h
