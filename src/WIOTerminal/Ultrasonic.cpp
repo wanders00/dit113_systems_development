@@ -61,5 +61,3 @@ UltrasonicData detectMovement(int count) {
 
     return data;
 }
-    return data;
-}
