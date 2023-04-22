@@ -8,4 +8,3 @@ void tempInit();
 int measureTemperature();
 
 #endif
-#endif

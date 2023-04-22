@@ -136,7 +136,7 @@ void mqttInit()
  * @param message The payload to publish.
  * @return void
  */
-void publishMessage(const char *topic, const char *message)
+void publishMessage(const char* topic, const char *message)
 {
     client.publish(topic, message);
 }
@@ -149,7 +149,7 @@ void publishMessage(const char *topic, const char *message)
  * @param message The payload to publish.
  * @return void
  */
-void publishMessage(const char topic, std::string message)
+void publishMessage(const char* topic, std::string message)
 {
     char const *pchar = message.c_str();
     publishMessage(topic, pchar);

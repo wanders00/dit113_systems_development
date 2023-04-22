@@ -9,6 +9,7 @@
 #include "TempHumidity.hpp"
 #include "MqttClient.hpp"
 #include "WifiDetails.h"
+#include "Loudness.hpp"
 
 int countMain = 0;
 int delayTime = 500;
@@ -20,6 +21,8 @@ void setup()
     mqttInit();
 
     tempHumidInit();
+
+    initializeLoudness();
 
     flashScreen();
 }

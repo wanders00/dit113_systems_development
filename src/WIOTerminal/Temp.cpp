@@ -15,6 +15,3 @@ void tempInit() {
 int measureTemperature() { 
     return tempSensor.readTemperature(false);    //Measure temperature in celsius
 }
-int measureTemperature() { 
-    return tempSensor.readTemperature(false);    //Measure temperature in celsius
-}
