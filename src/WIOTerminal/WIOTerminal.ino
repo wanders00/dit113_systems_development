@@ -4,7 +4,7 @@
 
 #include "Ultrasonic.hpp"
 #include "Screen.hpp"
-#include "Temp.hpp"
+#include "TempHumidity.hpp"
 
 int countMain = 0;
 
@@ -13,7 +13,7 @@ int delayTime = 500;
 void setup()
 {
     screenInit();
-    tempInit();
+    tempHumidInit();
 }
 void loop()
 {
@@ -23,6 +23,8 @@ void loop()
     displayPeopleCount(data.count);
     
     measureTemperature();
+
+    measureHumidity();
     
     delay(delayTime);
 }
