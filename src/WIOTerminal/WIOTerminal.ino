@@ -1,4 +1,4 @@
-#include"TFT_eSPI.h"
+#include "TFT_eSPI.h"
 #include <Ultrasonic.h>
 #include "Arduino.h"
 #include <DHT.h>
@@ -12,7 +12,12 @@
 #include "Loudness.hpp"
 
 int countMain = 0;
-int delayTime = 500;
+int delayTime = 50;
+
+const char *PEOPLE_COUNT_TOPIC = "LocusImperium/WIO/peopleCount";
+const char *TEMPRATURE_TOPIC = "LocusImperium/WIO/temperatureValue";
+const char *HUMIDITY_TOPIC = "LocusImperium/WIO/humidityValue";
+const char *LOUDNESS_TOPIC = "LocusImperium/WIO/loudnessValue";
 
 void setup()
 {
@@ -28,22 +33,14 @@ void setup()
 }
 void loop()
 {
-    UltrasonicData data = detectMovement(countMain);
-    countMain = data.count;
-    // displayPeopleCountDebug(data.count, data.distance1, data.distance2);
-    displayPeopleCount(data.count);
-    
-    measureTemperature();
-
-    measureHumidity();
-    
-    delay(delayTime);
-
-
     if (mqttLoop())
     {
         UltrasonicData data = detectMovement(countMain);
         countMain = data.count;
+        publishMessage(PEOPLE_COUNT_TOPIC, countMain);
+        publishMessage(TEMPRATURE_TOPIC, measureTemperature());
+        publishMessage(HUMIDITY_TOPIC, measureHumidity());
+        publishMessage(LOUDNESS_TOPIC, loudnessLevel());
         delay(delayTime);
     }
 }
