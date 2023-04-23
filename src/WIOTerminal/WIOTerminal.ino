@@ -37,10 +37,10 @@ void loop()
     {
         UltrasonicData data = detectMovement(countMain);
         countMain = data.count;
-        publishMessage(PEOPLE_COUNT_TOPIC, countMain);
-        publishMessage(TEMPRATURE_TOPIC, measureTemperature());
-        publishMessage(HUMIDITY_TOPIC, measureHumidity());
-        publishMessage(LOUDNESS_TOPIC, loudnessLevel());
+        publishMessage(PEOPLE_COUNT_TOPIC, String(countMain));
+        publishMessage(TEMPRATURE_TOPIC, String(measureTemperature()));
+        publishMessage(HUMIDITY_TOPIC, String(measureHumidity()));
+        publishMessage(LOUDNESS_TOPIC, String(loudnessLevel()));
         delay(delayTime);
     }
 }
