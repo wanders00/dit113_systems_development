@@ -52,7 +52,9 @@
 
 - Wio Terminal
 
-- Grove sensors & their respective library
+- [Mosquitto](https://mosquitto.org/)
+
+- Grove sensors & their respective libraries
   - Buzzer
   - Loudness
   - Multi Color Flash
