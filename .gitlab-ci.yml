@@ -6,8 +6,8 @@ build_arduino:
   stage: build_arduino
   image: ubuntu:latest
   before_script:
-    - sudo apt-get update
-    - sudo apt-get install -y arduino
+    - apt-get update
+    - apt-get install -y arduino
     - cd ../WIOTerminal
   script:
     - arduino --verify /path/to/your/arduino/sketch.ino
@@ -16,7 +16,8 @@ build_android:
   stage: build_android
   image: openjdk:8-jdk
   before_script:
-    - sudo apt-get install -y wget unzip
+    - apt-get update
+    - apt-get install -y wget unzip
     - wget https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip
     - unzip sdk-tools-linux-4333796.zip
     - echo y | sdkmanager "platforms;android-33" "build-tools;33"
