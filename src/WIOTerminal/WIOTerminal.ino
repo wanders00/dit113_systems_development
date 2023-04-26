@@ -10,6 +10,7 @@
 #include "MqttClient.hpp"
 #include "WifiDetails.h"
 #include "Loudness.hpp"
+#include "Buzzer.hpp"
 
 int countMain = 0;
 int delayTime = 500;
@@ -23,6 +24,8 @@ void setup()
     tempHumidInit();
 
     initializeLoudness();
+
+    buzzerInit();
 
     flashScreen();
 }
