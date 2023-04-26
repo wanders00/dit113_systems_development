@@ -1,15 +1,14 @@
 package com.group6.locusimperium;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    private BrokerConnection brokerConnection;
     public static final String PUB_TOPIC = "LocusImperium/APP/";
 
     @Override
@@ -17,31 +16,39 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        brokerConnection = new BrokerConnection(getApplicationContext());
+        BrokerConnection brokerConnection = new BrokerConnection(getApplicationContext());
 
-        brokerConnection.setConnectionMessage(findViewById(R.id.connectionMessage)); // TODO: DELETE THIS, TEMP VALUE
         // TextView elements setup
         brokerConnection.setPeopleCount(findViewById(R.id.peopleCount));
         brokerConnection.setTemperatureValue(findViewById(R.id.temperatureValue));
         brokerConnection.setHumidityValue(findViewById(R.id.humidityValue));
         brokerConnection.setLoudnessValue(findViewById(R.id.loudnessValue));
-        brokerConnection.setMaxPeopleCount(findViewById(R.id.maxPeopleCount));
-        brokerConnection.setMaxTemperatureValue(findViewById(R.id.maxTemperature));
-        brokerConnection.setMaxHumidityValue(findViewById(R.id.maxHumidity));
-        brokerConnection.setMaxLoudnessValue(findViewById(R.id.maxLoudness));
+        //brokerConnection.setMaxPeopleCount(findViewById(R.id.maxPeopleCount));
+        //brokerConnection.setMaxTemperatureValue(findViewById(R.id.maxTemperature));
+        //brokerConnection.setMaxHumidityValue(findViewById(R.id.maxHumidity));
+        //brokerConnection.setMaxLoudnessValue(findViewById(R.id.maxLoudness));
 
         // Broker connection
         brokerConnection.connectToMqttBroker();
 
-        Button publishMessageButton;
-        publishMessageButton = (Button) findViewById(R.id.publishMessageButton) ;
-        publishMessageButton.setOnClickListener(new View.OnClickListener() {
 
+        ImageButton goToConnect = (ImageButton) findViewById(R.id.connectButton);
+        goToConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                brokerConnection.publishMqttMessage("group-6 best group", "button-press");
+                Intent intentLoadConnectActivity = new Intent(MainActivity.this, ConnectActivity.class);
+                startActivity(intentLoadConnectActivity);
+            }
+        });
+
+        ImageButton goToSetting = (ImageButton) findViewById(R.id.settingsButton);
+        goToSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentLoadSettingsActivity = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intentLoadSettingsActivity);
+
             }
         });
     }
-
 }

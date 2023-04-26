@@ -23,7 +23,14 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Material3.Dark">
+        android:theme="@style/Theme.Material3.Dark.NoActionBar">
+
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ConnectActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
