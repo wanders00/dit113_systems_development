@@ -17,7 +17,7 @@ void mqttInit();
 
 void publishMessage(const char* topic, const char* message);
 
-void publishMessage(const char* topic, std::string message);
+void publishMessage(const char* topic, String message);
 
 boolean mqttLoop();
 
