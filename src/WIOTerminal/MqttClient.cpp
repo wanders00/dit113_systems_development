@@ -59,7 +59,7 @@ void setupWifi()
 /**
  * Whenever a mqtt message is published to the broker that the client is subscribed to, callback() is called.
  * @note So far will display the message on screen, need to be revisted in the future.
- * 
+ *
  * @param topic the mqtt topic of the message received.
  * @param payload the payload of the message received.
  * @param length the length of the message.
@@ -89,31 +89,41 @@ void callback(char *topic, byte *payload, unsigned int length)
  */
 void reconnect()
 {
-    // Loop until we're reconnected
-    while (!client.connected())
+    // If WiFi is not connected, reconnect to it first instead.
+    if (WiFi.status() != WL_CONNECTED)
     {
-        displayMessage("Connecting to mqtt broker..");
-        Serial.print("Attempting MQTT connection..");
-        delay(100);
-        // Create a client ID for the broker
-        String clientId = "WioTerminal-";
-        // Attempt to connect
-        if (client.connect(clientId.c_str()))
-        {
-            client.subscribe(TOPIC_sub);
-            displayMessage("Connected!");
-            Serial.println("connected");
-        }
-        else
-        {
-            Serial.print("failed, rc=");
-            Serial.print(client.state());
-            Serial.println(" try again in 5 seconds");
-            delay(5000);
-        }
+        displayMessage("Reconnecting to Wi-Fi");
+        WiFi.reconnect();
+        delay(5000);
     }
-    delay(1000);
-    flashScreen();
+    else
+    {
+        // Loop until we're reconnected to the broker
+        while (!client.connected())
+        {
+            displayMessage("Connecting to mqtt broker..");
+            Serial.print("Attempting MQTT connection..");
+            delay(100);
+            // Create a client ID for the broker
+            String clientId = "WioTerminal-";
+            // Attempt to connect
+            if (client.connect(clientId.c_str()))
+            {
+                client.subscribe(TOPIC_sub);
+                displayMessage("Connected!");
+                Serial.println("connected");
+            }
+            else
+            {
+                Serial.print("failed, rc=");
+                Serial.print(client.state());
+                Serial.println(" try again in 5 seconds");
+                delay(5000);
+            }
+        }
+        delay(500);
+        flashScreen();
+    }
 }
 
 /**
@@ -136,7 +146,7 @@ void mqttInit()
  * @param message The payload to publish.
  * @return void
  */
-void publishMessage(const char* topic, const char *message)
+void publishMessage(const char *topic, const char *message)
 {
     client.publish(topic, message);
 }
@@ -149,7 +159,7 @@ void publishMessage(const char* topic, const char *message)
  * @param message The payload to publish.
  * @return void
  */
-void publishMessage(const char* topic, std::string message)
+void publishMessage(const char *topic, String message)
 {
     char const *pchar = message.c_str();
     publishMessage(topic, pchar);
