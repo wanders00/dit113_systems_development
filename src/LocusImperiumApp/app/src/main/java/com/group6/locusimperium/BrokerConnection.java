@@ -25,7 +25,7 @@ public class BrokerConnection extends AppCompatActivity {
 
     //Application subscription, will receive everything from this topic.
     public static final String SUPER_SUBSCRIPTION_TOPIC = "LocusImperium/WIO/";
-    public static final String LOCALHOST = "192.168.251.91";
+    public static final String LOCALHOST = "192.168.251.76";
     private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883";
     public static final String CLIENT_ID = "LocusImperium-Application";
     public static final int QOS = 0;
