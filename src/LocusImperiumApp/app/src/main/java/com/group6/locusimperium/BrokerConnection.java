@@ -55,6 +55,7 @@ public class BrokerConnection extends AppCompatActivity {
     /**
      * Establishes connection to the mqtt broker.
      * @see MqttClient
+     * @return void
      */
     public void connectToMqttBroker() {
         if (!isConnected) {
@@ -86,6 +87,7 @@ public class BrokerConnection extends AppCompatActivity {
                 }
                 /**
                  * @see ValueSubtopic
+                 * @return void
                  */
                 @Override
                 public void messageArrived(String topic, MqttMessage message) {
@@ -154,6 +156,7 @@ public class BrokerConnection extends AppCompatActivity {
     /**
      * Updates the text of the connectionMessage TextView.
      * @param textView the new text
+     * @return void
      */
     public void setConnectionMessage(TextView textView) {
         this.connectionMessage = textView;
@@ -162,6 +165,7 @@ public class BrokerConnection extends AppCompatActivity {
     /**
      * Updates the text of the peopleCount TextView.
      * @param textView the new text
+     * @return void 
      */
     public void setPeopleCount(TextView textView) {
         this.peopleCount = textView;
@@ -170,6 +174,7 @@ public class BrokerConnection extends AppCompatActivity {
     /**
      * Updates the text of the temperatureValue TextView.
      * @param textView the new text
+     * @return void
      */
     public void setTemperatureValue(TextView textView) {
         this.temperatureValue = textView;
@@ -178,6 +183,7 @@ public class BrokerConnection extends AppCompatActivity {
     /**
      * Updates the text of the humidityValue TextView.
      * @param textView the new text
+     * @return void
      */
     public void setHumidityValue(TextView textView) {
         this.humidityValue = textView;
@@ -186,12 +192,14 @@ public class BrokerConnection extends AppCompatActivity {
     /**
      * Updates the text of the loudnessValue TextView.
      * @param textView the new text
+     * @return void
      */
     public void setLoudnessValue(TextView textView) { this.loudnessValue = textView; }
 
     /**
      * Updates the text of the maxPeopleCount TextView.
      * @param textView the new text
+     * @return void
      */
     public void setMaxPeopleCount(TextView textView) {
         this.maxPeopleCount = textView;
@@ -200,6 +208,7 @@ public class BrokerConnection extends AppCompatActivity {
     /**
      * Updates the text of the maxTemperatureValue TextView.
      * @param textView the new text
+     * @return void
      */
     public void setMaxTemperatureValue(TextView textView) {
         this.maxTemperatureValue = textView;
@@ -208,6 +217,7 @@ public class BrokerConnection extends AppCompatActivity {
     /**
      * Updates the text of the maxHumidityValue TextView.
      * @param textView the new text
+     * @return void
      */
     public void setMaxHumidityValue(TextView textView) {
         this.maxHumidityValue = textView;
@@ -216,6 +226,7 @@ public class BrokerConnection extends AppCompatActivity {
     /**
      * Updates the text of the maxLoudnessValue TextView.
      * @param textView the new text
+     * @return void
      */
     public void setMaxLoudnessValue(TextView textView) { this.maxLoudnessValue = textView; }
 

@@ -15,8 +15,7 @@ TFT_eSPI tft;
  *
  * @return void
  */
-void screenInit()
-{
+void screenInit() {
     // Screen setup
     tft.begin();
     tft.setRotation(3);
@@ -33,23 +32,21 @@ void screenInit()
  * @param count Number of people counted.
  * @return void
  */
-void displayPeopleCount(int count)
-{
+void displayPeopleCount(int count) {
     flashScreen();
     tft.drawString(String(count), 50, 70);
     tft.drawString("People", 50, 120);
 }
 
 /**
- * Display the number of people with debug information (measurements from the sensors)
+ * Display the number of people with debug information (measurements from the sensors).
  *
  * @param count Number of people counted.
  * @param dis1 Distance measured by the first sensor.
  * @param dis2 Distance measured by the second sensor.
  * @return void
  */
-void displayPeopleCountDebug(int count, int dis1, int dis2)
-{
+void displayPeopleCountDebug(int count, int dis1, int dis2) {
     flashScreen();
     tft.drawString(String(count), 50, 50);
     tft.drawString(String(dis1), 50, 100);
@@ -57,13 +54,12 @@ void displayPeopleCountDebug(int count, int dis1, int dis2)
 }
 
 /**
- * Displays the message argumennt on the screen.
+ * Displays the message argument on the screen.
  *
- * @param message the message to be displayed
+ * @param message The message to be displayed.
  * @return void
  */
-void displayMessage(String message)
-{
+void displayMessage(String message) {
     flashScreen();
     tft.drawString(message, 0, 0);
 }
@@ -74,7 +70,6 @@ void displayMessage(String message)
  * @return void
  * @note calls tft.fillScreen(TFT_WHITE)
  */
-void flashScreen()
-{
+void flashScreen() {
     tft.fillScreen(TFT_WHITE);
 }

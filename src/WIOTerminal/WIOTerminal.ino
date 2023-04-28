@@ -13,15 +13,15 @@
 #include "Buzzer.hpp"
 
 int countMain = 0;
-int delayTime = 500;
+int publishDelayTime = 500;
+uint32_t lastTimePublished;
 
 const char *PEOPLE_COUNT_TOPIC = "LocusImperium/WIO/peopleCount";
-const char *TEMPRATURE_TOPIC = "LocusImperium/WIO/temperatureValue";
+const char *TEMPERATURE_TOPIC = "LocusImperium/WIO/temperatureValue";
 const char *HUMIDITY_TOPIC = "LocusImperium/WIO/humidityValue";
 const char *LOUDNESS_TOPIC = "LocusImperium/WIO/loudnessValue";
 
-void setup()
-{
+void setup() {
     screenInit();
 
     mqttInit();
@@ -33,18 +33,21 @@ void setup()
     buzzerInit();
 
     flashScreen();
+
+    lastTimePublished = millis();
 }
 
-void loop()
-{
-    if (mqttLoop())
-    {
-        UltrasonicData data = detectMovement(countMain);
-        countMain = data.count;
-        publishMessage(PEOPLE_COUNT_TOPIC, String(countMain));
-        publishMessage(TEMPRATURE_TOPIC, String(measureTemperature()));
-        publishMessage(HUMIDITY_TOPIC, String(measureHumidity()));
-        publishMessage(LOUDNESS_TOPIC, String(loudnessLevel()));
-        delay(delayTime);
+void loop() {
+    UltrasonicData data = detectMovement(countMain);
+    countMain = data.count;
+    if (mqttLoop()) {
+        uint32_t currentTime = millis();
+        if (currentTime - lastTimePublished > publishDelayTime) {
+            publishMessage(PEOPLE_COUNT_TOPIC, String(countMain));
+            publishMessage(TEMPERATURE_TOPIC, String(measureTemperature()));
+            publishMessage(HUMIDITY_TOPIC, String(measureHumidity()));
+            publishMessage(LOUDNESS_TOPIC, String(loudnessLevel()));
+        }
     }
+    displayPeopleCountDebug(data.count, data.distance1, data.distance2);
 }
