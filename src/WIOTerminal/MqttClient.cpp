@@ -1,5 +1,6 @@
 /****************************************************************************
   Code based on "MQTT Example for SeeedStudio Wio Terminal".
+  Code based on "MQTT Example for SeeedStudio Wio Terminal".
   Author: Salman Faris
   Source: https://www.hackster.io/Salmanfarisvp/mqtt-on-wio-terminal-4ea8f8
 *****************************************************************************/
@@ -32,10 +33,8 @@ const char *MAX_PEOPLE_TOPIC = "LocusImperium/APP/maxPeopleCount";
 uint32_t whenLastAttemptedReconnect;
 const uint32_t attemptFrequency = 5000;  // Frequency in milliseconds
 
-// For alert
-bool haveAlerted;
-bool wifiConnection;
-bool mqttConnection;
+const char *SUBSCRIPTION_TOPIC = "LocusImperium/APP/#";
+const char *MAX_PEOPLE_TOPIC = "LocusImperium/WIO/maxPeopleCount";
 
 WiFiClient wioClient;
 PubSubClient client(wioClient);
@@ -148,7 +147,7 @@ void callback(char *topic, byte *payload, unsigned int length) {
     buff_p[length] = '\0';
     String msg_p = String(buff_p);
 
-    if (topic == "LocusImperium/APP/maxPeopleCount") {
+    if (topic == MAX_PEOPLE_TOPIC) {
         setMaxPeople(msg_p.toInt());
     }
     else {
@@ -164,27 +163,22 @@ void callback(char *topic, byte *payload, unsigned int length) {
  * @return void
  */
 void reconnect() {
-    // If reconnect() gets called, mqtt connection is lost-
-    mqttConnection = false;
-
-    // Restricts reconnecting attempts to only every "attemptFrequency"
-    if (getCurrentTime() - whenLastAttemptedReconnect > attemptFrequency) {
-        // Play alert if not already played
-        if (!haveAlerted) {
-            playConnectionLostAlert();
-        }
-
-        // To not allow too frequent reconnect attempts.
-        whenLastAttemptedReconnect = getCurrentTime();
-
-        // If WiFi is not connected, reconnect to it.
-        if (WiFi.status() != WL_CONNECTED) {
-            wifiConnection = false;
-            WiFi.reconnect();
-
-        } else if (!client.connected()) {
-            // Attempt to connect, will loop forever due to how the library works.
-            if (client.connect(CLIENT_ID.c_str())) {
+    // If WiFi is not connected, reconnect to it first instead.
+    if (WiFi.status() != WL_CONNECTED) {
+        displayMessage("Reconnecting to Wi-Fi");
+        WiFi.reconnect();
+        delay(5000);
+    }
+    else {
+        // Loop until we're reconnected to the broker
+        while (!client.connected()) {
+            displayMessage("Connecting to mqtt broker..");
+            Serial.print("Attempting MQTT connection..");
+            delay(100);
+            // Create a client ID for the broker
+            String clientId = "WioTerminal-";
+            // Attempt to connect
+            if (client.connect(clientId.c_str())) {
                 client.subscribe(SUBSCRIPTION_TOPIC);
                 displayMessage("Connected!");
             }
