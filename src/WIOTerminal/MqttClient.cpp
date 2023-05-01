@@ -1,5 +1,5 @@
 /****************************************************************************
-  Code based on "MQTT Exmple for SeeedStudio Wio Terminal".
+  Code based on "MQTT Example for SeeedStudio Wio Terminal".
   Author: Salman Faris
   Source: https://www.hackster.io/Salmanfarisvp/mqtt-on-wio-terminal-4ea8f8
 *****************************************************************************/
@@ -19,7 +19,8 @@ const char *ssid = SSID;         // WiFi Name
 const char *password = PASSWORD; // WiFi Password
 const char *server = my_IPv4;    // MQTT Broker URL
 
-const char *TOPIC_sub = "LocusImperium/APP/#";
+const char *SUBSCRIPTION_TOPIC = "LocusImperium/APP/#";
+const char *MAX_PEOPLE_TOPIC = "LocusImperium/WIO/maxPeopleCount";
 
 WiFiClient wioClient;
 PubSubClient client(wioClient);
@@ -78,7 +79,7 @@ void callback(char *topic, byte *payload, unsigned int length) {
     buff_p[length] = '\0';
     String msg_p = String(buff_p);
 
-    if (topic == "LocusImperium/APP/maxPeopleCount") {
+    if (topic == MAX_PEOPLE_TOPIC) {
         setMaxPeople(msg_p.toInt());
     }
     else {
@@ -108,7 +109,7 @@ void reconnect() {
             String clientId = "WioTerminal-";
             // Attempt to connect
             if (client.connect(clientId.c_str())) {
-                client.subscribe(TOPIC_sub);
+                client.subscribe(SUBSCRIPTION_TOPIC);
                 displayMessage("Connected!");
                 Serial.println("connected");
             }
