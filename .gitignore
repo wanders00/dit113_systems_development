@@ -73,7 +73,7 @@ replay_pid*
 src/LocusImperiumApp/.gradle/
 src/LocusImperiumApp/app/build/
 src/LocusImperiumApp/app/lint/
-builds
+builds/
 
 # Local configuration file (sdk path, etc)
 local.properties
