@@ -31,8 +31,9 @@ variables:
 
 # Packages installation before running script
 before_script:
+  - sudo su
   - apt-get --quiet update --yes
-  - apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1
+  - apt-get --quiet install --yes openjdk-17-jdk wget tar unzip lib32stdc++6 lib32z1
 
   # Setup path as ANDROID_HOME for moving/exporting the downloaded sdk into it
   - export ANDROID_HOME="${PWD}/android-home"
