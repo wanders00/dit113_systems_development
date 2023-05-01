@@ -14,6 +14,8 @@
 #include "Ultrasonic.hpp"
 #include "Util.hpp"
 #include "WifiDetails.h"
+#include "Loudness.hpp"
+#include "Buzzer.hpp"
 #include "Settings.hpp"
 
 // Ultrasonic

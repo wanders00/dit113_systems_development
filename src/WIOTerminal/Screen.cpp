@@ -1,5 +1,6 @@
 // Fonts taken from https://github.com/lakshanthad/Wio_Terminal_Classroom_Arduino/blob/main/Classroom%203/Free_Fonts_Example/Free_Fonts.h
 #include "fonts/Free_Fonts.h"
+#include "Settings.hpp"
 
 // Arduino libraries
 #include "TFT_eSPI.h"
@@ -64,10 +65,19 @@ void displayPeopleCount(int count) {
  * @return void
  */
 void displayPeopleCountDebug(int count, int dis1, int dis2) {
-    flashScreen();
-    tft.drawString(String(count), 50, 50);
-    tft.drawString(String(dis1), 50, 100);
-    tft.drawString(String(dis2), 50, 160);
+    
+    if (count >= getMaxPeople()) {
+        tft.setTextColor(TFT_WHITE);
+        tft.fillScreen(TFT_RED);
+        tft.setFreeFont(&FreeSansBoldOblique24pt7b);
+        tft.drawString("ROOM IS", 50, 70);
+        tft.drawString("FULL", 50, 120);
+    } else {
+        tft.fillScreen(TFT_WHITE); //background
+        tft.drawString(String(count), 50, 50);
+        tft.drawString(String(dis1), 50, 100);
+        tft.drawString(String(dis2), 50, 160);
+    }
 }
 
 /**
