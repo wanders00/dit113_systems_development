@@ -32,7 +32,7 @@ public class BrokerConnection extends AppCompatActivity {
 
     //Application subscription, will receive everything from this topic.
     public static final String SUPER_SUBSCRIPTION_TOPIC = "LocusImperium/WIO/";
-    public static final String LOCALHOST = "192.168.251.76";
+    public static final String LOCALHOST = "192.168.223.76";
     private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883";
     public static final String CLIENT_ID = "LocusImperium-Application";
     public static final int QOS = 0;
@@ -125,7 +125,7 @@ public class BrokerConnection extends AppCompatActivity {
                                 peopleCountArrived(messageMQTT);
                                 break;
                             case TEMPERATURE_VALUE:
-                                temperatureValue.setText(messageMQTT);
+                                temperatureValueArrived(messageMQTT);
                                 break;
                             case HUMIDITY_VALUE:
                                 humidityValue.setText(messageMQTT);
@@ -171,6 +171,22 @@ public class BrokerConnection extends AppCompatActivity {
         else {
             peopleCount.setText(message);
             peopleCount.setTextColor(Color.GRAY);
+        }
+    }
+
+    /**
+     * updates the textview value, color is gray if the value is below the max value, red if above. The max value is set in the settings.
+     * @return void
+     */
+    public void temperatureValueArrived(String message) {
+        temperatureValue.setText(message);
+        if (Integer.parseInt(message) > Integer.parseInt(getTemperature())) {
+            temperatureValue.setText(message);
+            temperatureValue.setTextColor(Color.RED);
+        }
+        else {
+            temperatureValue.setText(message);
+            temperatureValue.setTextColor(Color.GRAY);
         }
     }
 
