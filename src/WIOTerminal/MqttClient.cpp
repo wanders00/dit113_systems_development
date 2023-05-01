@@ -13,6 +13,7 @@
 #include "MqttClient.hpp"
 #include "Screen.hpp"
 #include "WifiDetails.h"
+#include "Settings.hpp"
 
 const char *ssid = SSID;         // WiFi Name
 const char *password = PASSWORD; // WiFi Password
@@ -76,7 +77,13 @@ void callback(char *topic, byte *payload, unsigned int length) {
     Serial.println();
     buff_p[length] = '\0';
     String msg_p = String(buff_p);
-    displayMessage(msg_p);
+
+    if (topic == "LocusImperium/APP/maxPeopleCount") {
+        setMaxPeople(msg_p.toInt());
+    }
+    else {
+        displayMessage("Message: " + msg_p);
+    }
 }
 
 /**

@@ -11,6 +11,7 @@
 #include "WifiDetails.h"
 #include "Loudness.hpp"
 #include "Buzzer.hpp"
+#include "Settings.hpp"
 
 int countMain = 0;
 int publishDelayTime = 500;
