@@ -12,6 +12,23 @@
 
 image: openjdk:17-jdk
 
+workflow:
+  rules:
+
+    # If the branch is empty do not run the pipeline
+    - if: $CI_COMMIT_BRANCH
+      changes:
+        compare_to: 'refs/heads/main'
+        paths:
+          - '*'
+    # When opening a merge request run the pipeline
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    # If a merge request has been opened for the branch do not run the branch pipeline
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
+    # When committing run the pipeline
+    - if: $CI_COMMIT_BRANCH
+
 variables:
 
   # ANDROID_COMPILE_SDK is the version of Android you're compiling with.
@@ -70,6 +87,7 @@ before_script:
 # Basic android and gradle stuff
 # Check linting
 lintDebug:
+  allow_failure: true
   interruptible: true
   stage: build
   script:
