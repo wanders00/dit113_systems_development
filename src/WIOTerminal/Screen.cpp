@@ -3,6 +3,7 @@
 #include "Screen.hpp"
 #include "TFT_eSPI.h"
 #include "fonts/Free_Fonts.h"
+#include "Settings.hpp"
 
 const uint32_t BACKGROUND_COLOR = TFT_WHITE;
 const uint32_t TEXT_COLOR = TFT_BLUE;
@@ -33,9 +34,18 @@ void screenInit() {
  * @return void
  */
 void displayPeopleCount(int count) {
-    flashScreen();
-    tft.drawString(String(count), 50, 70);
-    tft.drawString("People", 50, 120);
+    if (count >= getMaxPeople()) {
+        tft.setTextColor(TFT_WHITE);
+        tft.fillScreen(TFT_RED);
+        tft.setFreeFont(&FreeSansBoldOblique24pt7b);
+        tft.drawString("ROOM IS", 50, 70);
+        tft.drawString("FULL", 50, 120);
+    } else {
+        flashScreen();
+        tft.setTextColor(TFT_RED);
+        tft.drawString(String(count), 50, 70);
+        tft.drawString("People", 50, 120);
+    }
 }
 
 /**
@@ -47,10 +57,19 @@ void displayPeopleCount(int count) {
  * @return void
  */
 void displayPeopleCountDebug(int count, int dis1, int dis2) {
-    flashScreen();
-    tft.drawString(String(count), 50, 50);
-    tft.drawString(String(dis1), 50, 100);
-    tft.drawString(String(dis2), 50, 160);
+    
+    if (count >= getMaxPeople()) {
+        tft.setTextColor(TFT_WHITE);
+        tft.fillScreen(TFT_RED);
+        tft.setFreeFont(&FreeSansBoldOblique24pt7b);
+        tft.drawString("ROOM IS", 50, 70);
+        tft.drawString("FULL", 50, 120);
+    } else {
+        tft.fillScreen(TFT_WHITE); //background
+        tft.drawString(String(count), 50, 50);
+        tft.drawString(String(dis1), 50, 100);
+        tft.drawString(String(dis2), 50, 160);
+    }
 }
 
 /**

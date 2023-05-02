@@ -11,6 +11,7 @@
 #include "WifiDetails.h"
 #include "Loudness.hpp"
 #include "Buzzer.hpp"
+#include "Settings.hpp"
 
 int countMain = 0;
 int publishDelayTime = 500;
@@ -49,5 +50,5 @@ void loop() {
             publishMessage(LOUDNESS_TOPIC, String(loudnessLevel()));
         }
     }
-    displayPeopleCountDebug(data.count, data.distance1, data.distance2);
+    displayPeopleCount(countMain);
 }
