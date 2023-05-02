@@ -128,7 +128,7 @@ public class BrokerConnection extends AppCompatActivity {
                                 temperatureValueArrived(messageMQTT);
                                 break;
                             case HUMIDITY_VALUE:
-                                humidityValue.setText(messageMQTT);
+                                humidityValueArrived(messageMQTT);
                                 break;
                             case LOUDNESS_VALUE:
                                 loudnessValueArrived(messageMQTT);
@@ -159,7 +159,7 @@ public class BrokerConnection extends AppCompatActivity {
         }
     }
     /**
-     * updates the textview value, color is gray if the value is below the max value, red if above. The max value is set in the settings.
+     * updates the people counter textview value, color is gray if the value is below the max value, red if above. The max value is set in the settings.
      * @return void
      */
     public void peopleCountArrived(String message) {
@@ -175,7 +175,23 @@ public class BrokerConnection extends AppCompatActivity {
     }
 
     /**
-     * updates the textview value, color is gray if the value is below the max value, red if above. The max value is set in the settings.
+     * updates the humidity textview value, color is gray if the value is below the max value, red if above. The max value is set in the settings.
+     * @return void
+     */
+    public void humidityValueArrived(String message) {
+        humidityValue.setText(message);
+        if (Integer.parseInt(message) > Integer.parseInt(getHumidity())) {
+            humidityValue.setText(message);
+            humidityValue.setTextColor(Color.RED);
+        }
+        else {
+            humidityValue.setText(message);
+            humidityValue.setTextColor(Color.GRAY);
+        }
+    }
+
+    /**
+     * updates the temperature textview value, color is gray if the value is below the max value, red if above. The max value is set in the settings.
      * @return void
      */
     public void temperatureValueArrived(String message) {
@@ -191,7 +207,7 @@ public class BrokerConnection extends AppCompatActivity {
     }
 
     /**
-     * updates the textview value, color is gray if the value is below the max value, red if above. The max value is set in the settings.
+     * updates the loudness textview value, color is gray if the value is below the max value, red if above. The max value is set in the settings.
      * @return void
      */
     public void loudnessValueArrived(String message) {
