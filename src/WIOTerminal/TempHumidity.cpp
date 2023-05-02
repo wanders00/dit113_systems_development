@@ -13,7 +13,6 @@ DHT tempHumiditySensor(DHTPIN, DHTTYPE);
  * @return void
  */
 void tempHumidInit() {
-    Serial.begin(9600);
     tempHumiditySensor.begin();
 }
 

@@ -1,7 +1,13 @@
-#include "Buzzer.hpp"
+// Arduino libraries
 #include "Arduino.h"
 
+// Local header files
+#include "Buzzer.hpp"
+#include "Util.hpp"
+
+// General
 const u_int16_t BUZZER_PIN = 6;
+bool isTurnedOn;
 
 /**
  * Initialize the buzzer.
@@ -9,27 +15,38 @@ const u_int16_t BUZZER_PIN = 6;
  * @return void
  */
 void buzzerInit() {
+    uint32_t turnOffAt = millis();
     pinMode(BUZZER_PIN, OUTPUT);
-} 
+    isTurnedOn = false;
+}
 
 /**
- * Plays a sound for one second.
+ * Turn on the buzzer for a small amount of time then turn it off.
  *
  * @return void
  */
-void buzz() {
-    // Turn on buzzer
+void buzzerAlert() {
+    turnOnBuzzer();
+    timeoutTimer(300);
+    turnOffBuzzer();
+}
+
+/**
+ * Turn on buzzer and sets isTurnedOn to true.
+ *
+ * @return void
+ */
+void turnOnBuzzer() {
     digitalWrite(BUZZER_PIN, HIGH);
+    isTurnedOn = true;
+}
 
-    // "Pause" the method for ~1000 milliseconds
-    uint32_t startTime = millis();
-    while (true) {
-        uint32_t currentTime = millis();
-        if (currentTime - startTime > 1000) {
-            break;
-        }
-    }
-
-    // Turn off buzzer
+/**
+ * Turn off buzzer and sets isTurnedOn to false.
+ *
+ * @return void
+ */
+void turnOffBuzzer() {
     digitalWrite(BUZZER_PIN, LOW);
+    isTurnedOn = false;
 }
