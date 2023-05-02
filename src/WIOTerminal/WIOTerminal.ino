@@ -50,5 +50,5 @@ void loop() {
             publishMessage(LOUDNESS_TOPIC, String(loudnessLevel()));
         }
     }
-    displayPeopleCountDebug(data.count, data.distance1, data.distance2);
+    displayPeopleCount(countMain);
 }
