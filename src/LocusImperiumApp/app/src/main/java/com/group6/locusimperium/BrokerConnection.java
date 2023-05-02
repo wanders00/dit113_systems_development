@@ -7,8 +7,15 @@
 package com.group6.locusimperium;
 
 import static com.group6.locusimperium.MainActivity.PUB_TOPIC;
+import static com.group6.locusimperium.SettingsActivity.HUMIDITY;
+import static com.group6.locusimperium.SettingsActivity.LOUDNESS;
+import static com.group6.locusimperium.SettingsActivity.PEOPLE;
+import static com.group6.locusimperium.SettingsActivity.SHARED_PREFS;
+import static com.group6.locusimperium.SettingsActivity.TEMPERATURE;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +53,24 @@ public class BrokerConnection extends AppCompatActivity {
     public TextView maxHumidityValue;
     public TextView maxLoudnessValue;
 
+    public String getPeople() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        return sharedPreferences.getString(PEOPLE,"");
+    }
+
+    public String getLoudness() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        return sharedPreferences.getString(LOUDNESS,"");
+    }
+    public String getHumidity() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        return sharedPreferences.getString(HUMIDITY,"");
+    }
+
+    public String getTemperature() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        return sharedPreferences.getString(TEMPERATURE,"");
+    }
     public BrokerConnection(Context context) {
         this.context = context;
         mqttClient = new MqttClient(context, MQTT_SERVER, CLIENT_ID);
@@ -97,6 +122,14 @@ public class BrokerConnection extends AppCompatActivity {
                         switch(currentTopic) {
                             case PEOPLE_COUNT:
                                 peopleCount.setText(messageMQTT);
+                                 if (Integer.parseInt(messageMQTT) > Integer.parseInt(getPeople())) {
+                                     peopleCount.setText(messageMQTT);
+                                     peopleCount.setTextColor(Color.RED);
+                                  }
+                                 else {
+                                     peopleCount.setText(messageMQTT);
+                                     peopleCount.setTextColor(Color.GRAY);
+                                 }
                                 break;
                             case TEMPERATURE_VALUE:
                                 temperatureValue.setText(messageMQTT);
@@ -149,6 +182,21 @@ public class BrokerConnection extends AppCompatActivity {
         }
         Log.i(CLIENT_ID, actionDescription);
         mqttClient.publish(PUB_TOPIC, message, QOS, null);
+    }
+    public void publishSettings() {
+        if (!isConnected) {
+            final String notConnected = "Not connected (yet)";
+            Log.e(CLIENT_ID, notConnected);
+            Toast.makeText(context, notConnected, Toast.LENGTH_SHORT).show();
+            return;
+        } else {
+            final String connected = "Connected";
+            Log.e(CLIENT_ID, connected);
+            mqttClient.publish(PUB_TOPIC, getPeople(), QOS, null);
+            mqttClient.publish(PUB_TOPIC, getHumidity(), QOS, null);
+            mqttClient.publish(PUB_TOPIC, getTemperature(), QOS, null);
+            mqttClient.publish(PUB_TOPIC, getLoudness(), QOS, null);
+        }
     }
 
     // Methods to link TextView object to actual element on the screen on startup.

@@ -10,13 +10,14 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity {
 
     public static final String PUB_TOPIC = "LocusImperium/APP/";
+    public BrokerConnection brokerConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BrokerConnection brokerConnection = new BrokerConnection(getApplicationContext());
+        brokerConnection = new BrokerConnection(getApplicationContext());
 
         // TextView elements setup
         brokerConnection.setPeopleCount(findViewById(R.id.peopleCount));
@@ -34,6 +35,10 @@ public class MainActivity extends AppCompatActivity {
 
         ImageButton goToConnect = (ImageButton) findViewById(R.id.connectButton);
         goToConnect.setOnClickListener(new View.OnClickListener() {
+            /**
+             * goes to "connect" activity
+             * @return void
+             */
             @Override
             public void onClick(View view) {
                 Intent intentLoadConnectActivity = new Intent(MainActivity.this, ConnectActivity.class);
@@ -43,6 +48,10 @@ public class MainActivity extends AppCompatActivity {
 
         ImageButton goToSetting = (ImageButton) findViewById(R.id.settingsButton);
         goToSetting.setOnClickListener(new View.OnClickListener() {
+            /**
+             * goes to "settings" activity
+             * @return void
+             */
             @Override
             public void onClick(View view) {
                 Intent intentLoadSettingsActivity = new Intent(MainActivity.this, SettingsActivity.class);
