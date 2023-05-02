@@ -110,6 +110,7 @@ public class BrokerConnection extends AppCompatActivity {
                     Log.w(CLIENT_ID, connectionLost);
                     Toast.makeText(context, connectionLost, Toast.LENGTH_LONG).show();
                 }
+
                 /**
                  * @see ValueSubtopic
                  * @return void
@@ -121,15 +122,7 @@ public class BrokerConnection extends AppCompatActivity {
                     if(currentTopic != null) {
                         switch(currentTopic) {
                             case PEOPLE_COUNT:
-                                peopleCount.setText(messageMQTT);
-                                 if (Integer.parseInt(messageMQTT) > Integer.parseInt(getPeople())) {
-                                     peopleCount.setText(messageMQTT);
-                                     peopleCount.setTextColor(Color.RED);
-                                  }
-                                 else {
-                                     peopleCount.setText(messageMQTT);
-                                     peopleCount.setTextColor(Color.GRAY);
-                                 }
+                                peopleCountArrived(messageMQTT);
                                 break;
                             case TEMPERATURE_VALUE:
                                 temperatureValue.setText(messageMQTT);
@@ -138,7 +131,7 @@ public class BrokerConnection extends AppCompatActivity {
                                 humidityValue.setText(messageMQTT);
                                 break;
                             case LOUDNESS_VALUE:
-                                loudnessValue.setText(messageMQTT);
+                                loudnessValueArrived(messageMQTT);
                                 break;
                             case MAX_PEOPLE_COUNT:
                                 maxPeopleCount.setText(messageMQTT);
@@ -163,6 +156,47 @@ public class BrokerConnection extends AppCompatActivity {
                     Log.d(CLIENT_ID, "Message delivered");
                 }
             });
+        }
+    }
+    /**
+     * updates the textview value, color is gray if the value is below the max value, red if above. The max value is set in the settings.
+     * @return void
+     */
+    public void peopleCountArrived(String message) {
+        peopleCount.setText(message);
+        if (Integer.parseInt(message) > Integer.parseInt(getPeople())) {
+            peopleCount.setText(message);
+            peopleCount.setTextColor(Color.RED);
+        }
+        else {
+            peopleCount.setText(message);
+            peopleCount.setTextColor(Color.GRAY);
+        }
+    }
+
+    /**
+     * updates the textview value, color is gray if the value is below the max value, red if above. The max value is set in the settings.
+     * @return void
+     */
+    public void loudnessValueArrived(String message) {
+        int loudness = 0;
+        if (getLoudness().equals("Quiet")) {
+            loudness = 430;
+        }
+        else if (getLoudness().equals("Moderate")) {
+            loudness = 500;
+        }
+        else if (getLoudness().equals("Loud")) {
+            loudness = 600;
+        }
+
+        if (Integer.parseInt(message) < loudness) {
+            loudnessValue.setText(message);
+            loudnessValue.setTextColor(Color.GRAY);
+        }
+        else {
+            loudnessValue.setText(message);
+            loudnessValue.setTextColor(Color.RED);
         }
     }
 
