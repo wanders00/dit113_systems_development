@@ -74,4 +74,5 @@ void loop() {
             lastTimePublished = getCurrentTime();
         }
     }
+    displayPeopleCount(countMain);
 }

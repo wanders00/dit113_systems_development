@@ -51,9 +51,18 @@ void updateScreen() {
  * @return void
  */
 void displayPeopleCount(int count) {
-    flashScreen();
-    tft.drawString(String(count), 50, 70);
-    tft.drawString("People", 50, 120);
+    if (count >= getMaxPeople()) {
+        tft.setTextColor(TFT_WHITE);
+        tft.fillScreen(TFT_RED);
+        tft.setFreeFont(&FreeSansBoldOblique24pt7b);
+        tft.drawString("ROOM IS", 50, 70);
+        tft.drawString("FULL", 50, 120);
+    } else {
+        flashScreen();
+        tft.setTextColor(TFT_RED);
+        tft.drawString(String(count), 50, 70);
+        tft.drawString("People", 50, 120);
+    }
 }
 
 /**

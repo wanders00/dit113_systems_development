@@ -34,7 +34,7 @@ uint32_t whenLastAttemptedReconnect;
 const uint32_t attemptFrequency = 5000;  // Frequency in milliseconds
 
 const char *SUBSCRIPTION_TOPIC = "LocusImperium/APP/#";
-const char *MAX_PEOPLE_TOPIC = "LocusImperium/WIO/maxPeopleCount";
+const char *MAX_PEOPLE_TOPIC = "LocusImperium/APP/maxPeopleCount";
 
 WiFiClient wioClient;
 PubSubClient client(wioClient);
@@ -147,7 +147,7 @@ void callback(char *topic, byte *payload, unsigned int length) {
     buff_p[length] = '\0';
     String msg_p = String(buff_p);
 
-    if (topic == MAX_PEOPLE_TOPIC) {
+    if(strcmp(topic, MAX_PEOPLE_TOPIC) == 0) { 
         setMaxPeople(msg_p.toInt());
     }
     else {
