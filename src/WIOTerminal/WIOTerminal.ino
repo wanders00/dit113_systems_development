@@ -1,4 +1,4 @@
-#include"TFT_eSPI.h"
+#include "TFT_eSPI.h"
 #include <Ultrasonic.h>
 #include "Arduino.h"
 #include <DHT.h>
@@ -10,12 +10,19 @@
 #include "MqttClient.hpp"
 #include "WifiDetails.h"
 #include "Loudness.hpp"
+#include "Buzzer.hpp"
+#include "Settings.hpp"
 
 int countMain = 0;
-int delayTime = 500;
+int publishDelayTime = 500;
+uint32_t lastTimePublished;
 
-void setup()
-{
+const char *PEOPLE_COUNT_TOPIC = "LocusImperium/WIO/peopleCount";
+const char *TEMPERATURE_TOPIC = "LocusImperium/WIO/temperatureValue";
+const char *HUMIDITY_TOPIC = "LocusImperium/WIO/humidityValue";
+const char *LOUDNESS_TOPIC = "LocusImperium/WIO/loudnessValue";
+
+void setup() {
     screenInit();
 
     mqttInit();
@@ -24,26 +31,24 @@ void setup()
 
     initializeLoudness();
 
+    buzzerInit();
+
     flashScreen();
+
+    lastTimePublished = millis();
 }
-void loop()
-{
+
+void loop() {
     UltrasonicData data = detectMovement(countMain);
     countMain = data.count;
-    // displayPeopleCountDebug(data.count, data.distance1, data.distance2);
-    displayPeopleCount(data.count);
-    
-    measureTemperature();
-
-    measureHumidity();
-    
-    delay(delayTime);
-
-
-    if (mqttLoop())
-    {
-        UltrasonicData data = detectMovement(countMain);
-        countMain = data.count;
-        delay(delayTime);
+    if (mqttLoop()) {
+        uint32_t currentTime = millis();
+        if (currentTime - lastTimePublished > publishDelayTime) {
+            publishMessage(PEOPLE_COUNT_TOPIC, String(countMain));
+            publishMessage(TEMPERATURE_TOPIC, String(measureTemperature()));
+            publishMessage(HUMIDITY_TOPIC, String(measureHumidity()));
+            publishMessage(LOUDNESS_TOPIC, String(loudnessLevel()));
+        }
     }
+    displayPeopleCount(countMain);
 }

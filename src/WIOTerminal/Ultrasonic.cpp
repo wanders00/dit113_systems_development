@@ -39,13 +39,24 @@ UltrasonicData detectMovement(int count) {
         time2 = millis();
     }
 
+    //*****************************
     // ! code inspired by https://www.sensingthecity.com/detecting-movement-direction-with-two-ultrasonic-distance-sensors/
-    if (time1 > 0 && time2 > 0) {       // if both sensors have nonzero timestamps
-        if (time1 < time2) {                      // if left sensor triggered first
-            count++;    // direction is left to right
-        } 
-        else if (time2 < time1) {                 // if right sensor triggered first
-            count--;    // direction is right to left
+    //*****************************
+    if (time1 > 0 && time2 > 0) {   // if both sensors have nonzero timestamps
+                                    // check if the difference between the timestamps is less than 1300ms
+        if (abs(time1 - time2) < 1500) {
+            if (time1 < time2) {        // if left sensor triggered first
+                count++;                // direction is left to right
+            } 
+            else if (time2 < time1) {   // if right sensor triggered first
+                count--;                // direction is right to left
+            }
+        } else {
+            // zero the timestamps if both are non zero
+            if (time1 != 0 && time2 != 0) {
+                time1 = 0;
+                time2 = 0;
+            }
         }
 
         // after printing direction, reset both timestamps to 0
@@ -53,7 +64,7 @@ UltrasonicData detectMovement(int count) {
         time2 = 0;
     }
 
-    if(count < 0){  //prevent the count to go below 0
+    if(count < 0) {  //prevent the count to go below 0
         count = 0;
     }
 

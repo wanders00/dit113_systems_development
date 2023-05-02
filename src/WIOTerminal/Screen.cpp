@@ -3,6 +3,7 @@
 #include "Screen.hpp"
 #include "TFT_eSPI.h"
 #include "fonts/Free_Fonts.h"
+#include "Settings.hpp"
 
 const uint32_t BACKGROUND_COLOR = TFT_WHITE;
 const uint32_t TEXT_COLOR = TFT_BLUE;
@@ -15,8 +16,7 @@ TFT_eSPI tft;
  *
  * @return void
  */
-void screenInit()
-{
+void screenInit() {
     // Screen setup
     tft.begin();
     tft.setRotation(3);
@@ -33,37 +33,52 @@ void screenInit()
  * @param count Number of people counted.
  * @return void
  */
-void displayPeopleCount(int count)
-{
-    flashScreen();
-    tft.drawString(String(count), 50, 70);
-    tft.drawString("People", 50, 120);
+void displayPeopleCount(int count) {
+    if (count >= getMaxPeople()) {
+        tft.setTextColor(TFT_WHITE);
+        tft.fillScreen(TFT_RED);
+        tft.setFreeFont(&FreeSansBoldOblique24pt7b);
+        tft.drawString("ROOM IS", 50, 70);
+        tft.drawString("FULL", 50, 120);
+    } else {
+        flashScreen();
+        tft.setTextColor(TFT_RED);
+        tft.drawString(String(count), 50, 70);
+        tft.drawString("People", 50, 120);
+    }
 }
 
 /**
- * Display the number of people with debug information (measurements from the sensors)
+ * Display the number of people with debug information (measurements from the sensors).
  *
  * @param count Number of people counted.
  * @param dis1 Distance measured by the first sensor.
  * @param dis2 Distance measured by the second sensor.
  * @return void
  */
-void displayPeopleCountDebug(int count, int dis1, int dis2)
-{
-    flashScreen();
-    tft.drawString(String(count), 50, 50);
-    tft.drawString(String(dis1), 50, 100);
-    tft.drawString(String(dis2), 50, 160);
+void displayPeopleCountDebug(int count, int dis1, int dis2) {
+    
+    if (count >= getMaxPeople()) {
+        tft.setTextColor(TFT_WHITE);
+        tft.fillScreen(TFT_RED);
+        tft.setFreeFont(&FreeSansBoldOblique24pt7b);
+        tft.drawString("ROOM IS", 50, 70);
+        tft.drawString("FULL", 50, 120);
+    } else {
+        tft.fillScreen(TFT_WHITE); //background
+        tft.drawString(String(count), 50, 50);
+        tft.drawString(String(dis1), 50, 100);
+        tft.drawString(String(dis2), 50, 160);
+    }
 }
 
 /**
- * Displays the message argumennt on the screen.
+ * Displays the message argument on the screen.
  *
- * @param message the message to be displayed
+ * @param message The message to be displayed.
  * @return void
  */
-void displayMessage(String message)
-{
+void displayMessage(String message) {
     flashScreen();
     tft.drawString(message, 0, 0);
 }
@@ -74,7 +89,6 @@ void displayMessage(String message)
  * @return void
  * @note calls tft.fillScreen(TFT_WHITE)
  */
-void flashScreen()
-{
+void flashScreen() {
     tft.fillScreen(TFT_WHITE);
 }
