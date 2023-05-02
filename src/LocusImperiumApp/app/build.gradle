@@ -3,6 +3,7 @@ plugins {
 }
 
 android {
+    namespace 'com.group6.locusimperium'
     compileSdk 33
 
     defaultConfig {
@@ -25,11 +26,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    namespace 'com.group6.locusimperium'
 }
 
 dependencies {
-
     implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5'
     //implementation 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
     // For android 12 since above is not yet updated.
@@ -48,4 +47,15 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     implementation 'androidx.work:work-runtime-ktx:2.8.1'
+
+
+
+    // Espresso
+    def androidx_test_espresso = "3.1.0"
+
+    // androidx.test
+    def androidx_test = "1.1.0"
+    androidTestImplementation "androidx.test:runner:$androidx_test"
+    androidTestImplementation "androidx.test:core:$androidx_test"
+    androidTestImplementation "androidx.test.ext:junit-ktx:$androidx_test"
 }
