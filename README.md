@@ -81,7 +81,7 @@
   ### Dependencies
   <details>
   <summary> Expand </summary>
-  Please Install the following libraries using the Arduino shell library manager:
+  Please Install the following libraries:
 
   - Adafruit FONA Library
   - Adafruit MQTT Library
