@@ -1,5 +1,5 @@
 /****************************************************************************
-  Code based on "MQTT Exmple for SeeedStudio Wio Terminal".
+  Code based on "MQTT Example for SeeedStudio Wio Terminal".
   Author: Salman Faris
   Source: https://www.hackster.io/Salmanfarisvp/mqtt-on-wio-terminal-4ea8f8
 *****************************************************************************/
@@ -21,9 +21,11 @@ const char *ssid = SSID;          // WiFi Name
 const char *password = PASSWORD;  // WiFi Password
 
 // MQTT details
-const char *BROKER_ADRESS = my_IPv4;                     // Broker URL
+const char *BROKER_ADDRESS = my_IPv4;                    // Broker URL
 const char *SUBSCRIPTION_TOPIC = "LocusImperium/APP/#";  // Topic to subscribe to
 const String CLIENT_ID = "WioTerminal";                  // Client ID used on broker
+
+const char *MAX_PEOPLE_TOPIC = "LocusImperium/APP/maxPeopleCount";
 
 // To not allow attempts to often
 uint32_t whenLastAttemptedReconnect;
@@ -46,7 +48,7 @@ void mqttInit() {
     whenLastAttemptedReconnect = 0;
     Serial.begin(115200);
     setupWifi();
-    client.setServer(BROKER_ADRESS, 1883);  // Connect the MQTT Server
+    client.setServer(BROKER_ADDRESS, 1883);  // Connect the MQTT Server
     client.setCallback(callback);
     setupMqtt();
     haveAlerted = false;
@@ -75,7 +77,7 @@ void setupWifi() {
 }
 
 /**
- * Sets up the mqtt connection to the borker specified in the WifiDetails.h file (ipv4).
+ * Sets up the mqtt connection to the broker specified in the WifiDetails.h file (ipv4).
  * Will loop until it is successful.
  *
  * @return void
@@ -165,7 +167,7 @@ void reconnect() {
             playConnectionLostAlert();
         }
 
-        // To not allowed too frequenct reconnect attempts.
+        // To not allow too frequent reconnect attempts.
         whenLastAttemptedReconnect = getCurrentTime();
 
         // If WiFi is not connected, reconnect to it.
