@@ -14,12 +14,13 @@
 #include "Ultrasonic.hpp"
 #include "Util.hpp"
 #include "WifiDetails.h"
+#include "Settings.hpp"
 
 // Ultrasonic
 int countMain = 0;
 
 // Screen update
-const uint32_t screenUpdateFrequnecy = 1000;
+const uint32_t screenUpdateFrequency = 1000;
 uint32_t lastTimeScreenUpdated;
 
 // MQTT publish frequency values
@@ -53,7 +54,7 @@ void setup() {
 void loop() {
     setCurrentTime(millis());
 
-    if (getCurrentTime() - lastTimeScreenUpdated > screenUpdateFrequnecy) {
+    if (getCurrentTime() - lastTimeScreenUpdated > screenUpdateFrequency) {
         updateScreen();
         lastTimeScreenUpdated = getCurrentTime();
     }
