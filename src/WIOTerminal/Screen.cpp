@@ -7,6 +7,7 @@
 // Local header files
 #include "MqttClient.hpp"
 #include "Screen.hpp"
+#include "Settings.hpp"
 
 const uint32_t BACKGROUND_COLOR = TFT_WHITE;
 const uint32_t TEXT_COLOR = TFT_BLUE;
