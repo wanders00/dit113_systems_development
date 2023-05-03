@@ -20,6 +20,7 @@
     <string name="EnterIpBox">Enter IP Address Of The Broker</string>
     <string name="enterIPText">Enter IP Address Of The Broker</string>
     <string name="rawText">Click Below</string>
+    <string name="string">Save</string>
     <string-array name="diffrentLoudness">
         <item>Quiet</item>
         <item>Moderate</item>

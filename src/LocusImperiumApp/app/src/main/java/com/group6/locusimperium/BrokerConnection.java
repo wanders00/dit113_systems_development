@@ -7,8 +7,15 @@
 package com.group6.locusimperium;
 
 import static com.group6.locusimperium.MainActivity.PUB_TOPIC;
+import static com.group6.locusimperium.SettingsActivity.HUMIDITY;
+import static com.group6.locusimperium.SettingsActivity.LOUDNESS;
+import static com.group6.locusimperium.SettingsActivity.PEOPLE;
+import static com.group6.locusimperium.SettingsActivity.SHARED_PREFS;
+import static com.group6.locusimperium.SettingsActivity.TEMPERATURE;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,7 +32,7 @@ public class BrokerConnection extends AppCompatActivity {
 
     //Application subscription, will receive everything from this topic.
     public static final String SUPER_SUBSCRIPTION_TOPIC = "LocusImperium/WIO/";
-    public static final String LOCALHOST = "192.168.251.76";
+    public static final String LOCALHOST = "192.168.223.76";
     private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883";
     public static final String CLIENT_ID = "LocusImperium-Application";
     public static final int QOS = 0;
@@ -46,6 +53,24 @@ public class BrokerConnection extends AppCompatActivity {
     public TextView maxHumidityValue;
     public TextView maxLoudnessValue;
 
+    public String getPeople() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        return sharedPreferences.getString(PEOPLE,"");
+    }
+
+    public String getLoudness() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        return sharedPreferences.getString(LOUDNESS,"");
+    }
+    public String getHumidity() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        return sharedPreferences.getString(HUMIDITY,"");
+    }
+
+    public String getTemperature() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        return sharedPreferences.getString(TEMPERATURE,"");
+    }
     public BrokerConnection(Context context) {
         this.context = context;
         mqttClient = new MqttClient(context, MQTT_SERVER, CLIENT_ID);
@@ -85,6 +110,7 @@ public class BrokerConnection extends AppCompatActivity {
                     Log.w(CLIENT_ID, connectionLost);
                     Toast.makeText(context, connectionLost, Toast.LENGTH_LONG).show();
                 }
+
                 /**
                  * @see ValueSubtopic
                  * @return void
@@ -96,16 +122,16 @@ public class BrokerConnection extends AppCompatActivity {
                     if(currentTopic != null) {
                         switch(currentTopic) {
                             case PEOPLE_COUNT:
-                                peopleCount.setText(messageMQTT);
+                                peopleCountArrived(messageMQTT);
                                 break;
                             case TEMPERATURE_VALUE:
-                                temperatureValue.setText(messageMQTT);
+                                temperatureValueArrived(messageMQTT);
                                 break;
                             case HUMIDITY_VALUE:
-                                humidityValue.setText(messageMQTT);
+                                humidityValueArrived(messageMQTT);
                                 break;
                             case LOUDNESS_VALUE:
-                                loudnessValue.setText(messageMQTT);
+                                loudnessValueArrived(messageMQTT);
                                 break;
                             case MAX_PEOPLE_COUNT:
                                 maxPeopleCount.setText(messageMQTT);
@@ -132,6 +158,79 @@ public class BrokerConnection extends AppCompatActivity {
             });
         }
     }
+    /**
+     * updates the people counter textview value, color is gray if the value is below the max value, red if above. The max value is set in the settings.
+     * @return void
+     */
+    public void peopleCountArrived(String message) {
+        peopleCount.setText(message);
+        if (Integer.parseInt(message) > Integer.parseInt(getPeople())) {
+            peopleCount.setText(message);
+            peopleCount.setTextColor(Color.RED);
+        }
+        else {
+            peopleCount.setText(message);
+            peopleCount.setTextColor(Color.GRAY);
+        }
+    }
+
+    /**
+     * updates the humidity textview value, color is gray if the value is below the max value, red if above. The max value is set in the settings.
+     * @return void
+     */
+    public void humidityValueArrived(String message) {
+        humidityValue.setText(message);
+        if (Integer.parseInt(message) > Integer.parseInt(getHumidity())) {
+            humidityValue.setText(message);
+            humidityValue.setTextColor(Color.RED);
+        }
+        else {
+            humidityValue.setText(message);
+            humidityValue.setTextColor(Color.GRAY);
+        }
+    }
+
+    /**
+     * updates the temperature textview value, color is gray if the value is below the max value, red if above. The max value is set in the settings.
+     * @return void
+     */
+    public void temperatureValueArrived(String message) {
+        temperatureValue.setText(message);
+        if (Integer.parseInt(message) > Integer.parseInt(getTemperature())) {
+            temperatureValue.setText(message);
+            temperatureValue.setTextColor(Color.RED);
+        }
+        else {
+            temperatureValue.setText(message);
+            temperatureValue.setTextColor(Color.GRAY);
+        }
+    }
+
+    /**
+     * updates the loudness textview value, color is gray if the value is below the max value, red if above. The max value is set in the settings.
+     * @return void
+     */
+    public void loudnessValueArrived(String message) {
+        int loudness = 0;
+        if (getLoudness().equals("Quiet")) {
+            loudness = 430;
+        }
+        else if (getLoudness().equals("Moderate")) {
+            loudness = 500;
+        }
+        else if (getLoudness().equals("Loud")) {
+            loudness = 600;
+        }
+
+        if (Integer.parseInt(message) < loudness) {
+            loudnessValue.setText(message);
+            loudnessValue.setTextColor(Color.GRAY);
+        }
+        else {
+            loudnessValue.setText(message);
+            loudnessValue.setTextColor(Color.RED);
+        }
+    }
 
     /**
      * Publishes a message to the mqtt broker. Topic defined in MainActivity.java
@@ -149,6 +248,21 @@ public class BrokerConnection extends AppCompatActivity {
         }
         Log.i(CLIENT_ID, actionDescription);
         mqttClient.publish(PUB_TOPIC, message, QOS, null);
+    }
+    public void publishSettings() {
+        if (!isConnected) {
+            final String notConnected = "Not connected (yet)";
+            Log.e(CLIENT_ID, notConnected);
+            Toast.makeText(context, notConnected, Toast.LENGTH_SHORT).show();
+            return;
+        } else {
+            final String connected = "Connected";
+            Log.e(CLIENT_ID, connected);
+            mqttClient.publish(PUB_TOPIC, getPeople(), QOS, null);
+            mqttClient.publish(PUB_TOPIC, getHumidity(), QOS, null);
+            mqttClient.publish(PUB_TOPIC, getTemperature(), QOS, null);
+            mqttClient.publish(PUB_TOPIC, getLoudness(), QOS, null);
+        }
     }
 
     // Methods to link TextView object to actual element on the screen on startup.
