@@ -14,11 +14,6 @@
 #include "Ultrasonic.hpp"
 #include "Util.hpp"
 #include "WifiDetails.h"
-<<<<<<< src/WIOTerminal/WIOTerminal.ino
-=======
-#include "Loudness.hpp"
-#include "Buzzer.hpp"
->>>>>>> src/WIOTerminal/WIOTerminal.ino
 #include "Settings.hpp"
 
 // Ultrasonic
@@ -77,9 +72,4 @@ void loop() {
             lastTimePublished = getCurrentTime();
         }
     }
-<<<<<<< src/WIOTerminal/WIOTerminal.ino
 }
-=======
-    displayPeopleCount(countMain);
-}
->>>>>>> src/WIOTerminal/WIOTerminal.ino
