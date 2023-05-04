@@ -6,6 +6,7 @@
 
 package com.group6.locusimperium;
 
+import static com.group6.locusimperium.ConnectActivity.IPADDRESS;
 import static com.group6.locusimperium.MainActivity.PUB_TOPIC;
 import static com.group6.locusimperium.SettingsActivity.HUMIDITY;
 import static com.group6.locusimperium.SettingsActivity.LOUDNESS;
@@ -32,8 +33,7 @@ public class BrokerConnection extends AppCompatActivity {
 
     //Application subscription, will receive everything from this topic.
     public static final String SUPER_SUBSCRIPTION_TOPIC = "LocusImperium/WIO/";
-    public static final String LOCALHOST = "192.168.223.76";
-    private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883";
+    public static String LOCALHOST;
     public static final String CLIENT_ID = "LocusImperium-Application";
     public static final int QOS = 0;
     private boolean isConnected = false;
@@ -72,8 +72,10 @@ public class BrokerConnection extends AppCompatActivity {
         return sharedPreferences.getString(TEMPERATURE,"");
     }
     public BrokerConnection(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        LOCALHOST = sharedPreferences.getString(IPADDRESS, "");
         this.context = context;
-        mqttClient = new MqttClient(context, MQTT_SERVER, CLIENT_ID);
+        mqttClient = new MqttClient(context, "tcp://" + LOCALHOST + ":1883", CLIENT_ID);
         connectToMqttBroker();
     }
 
@@ -90,7 +92,7 @@ public class BrokerConnection extends AppCompatActivity {
                     isConnected = true;
                     final String successfulConnection = "Connected to MQTT broker";
                     Log.i(CLIENT_ID, successfulConnection);
-                    Toast.makeText(context, successfulConnection, Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, successfulConnection, Toast.LENGTH_SHORT).show();
                     // Added "+ '#'" to subscribe to all subtopics under the super one.
                     mqttClient.subscribe(SUPER_SUBSCRIPTION_TOPIC + '#', QOS, null);
                 }
@@ -99,7 +101,7 @@ public class BrokerConnection extends AppCompatActivity {
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     final String failedConnection = "Failed to connect to MQTT broker";
                     Log.e(CLIENT_ID, failedConnection);
-                    Toast.makeText(context, failedConnection, Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, failedConnection, Toast.LENGTH_SHORT).show();
                 }
             }, new MqttCallback() {
                 @Override
@@ -108,7 +110,7 @@ public class BrokerConnection extends AppCompatActivity {
 
                     final String connectionLost = "Connection to MQTT broker lost";
                     Log.w(CLIENT_ID, connectionLost);
-                    Toast.makeText(context, connectionLost, Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, connectionLost, Toast.LENGTH_SHORT).show();
                 }
 
                 /**

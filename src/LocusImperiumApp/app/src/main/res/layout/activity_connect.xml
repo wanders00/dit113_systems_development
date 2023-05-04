@@ -24,6 +24,7 @@
         android:layout_height="49dp"
         android:hint="@string/EnterIpBox"
         android:textAlignment="center"
+        android:digits="0123456789."
         android:inputType="number"
         android:singleLine="true"
         app:layout_constraintBottom_toBottomOf="parent"
