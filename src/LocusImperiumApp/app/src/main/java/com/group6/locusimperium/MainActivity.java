@@ -8,8 +8,6 @@ import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
-
-    public static final String PUB_TOPIC = "LocusImperium/APP/";
     public BrokerConnection brokerConnection;
 
     @Override

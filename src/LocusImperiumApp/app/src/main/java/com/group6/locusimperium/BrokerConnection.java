@@ -7,7 +7,6 @@
 package com.group6.locusimperium;
 
 import static com.group6.locusimperium.ConnectActivity.IPADDRESS;
-import static com.group6.locusimperium.MainActivity.PUB_TOPIC;
 import static com.group6.locusimperium.SettingsActivity.HUMIDITY;
 import static com.group6.locusimperium.SettingsActivity.LOUDNESS;
 import static com.group6.locusimperium.SettingsActivity.PEOPLE;
@@ -33,7 +32,13 @@ public class BrokerConnection extends AppCompatActivity {
 
     //Application subscription, will receive everything from this topic.
     public static final String SUPER_SUBSCRIPTION_TOPIC = "LocusImperium/WIO/";
+    public static final String PUB_TOPIC = "LocusImperium/APP/";
+    public static final String MAX_LOUDNESS_PUB_TOPIC = ValueSubtopic.MAX_LOUDNESS.getSubTopicPublish();
+    public static final String MAX_PEOPLE_PUB_TOPIC = ValueSubtopic.MAX_PEOPLE_COUNT.getSubTopicPublish();
+    public static final String MAX_HUMIDITY_PUB_TOPIC = ValueSubtopic.MAX_HUMIDITY.getSubTopicPublish();
+    public static final String MAX_TEMPERATURE_PUB_TOPIC = ValueSubtopic.MAX_TEMPERATURE.getSubTopicPublish();
     public static String LOCALHOST;
+    public static String MQTT_SERVER;
     public static final String CLIENT_ID = "LocusImperium-Application";
     public static final int QOS = 0;
     private boolean isConnected = false;
@@ -53,29 +58,30 @@ public class BrokerConnection extends AppCompatActivity {
     public TextView maxHumidityValue;
     public TextView maxLoudnessValue;
 
-    public String getPeople() {
+    public String getMaxPeople() {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         return sharedPreferences.getString(PEOPLE,"");
     }
 
-    public String getLoudness() {
+    public String getMaxLoudness() {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         return sharedPreferences.getString(LOUDNESS,"");
     }
-    public String getHumidity() {
+    public String getMaxHumidity() {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         return sharedPreferences.getString(HUMIDITY,"");
     }
 
-    public String getTemperature() {
+    public String getMaxTemperature() {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         return sharedPreferences.getString(TEMPERATURE,"");
     }
     public BrokerConnection(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         LOCALHOST = sharedPreferences.getString(IPADDRESS, "");
+        MQTT_SERVER = "tcp://" + LOCALHOST + ":1883";
         this.context = context;
-        mqttClient = new MqttClient(context, "tcp://" + LOCALHOST + ":1883", CLIENT_ID);
+        mqttClient = new MqttClient(context, MQTT_SERVER, CLIENT_ID);
         connectToMqttBroker();
     }
 
@@ -166,7 +172,7 @@ public class BrokerConnection extends AppCompatActivity {
      */
     public void peopleCountArrived(String message) {
         peopleCount.setText(message);
-        if (Integer.parseInt(message) > Integer.parseInt(getPeople())) {
+        if (Integer.parseInt(message) > Integer.parseInt(getMaxPeople())) {
             peopleCount.setText(message);
             peopleCount.setTextColor(Color.RED);
         }
@@ -182,7 +188,7 @@ public class BrokerConnection extends AppCompatActivity {
      */
     public void humidityValueArrived(String message) {
         humidityValue.setText(message);
-        if (Integer.parseInt(message) > Integer.parseInt(getHumidity())) {
+        if (Integer.parseInt(message) > Integer.parseInt(getMaxHumidity())) {
             humidityValue.setText(message);
             humidityValue.setTextColor(Color.RED);
         }
@@ -198,7 +204,7 @@ public class BrokerConnection extends AppCompatActivity {
      */
     public void temperatureValueArrived(String message) {
         temperatureValue.setText(message);
-        if (Integer.parseInt(message) > Integer.parseInt(getTemperature())) {
+        if (Integer.parseInt(message) > Integer.parseInt(getMaxTemperature())) {
             temperatureValue.setText(message);
             temperatureValue.setTextColor(Color.RED);
         }
@@ -214,13 +220,13 @@ public class BrokerConnection extends AppCompatActivity {
      */
     public void loudnessValueArrived(String message) {
         int loudness = 0;
-        if (getLoudness().equals("Quiet")) {
+        if (getMaxLoudness().equals("Quiet")) {
             loudness = 430;
         }
-        else if (getLoudness().equals("Moderate")) {
+        else if (getMaxLoudness().equals("Moderate")) {
             loudness = 500;
         }
-        else if (getLoudness().equals("Loud")) {
+        else if (getMaxLoudness().equals("Loud")) {
             loudness = 600;
         }
 
@@ -260,10 +266,10 @@ public class BrokerConnection extends AppCompatActivity {
         } else {
             final String connected = "Connected";
             Log.e(CLIENT_ID, connected);
-            mqttClient.publish(PUB_TOPIC, getPeople(), QOS, null);
-            mqttClient.publish(PUB_TOPIC, getHumidity(), QOS, null);
-            mqttClient.publish(PUB_TOPIC, getTemperature(), QOS, null);
-            mqttClient.publish(PUB_TOPIC, getLoudness(), QOS, null);
+            mqttClient.publish(MAX_PEOPLE_PUB_TOPIC, getMaxPeople(), QOS, null);
+            mqttClient.publish(MAX_HUMIDITY_PUB_TOPIC, getMaxHumidity(), QOS, null);
+            mqttClient.publish(MAX_TEMPERATURE_PUB_TOPIC, getMaxTemperature(), QOS, null);
+            mqttClient.publish(MAX_LOUDNESS_PUB_TOPIC, getMaxLoudness(), QOS, null);
         }
     }
 

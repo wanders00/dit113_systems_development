@@ -24,7 +24,7 @@ public enum ValueSubtopic {
      */
     public static ValueSubtopic whichSubTopic(String inputTopic) {
         for (ValueSubtopic currentSubtopic : ValueSubtopic.values()) {
-            if (currentSubtopic.getSubtopic().equals(inputTopic)) {
+            if (currentSubtopic.getSubtopicSubscription().equals(inputTopic)) {
                 return currentSubtopic;
             }
         }
@@ -38,7 +38,10 @@ public enum ValueSubtopic {
      * @return Corresponding ValueSubtopics subtopic with the super topic before it.
      * @see BrokerConnection
      */
-    public String getSubtopic() {
+    public String getSubtopicSubscription() {
         return BrokerConnection.SUPER_SUBSCRIPTION_TOPIC + this.subtopic;
     }
+
+    public String getSubTopicPublish() {
+        return BrokerConnection.PUB_TOPIC + this.subtopic; }
 }
