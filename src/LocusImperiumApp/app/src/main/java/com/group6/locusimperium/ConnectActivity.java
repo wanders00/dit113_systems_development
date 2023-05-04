@@ -62,14 +62,17 @@ public class ConnectActivity extends AppCompatActivity {
         updateIP();
     }
 
-
+    /**
+     * saves IP address to shared preferences and disconnect from broker to reconnect with new IP
+     * @return void
+     */
     public void saveIP() {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-
+        BrokerConnection brokerConnection = new BrokerConnection(getApplicationContext());
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(IPADDRESS, inputIP.getText().toString());
         editor.apply();
-
+        brokerConnection.getMqttClient().disconnect(null);
         Toast.makeText(this, "Saved IP", Toast.LENGTH_SHORT).show();
     }
 
