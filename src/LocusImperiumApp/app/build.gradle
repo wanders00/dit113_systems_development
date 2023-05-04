@@ -2,6 +2,8 @@ plugins {
     id 'com.android.application'
 }
 
+apply from: "$project.rootDir/jacoco.gradle"
+
 android {
     namespace 'com.group6.locusimperium'
     compileSdk 33
