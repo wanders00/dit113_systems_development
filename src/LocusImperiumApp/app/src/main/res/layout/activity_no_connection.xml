@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NoConnectionActivity">
+
+    <ImageView
+        android:id="@+id/purpBarBackground"
+        android:layout_width="421dp"
+        android:layout_height="110dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/purpleBackground"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/purpbackground" />
+
+    <ImageButton
+        android:id="@+id/settingsButton"
+        android:layout_width="95dp"
+        android:layout_height="77dp"
+        android:background="@null"
+        android:contentDescription="@string/settinIcon"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.091"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.961"
+        app:srcCompat="@drawable/settingactivityicon" />
+
+    <ImageButton
+        android:id="@+id/mainButton"
+        android:layout_width="95dp"
+        android:layout_height="77dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="24dp"
+        android:background="@null"
+        android:contentDescription="@string/mainIcon"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/settingsButton"
+        app:srcCompat="@drawable/mainactivityicon" />
+
+    <ImageButton
+        android:id="@+id/connectButton"
+        android:layout_width="77dp"
+        android:layout_height="77dp"
+        android:layout_marginBottom="24dp"
+        android:background="@null"
+        android:contentDescription="@string/connectIcon"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toEndOf="@+id/mainButton"
+        app:srcCompat="@drawable/connectactivityicon" />
+
+    <TextView
+        android:id="@+id/noConnectionMsg"
+        android:layout_width="387dp"
+        android:layout_height="134dp"
+        android:layout_marginStart="104dp"
+        android:layout_marginTop="200dp"
+        android:layout_marginEnd="104dp"
+        android:layout_marginBottom="351dp"
+        android:gravity="center"
+        android:text="@string/notConnected"
+        android:typeface="monospace"
+        android:textSize="24sp"
+
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        app:layout_constraintBottom_toTopOf="@+id/purpBarBackground"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/reconnectButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="160dp"
+        android:layout_marginTop="26dp"
+        android:layout_marginEnd="160dp"
+        android:layout_marginBottom="245dp"
+        android:text="@string/ReconnectBtn"
+        app:layout_constraintBottom_toTopOf="@+id/purpBarBackground"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/noConnectionMsg" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
