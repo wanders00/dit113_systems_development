@@ -1,3 +1,6 @@
+// Code inspired by the example at
+// https://medium.com/nerd-for-tech/setup-jacoco-code-coverage-with-your-multimodule-android-app-kotlin-a0f82573a1
+
 project.afterEvaluate { project ->
     setupAndroidReporting()
 }
