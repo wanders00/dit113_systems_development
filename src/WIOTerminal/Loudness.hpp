@@ -1,7 +1,7 @@
 #ifndef LOUDNESS_HPP
 #define LOUDNESS_HPP
 
-void initializeLoudness();
+void loudnessInit();
 
 int loudnessRaw();
 

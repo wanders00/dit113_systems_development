@@ -1,22 +1,38 @@
-#include "TFT_eSPI.h"
-#include <Ultrasonic.h>
-#include "Arduino.h"
+// Arduino libraries
 #include <DHT.h>
+#include <Ultrasonic.h>
+
+#include "Arduino.h"
+#include "TFT_eSPI.h"
 
 // Local header files
-#include "Ultrasonic.hpp"
+#include "Buzzer.hpp"
+#include "Loudness.hpp"
+#include "MqttClient.hpp"
 #include "Screen.hpp"
 #include "TempHumidity.hpp"
-#include "MqttClient.hpp"
+#include "Ultrasonic.hpp"
+#include "Util.hpp"
 #include "WifiDetails.h"
+<<<<<<< src/WIOTerminal/WIOTerminal.ino
+=======
 #include "Loudness.hpp"
 #include "Buzzer.hpp"
+>>>>>>> src/WIOTerminal/WIOTerminal.ino
 #include "Settings.hpp"
 
+// Ultrasonic
 int countMain = 0;
-int publishDelayTime = 500;
+
+// Screen update
+const uint32_t screenUpdateFrequency = 1000;
+uint32_t lastTimeScreenUpdated;
+
+// MQTT publish frequency values
+const uint32_t publishDelayTime = 1000;
 uint32_t lastTimePublished;
 
+// MQTT subscription topics
 const char *PEOPLE_COUNT_TOPIC = "LocusImperium/WIO/peopleCount";
 const char *TEMPERATURE_TOPIC = "LocusImperium/WIO/temperatureValue";
 const char *HUMIDITY_TOPIC = "LocusImperium/WIO/humidityValue";
@@ -29,26 +45,41 @@ void setup() {
 
     tempHumidInit();
 
-    initializeLoudness();
+    loudnessInit();
 
     buzzerInit();
 
     flashScreen();
 
-    lastTimePublished = millis();
+    lastTimePublished = 0;
+
+    lastTimeScreenUpdated = 0;
 }
 
 void loop() {
-    UltrasonicData data = detectMovement(countMain);
-    countMain = data.count;
-    if (mqttLoop()) {
-        uint32_t currentTime = millis();
-        if (currentTime - lastTimePublished > publishDelayTime) {
-            publishMessage(PEOPLE_COUNT_TOPIC, String(countMain));
-            publishMessage(TEMPERATURE_TOPIC, String(measureTemperature()));
-            publishMessage(HUMIDITY_TOPIC, String(measureHumidity()));
+    setCurrentTime(millis());
+
+    if (getCurrentTime() - lastTimeScreenUpdated > screenUpdateFrequency) {
+        updateScreen();
+        lastTimeScreenUpdated = getCurrentTime();
+    }
+
+    /* UltrasonicData data;
+    data = detectMovement(countMain);
+    countMain = data.count; */
+
+    if (getCurrentTime() - lastTimePublished > publishDelayTime) {
+        if (mqttLoop()) {
+            // publishMessage(PEOPLE_COUNT_TOPIC, String(countMain));
+            // publishMessage(TEMPERATURE_TOPIC, String(measureTemperature()));
+            // publishMessage(HUMIDITY_TOPIC, String(measureHumidity()));
             publishMessage(LOUDNESS_TOPIC, String(loudnessLevel()));
+            lastTimePublished = getCurrentTime();
         }
     }
+<<<<<<< src/WIOTerminal/WIOTerminal.ino
+}
+=======
     displayPeopleCount(countMain);
 }
+>>>>>>> src/WIOTerminal/WIOTerminal.ino
