@@ -5,6 +5,7 @@
 #include "MqttClient.hpp"
 #include "Screen.hpp"
 #include "Settings.hpp"
+#include "Buzzer.hpp"
 
 const int SCREEN_WIDTH = 320;
 const int SCREEN_HEIGHT = 240;
@@ -45,6 +46,7 @@ void updateScreen() {
         tft.setTextColor(TFT_GREEN);
     } else {
         tft.setTextColor(TFT_RED);
+        buzzerAlert();
     }
     tft.drawString("WiFi", (70 - tft.textWidth("WiFi")) / 2, 15);
 
@@ -52,6 +54,7 @@ void updateScreen() {
         tft.setTextColor(TFT_GREEN);
     } else {
         tft.setTextColor(TFT_RED);
+        buzzerAlert();
     }
     tft.drawString("MQTT", (70 - tft.textWidth("MQTT")) / 2 + 70, 15);
 
@@ -91,6 +94,7 @@ void updateScreen() {
         tft.setTextColor(TFT_BLACK);
     } else {
         tft.setTextColor(TFT_RED);
+        buzzerAlert();
     }
     String temperatureDisplay = "T:" + String(getTemperature()) + (String)(char(248)) + "C";
     tft.drawString(temperatureDisplay, (106 - tft.textWidth(temperatureDisplay)) / 2, 50 + 140 + 15);
@@ -100,6 +104,7 @@ void updateScreen() {
         tft.setTextColor(TFT_BLACK);
     } else {
         tft.setTextColor(TFT_RED);
+        buzzerAlert();
     }
     String humidityDisplay = "H:" + String(getHumidity()) + "%";
     tft.drawString(humidityDisplay, (106 - tft.textWidth(humidityDisplay)) / 2 + 106, 50 + 140 + 15);
@@ -108,6 +113,7 @@ void updateScreen() {
         tft.setTextColor(TFT_BLACK);
     } else {
         tft.setTextColor(TFT_RED);
+        buzzerAlert();
     }
     String loudnessDisplay = "L:" + String(getLoudness()) + "db";
     tft.drawString(loudnessDisplay, (106 - tft.textWidth(loudnessDisplay)) / 2 + 212, 50 + 140 + 15);

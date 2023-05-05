@@ -1,11 +1,13 @@
 // Local header files
 #include "Buzzer.hpp"
-
 #include "Util.hpp"
 
 // General
 const u_int16_t BUZZER_PIN = 6;
 bool isTurnedOn;
+const uint32_t alertLength = 500;
+uint32_t shouldTurnOffAt;
+uint32_t alertFrequency = 10000;
 
 /**
  * Initialize the buzzer.
@@ -13,21 +15,43 @@ bool isTurnedOn;
  * @return void
  */
 void buzzerInit() {
-    uint32_t turnOffAt = millis();
-    pinMode(WIO_BUZZER, OUTPUT);
-    // pinMode(BUZZER_PIN, OUTPUT);
+    shouldTurnOffAt = 0;
+    // pinMode(WIO_BUZZER, OUTPUT);
+    pinMode(BUZZER_PIN, OUTPUT);
     isTurnedOn = false;
 }
 
 /**
- * Turn on the buzzer for a small amount of time then turn it off.
+ * Checks if the buzzer should turn off.
+ *
+ * @return void
+ */
+void buzzerLoop() {
+    if (isTurnedOn && getCurrentTime() - shouldTurnOffAt > alertLength) {
+        turnOffBuzzer();
+    }
+}
+
+/**
+ * Turn on the buzzer if it has not been played to recently.
  *
  * @return void
  */
 void buzzerAlert() {
+    if (getCurrentTime() - shouldTurnOffAt > alertFrequency) {
+        shouldTurnOffAt = getCurrentTime() + alertLength;
+        turnOnBuzzer();
+    }
+}
+
+/**
+ * Turn on the buzzer alert even if it was played recently.
+ *
+ * @return void
+ */
+void forceBuzzerAlert() {
+    shouldTurnOffAt = getCurrentTime() + alertLength;
     turnOnBuzzer();
-    timeoutTimer(300);
-    turnOffBuzzer();
 }
 
 /**
@@ -36,8 +60,8 @@ void buzzerAlert() {
  * @return void
  */
 void turnOnBuzzer() {
-    digitalWrite(WIO_BUZZER, 150);
-    // digitalWrite(BUZZER_PIN, HIGH);
+    // digitalWrite(WIO_BUZZER, 100);
+    digitalWrite(BUZZER_PIN, HIGH);
     isTurnedOn = true;
 }
 
@@ -47,7 +71,7 @@ void turnOnBuzzer() {
  * @return void
  */
 void turnOffBuzzer() {
-    digitalWrite(WIO_BUZZER, 0);
-    //digitalWrite(BUZZER_PIN, LOW);
+    // digitalWrite(WIO_BUZZER, 0);
+    digitalWrite(BUZZER_PIN, LOW);
     isTurnedOn = false;
 }

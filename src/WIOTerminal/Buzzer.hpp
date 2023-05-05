@@ -5,7 +5,11 @@
 
 void buzzerInit();
 
+void buzzerLoop();
+
 void buzzerAlert();
+
+void forceBuzzerAlert();
 
 void turnOnBuzzer();
 

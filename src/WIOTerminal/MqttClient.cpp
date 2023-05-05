@@ -15,6 +15,7 @@
 #include "Util.hpp"
 #include "WifiDetails.h"
 #include "Settings.hpp"
+#include "Buzzer.hpp"
 
 // Wi-Fi details
 const char *ssid = SSID;          // WiFi Name
@@ -212,13 +213,7 @@ void publishMessage(const char *topic, String message) {
  */
 void playConnectionLostAlert() {
     haveAlerted = true;
-    String alertMessage = "Lost connection to ";
-    if (WiFi.status() != WL_CONNECTED) {
-        //displayAlert(alertMessage + "WiFi.");
-    } else {
-        //displayAlert(alertMessage + "broker.");
-    }
-    buzzerAlert();
+    forceBuzzerAlert();
 }
 
 /**

@@ -48,13 +48,15 @@ void setup() {
     lastTimeScreenUpdated = 0;
 
     setMaxPeople(10);
-    setMaxTemperature(21);
-    setMaxHumidity(10);
+    setMaxTemperature(30);
+    setMaxHumidity(30);
     setMaxLoudness(50);
 }
 
 void loop() {
     setCurrentTime(millis());
+
+    buzzerLoop();
 
     UltrasonicData data;
     data = detectMovement(getPeople());
