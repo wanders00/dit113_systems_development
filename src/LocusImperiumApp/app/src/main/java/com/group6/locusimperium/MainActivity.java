@@ -2,12 +2,16 @@ package com.group6.locusimperium;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements  NavigationBarView.OnItemSelectedListener {
     public BrokerConnection brokerConnection;
 
     @Override
@@ -18,10 +22,10 @@ public class MainActivity extends AppCompatActivity {
         brokerConnection = new BrokerConnection(getApplicationContext());
 
         // TextView elements setup
-        brokerConnection.setPeopleCount(findViewById(R.id.peopleCount));
-        brokerConnection.setTemperatureValue(findViewById(R.id.temperatureValue));
-        brokerConnection.setHumidityValue(findViewById(R.id.humidityValue));
-        brokerConnection.setLoudnessValue(findViewById(R.id.loudnessValue));
+        brokerConnection.setPeopleCount(findViewById(R.id.loudness_textview));
+        brokerConnection.setTemperatureValue(findViewById(R.id.people_textview));
+        brokerConnection.setHumidityValue(findViewById(R.id.temperature_textview));
+        brokerConnection.setLoudnessValue(findViewById(R.id.humidity_textview));
         //brokerConnection.setMaxPeopleCount(findViewById(R.id.maxPeopleCount));
         //brokerConnection.setMaxTemperatureValue(findViewById(R.id.maxTemperature));
         //brokerConnection.setMaxHumidityValue(findViewById(R.id.maxHumidity));
@@ -31,31 +35,28 @@ public class MainActivity extends AppCompatActivity {
         brokerConnection.connectToMqttBroker();
 
 
-        ImageButton goToConnect = (ImageButton) findViewById(R.id.connectButton);
-        goToConnect.setOnClickListener(new View.OnClickListener() {
-            /**
-             * goes to "connect" activity
-             * @return void
-             */
-            @Override
-            public void onClick(View view) {
-                Intent intentLoadConnectActivity = new Intent(MainActivity.this, ConnectActivity.class);
-                startActivity(intentLoadConnectActivity);
-            }
-        });
+        // bottom navigation bar selections
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
 
-        ImageButton goToSetting = (ImageButton) findViewById(R.id.settingsButton);
-        goToSetting.setOnClickListener(new View.OnClickListener() {
-            /**
-             * goes to "settings" activity
-             * @return void
-             */
-            @Override
-            public void onClick(View view) {
-                Intent intentLoadSettingsActivity = new Intent(MainActivity.this, SettingsActivity.class);
+        bottomNavigationView.setSelectedItemId(R.id.homeButton);
+        bottomNavigationView.setOnItemSelectedListener(this);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.homeButton:
+                return true;
+            case R.id.connectButton:
+                Intent intentLoadSettingsActivity = new Intent(MainActivity.this, ConnectActivity.class);
                 startActivity(intentLoadSettingsActivity);
+                return true;
+            case R.id.settingsButton:
+                Intent intentLoadConnectActivity = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intentLoadConnectActivity);
+                return true;
+        }
 
-            }
-        });
+        return false;
     }
 }
