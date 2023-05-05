@@ -1,8 +1,6 @@
-// Arduino libraries
-#include "Arduino.h"
-
 // Local header files
 #include "Buzzer.hpp"
+
 #include "Util.hpp"
 
 // General
@@ -16,7 +14,8 @@ bool isTurnedOn;
  */
 void buzzerInit() {
     uint32_t turnOffAt = millis();
-    pinMode(BUZZER_PIN, OUTPUT);
+    pinMode(WIO_BUZZER, OUTPUT);
+    // pinMode(BUZZER_PIN, OUTPUT);
     isTurnedOn = false;
 }
 
@@ -37,7 +36,8 @@ void buzzerAlert() {
  * @return void
  */
 void turnOnBuzzer() {
-    digitalWrite(BUZZER_PIN, HIGH);
+    digitalWrite(WIO_BUZZER, 150);
+    // digitalWrite(BUZZER_PIN, HIGH);
     isTurnedOn = true;
 }
 
@@ -47,6 +47,7 @@ void turnOnBuzzer() {
  * @return void
  */
 void turnOffBuzzer() {
-    digitalWrite(BUZZER_PIN, LOW);
+    digitalWrite(WIO_BUZZER, 0);
+    //digitalWrite(BUZZER_PIN, LOW);
     isTurnedOn = false;
 }
