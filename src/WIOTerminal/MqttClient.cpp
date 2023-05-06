@@ -30,7 +30,7 @@ const String CLIENT_ID = "WioTerminal";                      // Client ID used o
 const char *MAX_PEOPLE_TOPIC = "LocusImperium/APP/maxPeopleCount";
 const char *MAX_TEMPERATURE_TOPIC = "LocusImperium/APP/maxTemperature";
 const char *MAX_HUMIDITY_TOPIC = "LocusImperium/APP/maxHumidity";
-const char *MAX_LOUDNESS_TOPIC = "LocusImperium/APP/maxHumidity";
+const char *MAX_LOUDNESS_TOPIC = "LocusImperium/APP/maxLoudness";
 
 // To not allow attempts to often
 uint32_t whenLastAttemptedReconnect;
