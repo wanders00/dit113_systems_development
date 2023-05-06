@@ -1,12 +1,15 @@
 #ifndef BUZZER_HPP
 #define BUZZER_HPP
 
-#include "Arduino.h"
 #include "Util.hpp"
 
 void buzzerInit();
 
+void buzzerLoop();
+
 void buzzerAlert();
+
+void forceBuzzerAlert();
 
 void turnOnBuzzer();
 
