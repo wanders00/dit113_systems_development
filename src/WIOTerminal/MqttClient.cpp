@@ -12,21 +12,24 @@
 #include "Screen.hpp"
 #include "Buzzer.hpp"
 #include "MqttClient.hpp"
+#include "Settings.hpp"
 #include "Util.hpp"
 #include "WifiDetails.h"
-#include "Settings.hpp"
-#include "Buzzer.hpp"
 
 // Wi-Fi details
 const char *ssid = SSID;          // WiFi Name
 const char *password = PASSWORD;  // WiFi Password
 
 // MQTT details
-const char *BROKER_ADDRESS = my_IPv4;                    // Broker URL
-const char *SUBSCRIPTION_TOPIC = "LocusImperium/APP/#";  // Topic to subscribe to
-const String CLIENT_ID = "WioTerminal";                  // Client ID used on broker
+const char *BROKER_ADDRESS = my_IPv4;                        // Broker URL
+const char *SUBSCRIPTION_TOPIC_ALL = "LocusImperium/APP/#";  // Topic to subscribe to
+const String CLIENT_ID = "WioTerminal";                      // Client ID used on broker
 
+// Maximum values topics
 const char *MAX_PEOPLE_TOPIC = "LocusImperium/APP/maxPeopleCount";
+const char *MAX_TEMPERATURE_TOPIC = "LocusImperium/APP/maxTemperature";
+const char *MAX_HUMIDITY_TOPIC = "LocusImperium/APP/maxHumidity";
+const char *MAX_LOUDNESS_TOPIC = "LocusImperium/APP/maxLoudness";
 
 // To not allow attempts to often
 uint32_t whenLastAttemptedReconnect;
@@ -85,7 +88,7 @@ void setupMqtt() {
     while (!client.connected()) {
         // Attempt to connect
         if (client.connect(CLIENT_ID.c_str())) {
-            client.subscribe(SUBSCRIPTION_TOPIC);
+            client.subscribe(SUBSCRIPTION_TOPIC_ALL);
         }
         // To not attempt to often.
         timeoutTimer(1000);
@@ -120,7 +123,7 @@ boolean mqttLoop() {
 
 /**
  * Whenever a mqtt message is published to the broker that the client is subscribed to, callback() is called automatically.
- * @note So far will display the message on screen, need to be revisited in the future.
+ * When called, will check the topic of the message and set the corresponding value dependent on the topic.
  *
  * @param topic the mqtt topic of the message received.
  * @param payload the payload of the message received.
@@ -128,21 +131,42 @@ boolean mqttLoop() {
  * @return void
  */
 void callback(char *topic, byte *payload, unsigned int length) {
-    Serial.print("Message arrived [");
-    Serial.print(topic);
-    Serial.print("] ");
+    // Convert message from byte to char
     char buff_p[length];
-
     for (int i = 0; i < length; i++) {
         Serial.print((char)payload[i]);
         buff_p[i] = (char)payload[i];
     }
     Serial.println();
-    buff_p[length] = '\0';
-    String msg_p = String(buff_p);
+    buff_p[length] = '\0';  // Message as char
 
-    if(strcmp(topic, MAX_PEOPLE_TOPIC) == 0) { 
+    // Convert message from char to String
+    String msg_p = String(buff_p);  // Message as String
+
+    if (strcmp(topic, MAX_PEOPLE_TOPIC) == 0) {
         setMaxPeople(msg_p.toInt());
+    }
+
+    if (strcmp(topic, MAX_TEMPERATURE_TOPIC) == 0) {
+        setMaxTemperature(msg_p.toInt());
+    }
+
+    if (strcmp(topic, MAX_HUMIDITY_TOPIC) == 0) {
+        setMaxHumidity(msg_p.toInt());
+    }
+
+    if (strcmp(topic, MAX_LOUDNESS_TOPIC) == 0) {
+        if (strcmp(buff_p, "Quiet")) {
+            setMaxLoudness(1);
+        }
+
+        if (strcmp(buff_p, "Moderate")) {
+            setMaxLoudness(2);
+        }
+
+        if (strcmp(buff_p, "Loud")) {
+            setMaxLoudness(3);
+        }
     }
 }
 
@@ -175,7 +199,7 @@ void reconnect() {
         } else if (!client.connected()) {
             // Attempt to connect, will loop forever due to how the library works.
             if (client.connect(CLIENT_ID.c_str())) {
-                client.subscribe(SUBSCRIPTION_TOPIC);
+                client.subscribe(SUBSCRIPTION_TOPIC_ALL);
             }
         }
     }
