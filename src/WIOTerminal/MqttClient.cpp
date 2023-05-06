@@ -5,17 +5,17 @@
 *****************************************************************************/
 
 // Libraries
-#include <DHT.h>
 #include <PubSubClient.h>
 #include <rpcWiFi.h>
 
 // Local header files
+#include "Screen.hpp"
 #include "Buzzer.hpp"
 #include "MqttClient.hpp"
-#include "Screen.hpp"
 #include "Util.hpp"
 #include "WifiDetails.h"
 #include "Settings.hpp"
+#include "Buzzer.hpp"
 
 // Wi-Fi details
 const char *ssid = SSID;          // WiFi Name
@@ -48,9 +48,11 @@ PubSubClient client(wioClient);
 void mqttInit() {
     whenLastAttemptedReconnect = 0;
     Serial.begin(115200);
+    startUpImg("Connecting to WiFi...");
     setupWifi();
     client.setServer(BROKER_ADDRESS, 1883);  // Connect the MQTT Server
     client.setCallback(callback);
+    startUpImg("Connecting to broker...");
     setupMqtt();
     haveAlerted = false;
     wifiConnection = true;
@@ -64,16 +66,12 @@ void mqttInit() {
  * @return void
  */
 void setupWifi() {
-    displayMessage("Connecting to wifi..");
-
     WiFi.begin(ssid, password);  // Connecting WiFi
 
     while (WiFi.status() != WL_CONNECTED) {
         // To not attempt to often.
         timeoutTimer(1000);
     }
-
-    displayMessage("Connected!");
     timeoutTimer(100);
 }
 
@@ -84,8 +82,6 @@ void setupWifi() {
  * @return void
  */
 void setupMqtt() {
-    displayMessage("Connecting to MQTT..");
-
     while (!client.connected()) {
         // Attempt to connect
         if (client.connect(CLIENT_ID.c_str())) {
@@ -94,9 +90,6 @@ void setupMqtt() {
         // To not attempt to often.
         timeoutTimer(1000);
     }
-
-    displayMessage("Connected!");
-    timeoutTimer(100);
 }
 
 /**
@@ -151,9 +144,6 @@ void callback(char *topic, byte *payload, unsigned int length) {
     if(strcmp(topic, MAX_PEOPLE_TOPIC) == 0) { 
         setMaxPeople(msg_p.toInt());
     }
-    else {
-        displayMessage("Message: " + msg_p);
-    }
 }
 
 /**
@@ -186,7 +176,6 @@ void reconnect() {
             // Attempt to connect, will loop forever due to how the library works.
             if (client.connect(CLIENT_ID.c_str())) {
                 client.subscribe(SUBSCRIPTION_TOPIC);
-                displayMessage("Connected!");
             }
         }
     }
@@ -224,13 +213,7 @@ void publishMessage(const char *topic, String message) {
  */
 void playConnectionLostAlert() {
     haveAlerted = true;
-    String alertMessage = "Lost connection to ";
-    if (WiFi.status() != WL_CONNECTED) {
-        displayAlert(alertMessage + "WiFi.");
-    } else {
-        displayAlert(alertMessage + "broker.");
-    }
-    buzzerAlert();
+    forceBuzzerAlert();
 }
 
 /**
