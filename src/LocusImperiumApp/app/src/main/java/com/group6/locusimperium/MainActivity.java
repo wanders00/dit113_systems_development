@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         final Handler handler = new Handler();
-        final int delay = 1000; // delay between checks (in milliseconds)
+        final int delay = 300; // delay between checks in ms
 
         Runnable runnable = new Runnable() {
             /**

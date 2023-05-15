@@ -41,7 +41,7 @@ public class BrokerConnection extends AppCompatActivity {
     public static String MQTT_SERVER;
     public static final String CLIENT_ID = "LocusImperium-Application";
     public static final int QOS = 0;
-    private boolean isConnected = false;
+    private static boolean isConnected = false;
     private MqttClient mqttClient;
     Context context;
 
@@ -362,4 +362,9 @@ public class BrokerConnection extends AppCompatActivity {
      * @return boolean
      */
     public boolean getConnectionStatus() {return isConnected; }
+
+    /**
+     * Sets the connection status used ONLY for testing
+     */
+    public static void setConnectionStatus(boolean status){isConnected = status; } //made isConnection static
 }
