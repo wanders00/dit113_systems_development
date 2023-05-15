@@ -41,7 +41,7 @@ public class BrokerConnection extends AppCompatActivity {
     public static String MQTT_SERVER;
     public static final String CLIENT_ID = "LocusImperium-Application";
     public static final int QOS = 0;
-    private boolean isConnected = false;
+    private static boolean isConnected = false;
     private MqttClient mqttClient;
     Context context;
 
@@ -107,7 +107,6 @@ public class BrokerConnection extends AppCompatActivity {
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     final String failedConnection = "Failed to connect to MQTT broker";
                     Log.e(CLIENT_ID, failedConnection);
-                    Toast.makeText(context, failedConnection, Toast.LENGTH_SHORT).show();
                 }
             }, new MqttCallback() {
                 @Override
@@ -116,7 +115,6 @@ public class BrokerConnection extends AppCompatActivity {
 
                     final String connectionLost = "Connection to MQTT broker lost";
                     Log.w(CLIENT_ID, connectionLost);
-                    Toast.makeText(context, connectionLost, Toast.LENGTH_SHORT).show();
                 }
 
                 /**
@@ -251,7 +249,6 @@ public class BrokerConnection extends AppCompatActivity {
         if (!isConnected) {
             final String notConnected = "Not connected (yet)";
             Log.e(CLIENT_ID, notConnected);
-            Toast.makeText(context, notConnected, Toast.LENGTH_SHORT).show();
             return;
         }
         Log.i(CLIENT_ID, actionDescription);
@@ -360,4 +357,14 @@ public class BrokerConnection extends AppCompatActivity {
         return mqttClient;
     }
 
+    /**
+     * Gets the current connection status
+     * @return boolean
+     */
+    public boolean getConnectionStatus() {return isConnected; }
+
+    /**
+     * Sets the connection status used ONLY for testing
+     */
+    public static void setConnectionStatus(boolean status){isConnected = status; } //made isConnection static
 }

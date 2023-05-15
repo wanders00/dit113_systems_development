@@ -2,6 +2,7 @@ package com.group6.locusimperium;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
         // Broker connection
         brokerConnection.connectToMqttBroker();
 
+        //check if the app is connected, if not go to the lost connection screen
+        Intent connectionCheck = new Intent(MainActivity.this, NoConnectionActivity.class);
 
         ImageButton goToConnect = (ImageButton) findViewById(R.id.connectButton);
         goToConnect.setOnClickListener(new View.OnClickListener() {
@@ -57,5 +60,27 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        final Handler handler = new Handler();
+        final int delay = 300; // delay between checks in ms
+
+        Runnable runnable = new Runnable() {
+            /**
+             * checks if the app is connected to the broker, if not go to the lost connection screen
+             * @return void
+             */
+            @Override
+            public void run() {
+                if (!brokerConnection.getConnectionStatus()) {
+                    Intent intent = new Intent(MainActivity.this, NoConnectionActivity.class);
+                    startActivity(intent);
+                } else {
+                    handler.postDelayed(this, delay);
+                }
+            }
+        };
+
+        handler.postDelayed(runnable, delay);
+
     }
 }
