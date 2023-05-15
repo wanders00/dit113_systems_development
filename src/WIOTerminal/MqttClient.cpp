@@ -9,9 +9,9 @@
 #include <rpcWiFi.h>
 
 // Local header files
-#include "Screen.hpp"
 #include "Buzzer.hpp"
 #include "MqttClient.hpp"
+#include "Screen.hpp"
 #include "Settings.hpp"
 #include "Util.hpp"
 #include "WifiDetails.h"
@@ -24,12 +24,6 @@ const char *password = PASSWORD;  // WiFi Password
 const char *BROKER_ADDRESS = my_IPv4;                        // Broker URL
 const char *SUBSCRIPTION_TOPIC_ALL = "LocusImperium/APP/#";  // Topic to subscribe to
 const String CLIENT_ID = "WioTerminal";                      // Client ID used on broker
-
-// Maximum values topics
-const char *MAX_PEOPLE_TOPIC = "LocusImperium/APP/maxPeopleCount";
-const char *MAX_TEMPERATURE_TOPIC = "LocusImperium/APP/maxTemperature";
-const char *MAX_HUMIDITY_TOPIC = "LocusImperium/APP/maxHumidity";
-const char *MAX_LOUDNESS_TOPIC = "LocusImperium/APP/maxLoudness";
 
 // To not allow attempts to often
 uint32_t whenLastAttemptedReconnect;
@@ -106,7 +100,6 @@ boolean mqttLoop() {
         // Reconnect if not connected.
         reconnect();
         return false;
-
     } else {
         // Connection works.
         wifiConnection = true;
@@ -134,39 +127,35 @@ void callback(char *topic, byte *payload, unsigned int length) {
     // Convert message from byte to char
     char buff_p[length];
     for (int i = 0; i < length; i++) {
-        Serial.print((char)payload[i]);
         buff_p[i] = (char)payload[i];
     }
-    Serial.println();
     buff_p[length] = '\0';  // Message as char
 
     // Convert message from char to String
     String msg_p = String(buff_p);  // Message as String
 
-    if (strcmp(topic, MAX_PEOPLE_TOPIC) == 0) {
-        setMaxPeople(msg_p.toInt());
-    }
+    String topicArray[4];
+    int topicSize = sizeof(topicArray) / sizeof(String); // Size of array
 
-    if (strcmp(topic, MAX_TEMPERATURE_TOPIC) == 0) {
-        setMaxTemperature(msg_p.toInt());
-    }
-
-    if (strcmp(topic, MAX_HUMIDITY_TOPIC) == 0) {
-        setMaxHumidity(msg_p.toInt());
-    }
-
-    if (strcmp(topic, MAX_LOUDNESS_TOPIC) == 0) {
-        if (strcmp(buff_p, "Quiet")) {
-            setMaxLoudness(1);
+    for (int i = 0; i < topicSize; i++) {
+        if (msg_p.indexOf(",")) {
+            topicArray[i] = msg_p.substring(0, msg_p.indexOf(","));
+            msg_p = msg_p.substring(msg_p.indexOf(",") + 1);
+        } else {
+            topicArray[i] = msg_p;
         }
+    }
+    //The position of the different settings values are predefined in the array.
+    setMaxPeople(topicArray[0].toInt());
+    setMaxHumidity(topicArray[1].toInt());
+    setMaxTemperature(topicArray[2].toInt());
 
-        if (strcmp(buff_p, "Moderate")) {
-            setMaxLoudness(2);
-        }
-
-        if (strcmp(buff_p, "Loud")) {
-            setMaxLoudness(3);
-        }
+    if (topicArray[3].equals("Quiet")) {
+        setMaxLoudness(50);
+    } else if (topicArray[3].equals("Moderate")) {
+        setMaxLoudness(60);
+    } else if (topicArray[3].equals("Loud")) {
+        setMaxLoudness(70);
     }
 }
 
@@ -195,7 +184,6 @@ void reconnect() {
         if (WiFi.status() != WL_CONNECTED) {
             wifiConnection = false;
             WiFi.reconnect();
-
         } else if (!client.connected()) {
             // Attempt to connect, will loop forever due to how the library works.
             if (client.connect(CLIENT_ID.c_str())) {

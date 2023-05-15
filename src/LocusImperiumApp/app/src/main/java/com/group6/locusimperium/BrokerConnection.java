@@ -33,10 +33,9 @@ public class BrokerConnection extends AppCompatActivity {
     //Application subscription, will receive everything from this topic.
     public static final String SUPER_SUBSCRIPTION_TOPIC = "LocusImperium/WIO/";
     public static final String PUB_TOPIC = "LocusImperium/APP/";
-    public static final String MAX_LOUDNESS_PUB_TOPIC = ValueSubtopic.MAX_LOUDNESS.getSubTopicPublish();
-    public static final String MAX_PEOPLE_PUB_TOPIC = ValueSubtopic.MAX_PEOPLE_COUNT.getSubTopicPublish();
-    public static final String MAX_HUMIDITY_PUB_TOPIC = ValueSubtopic.MAX_HUMIDITY.getSubTopicPublish();
-    public static final String MAX_TEMPERATURE_PUB_TOPIC = ValueSubtopic.MAX_TEMPERATURE.getSubTopicPublish();
+
+    public static final String MAX_SETTINGS_PUB_TOPIC = PUB_TOPIC + "maxSettings";
+
     public static String LOCALHOST;
     public static String MQTT_SERVER;
     public static final String CLIENT_ID = "LocusImperium-Application";
@@ -46,17 +45,11 @@ public class BrokerConnection extends AppCompatActivity {
     Context context;
 
     //TextView elements
-    public TextView connectionMessage; // TODO: DELETE THIS
     public TextView peopleCount;
     public TextView temperatureValue;
     public TextView humidityValue;
     public TextView loudnessValue;
 
-    //TextView max-value elements
-    public TextView maxPeopleCount;
-    public TextView maxTemperatureValue;
-    public TextView maxHumidityValue;
-    public TextView maxLoudnessValue;
 
     public String getMaxPeople() {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
@@ -118,45 +111,15 @@ public class BrokerConnection extends AppCompatActivity {
                     Log.w(CLIENT_ID, connectionLost);
                     Toast.makeText(context, connectionLost, Toast.LENGTH_SHORT).show();
                 }
-
-                /**
-                 * @see ValueSubtopic
-                 * @return void
-                 */
                 @Override
                 public void messageArrived(String topic, MqttMessage message) {
                     String messageMQTT = message.toString();
-                    ValueSubtopic currentTopic = ValueSubtopic.whichSubTopic(topic);
-                    if(currentTopic != null) {
-                        switch(currentTopic) {
-                            case PEOPLE_COUNT:
-                                peopleCountArrived(messageMQTT);
-                                break;
-                            case TEMPERATURE_VALUE:
-                                temperatureValueArrived(messageMQTT);
-                                break;
-                            case HUMIDITY_VALUE:
-                                humidityValueArrived(messageMQTT);
-                                break;
-                            case LOUDNESS_VALUE:
-                                loudnessValueArrived(messageMQTT);
-                                break;
-                            case MAX_PEOPLE_COUNT:
-                                maxPeopleCount.setText(messageMQTT);
-                                break;
-                            case MAX_TEMPERATURE:
-                                maxTemperatureValue.setText(messageMQTT);
-                                break;
-                            case MAX_HUMIDITY:
-                                maxHumidityValue.setText(messageMQTT);
-                                break;
-                            case MAX_LOUDNESS:
-                                maxLoudnessValue.setText(messageMQTT);
-                                break;
-                        }
-                    } else {
-                        connectionMessage.setText(messageMQTT);
-                    }
+                    String[] topicArray = messageMQTT.split(",");
+                    //The position of the different settings values are predefined in the array.
+                    peopleCountArrived(topicArray[0]);
+                    humidityValueArrived(topicArray[1]);
+                    temperatureValueArrived(topicArray[2]);
+                    loudnessValueArrived(topicArray[3]);
                 }
 
                 @Override
@@ -221,13 +184,13 @@ public class BrokerConnection extends AppCompatActivity {
     public void loudnessValueArrived(String message) {
         int loudness = 0;
         if (getMaxLoudness().equals("Quiet")) {
-            loudness = 430;
+            loudness = 50;
         }
         else if (getMaxLoudness().equals("Moderate")) {
-            loudness = 500;
+            loudness = 60;
         }
         else if (getMaxLoudness().equals("Loud")) {
-            loudness = 600;
+            loudness = 70;
         }
 
         if (Integer.parseInt(message) < loudness) {
@@ -241,48 +204,23 @@ public class BrokerConnection extends AppCompatActivity {
     }
 
     /**
-     * Publishes a message to the mqtt broker. Topic defined in MainActivity.java
-     * @param message the payload of the message.
-     * @param actionDescription what caused the publish.
+     * Publishes the settings to the broker.
      * @return void
-     * @see MainActivity
      */
-    public void publishMqttMessage(String message, String actionDescription) {
-        if (!isConnected) {
-            final String notConnected = "Not connected (yet)";
-            Log.e(CLIENT_ID, notConnected);
-            Toast.makeText(context, notConnected, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        Log.i(CLIENT_ID, actionDescription);
-        mqttClient.publish(PUB_TOPIC, message, QOS, null);
-    }
     public void publishSettings() {
         if (!isConnected) {
             final String notConnected = "Not connected (yet)";
             Log.e(CLIENT_ID, notConnected);
             Toast.makeText(context, notConnected, Toast.LENGTH_SHORT).show();
-            return;
         } else {
             final String connected = "Connected";
             Log.e(CLIENT_ID, connected);
-            mqttClient.publish(MAX_PEOPLE_PUB_TOPIC, getMaxPeople(), QOS, null);
-            mqttClient.publish(MAX_HUMIDITY_PUB_TOPIC, getMaxHumidity(), QOS, null);
-            mqttClient.publish(MAX_TEMPERATURE_PUB_TOPIC, getMaxTemperature(), QOS, null);
-            mqttClient.publish(MAX_LOUDNESS_PUB_TOPIC, getMaxLoudness(), QOS, null);
+            mqttClient.publish(MAX_SETTINGS_PUB_TOPIC, getMaxPeople() + "," + getMaxHumidity() + "," + getMaxTemperature() + "," + getMaxLoudness(), QOS, null);
         }
     }
 
     // Methods to link TextView object to actual element on the screen on startup.
 
-    /**
-     * Updates the text of the connectionMessage TextView.
-     * @param textView the new text
-     * @return void
-     */
-    public void setConnectionMessage(TextView textView) {
-        this.connectionMessage = textView;
-    }
 
     /**
      * Updates the text of the peopleCount TextView.
@@ -318,39 +256,11 @@ public class BrokerConnection extends AppCompatActivity {
      */
     public void setLoudnessValue(TextView textView) { this.loudnessValue = textView; }
 
-    /**
-     * Updates the text of the maxPeopleCount TextView.
-     * @param textView the new text
-     * @return void
-     */
-    public void setMaxPeopleCount(TextView textView) {
-        this.maxPeopleCount = textView;
-    }
 
-    /**
-     * Updates the text of the maxTemperatureValue TextView.
-     * @param textView the new text
-     * @return void
-     */
-    public void setMaxTemperatureValue(TextView textView) {
-        this.maxTemperatureValue = textView;
-    }
 
-    /**
-     * Updates the text of the maxHumidityValue TextView.
-     * @param textView the new text
-     * @return void
-     */
-    public void setMaxHumidityValue(TextView textView) {
-        this.maxHumidityValue = textView;
-    }
 
-    /**
-     * Updates the text of the maxLoudnessValue TextView.
-     * @param textView the new text
-     * @return void
-     */
-    public void setMaxLoudnessValue(TextView textView) { this.maxLoudnessValue = textView; }
+
+
 
     /**
      * Gets the corresponding MqttClient object of the BrokerConnection object.
