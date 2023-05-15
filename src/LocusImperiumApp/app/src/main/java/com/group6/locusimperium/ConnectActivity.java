@@ -49,7 +49,7 @@ public class ConnectActivity extends AppCompatActivity implements NavigationBarV
         // bottom navigation bar selections
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
 
-        bottomNavigationView.setSelectedItemId(R.id.homeButton);
+        bottomNavigationView.setSelectedItemId(R.id.connectButton);
         bottomNavigationView.setOnItemSelectedListener(this);
     }
 

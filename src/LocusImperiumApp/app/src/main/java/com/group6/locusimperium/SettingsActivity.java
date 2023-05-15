@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -13,9 +14,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class SettingsActivity extends AppCompatActivity {
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
+
+public class SettingsActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
 
     public BrokerConnection brokerConnection;
     private String [] item = {"Quiet", "Moderate", "Loud"};
@@ -70,34 +75,6 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        ImageButton goToMain = (ImageButton) findViewById(R.id.mainButton);
-        goToMain.setOnClickListener(new View.OnClickListener() {
-            /**
-             * goes to "main" activity
-             * @return void
-             */
-            @Override
-            public void onClick(View view) {
-                Intent intentLoadMainActivity = new Intent(SettingsActivity.this, MainActivity.class);
-                startActivity(intentLoadMainActivity);
-
-            }
-        });
-
-        ImageButton goToConnect = (ImageButton) findViewById(R.id.connectButton);
-
-        goToConnect.setOnClickListener(new View.OnClickListener() {
-            /**
-             * goes to "connect" activity
-             * @return void
-             */
-            @Override
-            public void onClick(View view) {
-                Intent intentLoadConnectActivity = new Intent(SettingsActivity.this, ConnectActivity.class);
-                startActivity(intentLoadConnectActivity);
-            }
-        });
-
         saveButton.setOnClickListener(new View.OnClickListener() {
             /**
              * saves data when save button is clicked
@@ -113,8 +90,29 @@ public class SettingsActivity extends AppCompatActivity {
         adapterItems = new ArrayAdapter<String>(this, R.layout.dropdown_item, item);
         autoCompleteTextView.setAdapter(adapterItems);
 
+        // bottom navigation bar selections
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
 
+        bottomNavigationView.setSelectedItemId(R.id.settingsButton);
+        bottomNavigationView.setOnItemSelectedListener(this);
     }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.homeButton:
+                Intent intentLoadMainActivity = new Intent(SettingsActivity.this, MainActivity.class);
+                startActivity(intentLoadMainActivity);
+            case R.id.connectButton:
+                Intent intentLoadConnectActivity = new Intent(SettingsActivity.this, ConnectActivity.class);
+                startActivity(intentLoadConnectActivity);
+            case R.id.settingsButton:
+                return true;
+        }
+
+        return false;
+    }
+
     /**
      * saves data to shared preferences and publishing the settings to the broker.
      * @return void
