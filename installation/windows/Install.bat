@@ -2,10 +2,6 @@
 
 :: ---- WIO ----
 
-:: Config init
-arduino-cli config init
-arduino-cli config set library.enable_unsafe_install true
-
 :: Installing core
 arduino-cli core install Seeeduino:samd@1.8.3
 
@@ -14,7 +10,6 @@ arduino-cli lib install "Seeed Arduino rpcWiFi"
 arduino-cli lib install "PubSubClient"
 arduino-cli lib install "Grove Ultrasonic Ranger"
 arduino-cli lib install "Grove Temperature And Humidity Sensor"
-arduino-cli lib install --git-url https://github.com/Seeed-Studio/Seeed_Arduino_rpcWiFiManager
 
 :: Dependecies of "Seeed Arduino rpcWiFi" so will be installed by that.
 :: arduino-cli lib install "Seeed Arduino SFUD"
