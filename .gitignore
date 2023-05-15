@@ -87,7 +87,7 @@ output.json
 
 # IntelliJ
 *.iml
-src/LocusImperiumApp/.idea/
+.idea/
 misc.xml
 deploymentTargetDropDown.xml
 render.experimental.xml
