@@ -44,13 +44,15 @@
             android:id="@+id/textField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="IP Address of the Imperium Device">
+            android:hint="IP Address of the Imperium Device"
+            >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:id="@+id/inputIPAddress"
+                android:digits="0123456789."
                 />
 
         </com.google.android.material.textfield.TextInputLayout>

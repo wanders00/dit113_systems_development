@@ -18,6 +18,8 @@ import com.google.android.material.navigation.NavigationBarView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import maes.tech.intentanim.CustomIntent;
+
 public class ConnectActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
     Context context;
     private Button saveIPButton;
@@ -59,11 +61,14 @@ public class ConnectActivity extends AppCompatActivity implements NavigationBarV
             case R.id.homeButton:
                 Intent intentLoadMainActivity = new Intent(ConnectActivity.this, MainActivity.class);
                 startActivity(intentLoadMainActivity);
+                CustomIntent.customType(ConnectActivity.this, "fadein-to-fadeout");
+                return true;
             case R.id.connectButton:
                 return true;
             case R.id.settingsButton:
                 Intent intentLoadSettingsActivity = new Intent(ConnectActivity.this, SettingsActivity.class);
                 startActivity(intentLoadSettingsActivity);
+                CustomIntent.customType(ConnectActivity.this, "fadein-to-fadeout");
                 return true;
         }
 

@@ -51,6 +51,9 @@ dependencies {
     // dependency for Material UI
     implementation 'com.google.android.material:material:1.4.0'
 
+    // dependency for animations
+    implementation 'com.github.hajiyevelnur92:intentanimation:1.0'
+
 
 
     // Espresso

@@ -20,6 +20,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+import maes.tech.intentanim.CustomIntent;
+
 public class SettingsActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
 
     public BrokerConnection brokerConnection;
@@ -100,12 +102,16 @@ public class SettingsActivity extends AppCompatActivity implements NavigationBar
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()) {
-            case R.id.homeButton:
-                Intent intentLoadMainActivity = new Intent(SettingsActivity.this, MainActivity.class);
-                startActivity(intentLoadMainActivity);
             case R.id.connectButton:
                 Intent intentLoadConnectActivity = new Intent(SettingsActivity.this, ConnectActivity.class);
                 startActivity(intentLoadConnectActivity);
+                CustomIntent.customType(SettingsActivity.this, "fadein-to-fadeout");
+                return true;
+            case R.id.homeButton:
+                Intent intentLoadMainActivity = new Intent(SettingsActivity.this, MainActivity.class);
+                startActivity(intentLoadMainActivity);
+                CustomIntent.customType(SettingsActivity.this, "fadein-to-fadeout");
+                return true;
             case R.id.settingsButton:
                 return true;
         }

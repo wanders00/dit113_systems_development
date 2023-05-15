@@ -63,6 +63,24 @@
                 android:orientation="horizontal"
                 android:gravity="center">
 
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="-"
+                    android:layout_margin="5dp"
+                    android:textColor="@color/white"
+                    android:textSize="23sp"
+                    android:background="@drawable/button_shape"
+                    android:backgroundTint="@color/colorPrimaryDark"
+                    />
+                
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
@@ -79,7 +97,18 @@
                     android:padding="10dp"
                     android:gravity="center"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
+                </LinearLayout>
 
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="+"
+                    android:layout_margin="5dp"
+                    android:textColor="@color/white"
+                    android:textSize="23sp"
+                    android:background="@drawable/button_shape"
+                    android:backgroundTint="@color/colorPrimaryDark"
+                    />
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
@@ -151,13 +180,6 @@
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
-
-        <ImageView
-            android:layout_marginTop="120dp"
-            android:layout_width="match_parent"
-            android:layout_height="110dp"
-            android:alpha="0.4"
-            android:src="@drawable/group_6_low_resolution_logo_white_on_transparent_background__1_" />
 
     </LinearLayout>
 

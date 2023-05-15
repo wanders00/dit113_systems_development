@@ -11,6 +11,8 @@ import com.google.android.material.navigation.NavigationBarView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import maes.tech.intentanim.CustomIntent;
+
 public class MainActivity extends AppCompatActivity implements  NavigationBarView.OnItemSelectedListener {
     public BrokerConnection brokerConnection;
 
@@ -50,10 +52,12 @@ public class MainActivity extends AppCompatActivity implements  NavigationBarVie
             case R.id.connectButton:
                 Intent intentLoadSettingsActivity = new Intent(MainActivity.this, ConnectActivity.class);
                 startActivity(intentLoadSettingsActivity);
+                CustomIntent.customType(MainActivity.this, "fadein-to-fadeout");
                 return true;
             case R.id.settingsButton:
                 Intent intentLoadConnectActivity = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intentLoadConnectActivity);
+                CustomIntent.customType(MainActivity.this, "fadein-to-fadeout");
                 return true;
         }
 
