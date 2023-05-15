@@ -14,6 +14,7 @@
 #include "Ultrasonic.hpp"
 #include "Util.hpp"
 #include "WifiDetails.h"
+#include "Buttons.hpp"
 
 // Ultrasonic
 int countMain = 0;
@@ -43,6 +44,8 @@ void setup() {
 
     buzzerInit();
 
+    buttonsInit();
+
     lastTimePublished = 0;
 
     lastTimeScreenUpdated = 0;
@@ -55,7 +58,7 @@ void setup() {
 
 void loop() {
     setCurrentTime(millis());
-
+    
     buzzerLoop();
 
     UltrasonicData data;
@@ -65,6 +68,16 @@ void loop() {
     setTemperature(measureTemperature());
     setHumidity(measureHumidity());
     setLoudness(loudnessMapped());
+
+    if(digitalRead(WIO_KEY_A) == LOW) {
+        setPeople(getPeople() + 1);
+    }
+
+    if(digitalRead(WIO_KEY_B) == LOW) {
+        if(getPeople() > 0){
+            setPeople(getPeople() - 1);
+        }else{setPeople(0); }
+    }
 
     if (getCurrentTime() - lastTimeScreenUpdated > screenUpdateFrequency) {
         updateScreen();
