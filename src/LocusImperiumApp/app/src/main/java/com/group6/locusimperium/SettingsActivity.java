@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -97,6 +98,29 @@ public class SettingsActivity extends AppCompatActivity implements NavigationBar
 
         bottomNavigationView.setSelectedItemId(R.id.settingsButton);
         bottomNavigationView.setOnItemSelectedListener(this);
+
+
+        BrokerConnection brokerConnection = new BrokerConnection(getApplicationContext());
+        final Handler handler = new Handler();
+        final int delay = 300; // delay between checks in ms
+
+        Runnable runnable = new Runnable() {
+            /**
+             * checks if the app is connected, if not go to the lost connection screen
+             * @return void
+             */
+            @Override
+            public void run() {
+                if (!brokerConnection.getConnectionStatus()) {
+                    Intent intent = new Intent(SettingsActivity.this, NoConnectionActivity.class);
+                    startActivity(intent);
+                } else {
+                    handler.postDelayed(this, delay);
+                }
+            }
+        };
+
+        handler.postDelayed(runnable, delay);
     }
 
     @Override
