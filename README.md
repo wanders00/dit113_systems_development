@@ -9,8 +9,6 @@
 
 </div>
 
-<br>
-
 # Table of Contents 
 
 - [Table of Contents](#table-of-contents)
@@ -117,8 +115,6 @@
 "Wireless LAN adapter Wi-Fi: IPv4 Address"
 
 </details>
-
-<br>
 
 # Developed by
 
