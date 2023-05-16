@@ -2,14 +2,18 @@
 #define MQTTCLIENT_HPP
 
 // Libraries
-#include <DHT.h>
 #include <PubSubClient.h>
 #include <rpcWiFi.h>
 
 // Local header files
 #include "Screen.hpp"
+#include "Buzzer.hpp"
 #include "Util.hpp"
 #include "WifiDetails.h"
+#include "Settings.hpp"
+#include "Buzzer.hpp"
+
+void mqttInit();
 
 void mqttInit();
 

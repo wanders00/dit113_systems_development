@@ -1,19 +1,18 @@
 /****************************************************************************
   Code based on "MQTT Example for SeeedStudio Wio Terminal".
-  Code based on "MQTT Example for SeeedStudio Wio Terminal".
   Author: Salman Faris
   Source: https://www.hackster.io/Salmanfarisvp/mqtt-on-wio-terminal-4ea8f8
 *****************************************************************************/
 
 // Libraries
-#include <DHT.h>
 #include <PubSubClient.h>
 #include <rpcWiFi.h>
 
 // Local header files
+#include "Screen.hpp"
 #include "Buzzer.hpp"
 #include "MqttClient.hpp"
-#include "Screen.hpp"
+#include "Settings.hpp"
 #include "Util.hpp"
 #include "WifiDetails.h"
 #include "Settings.hpp"
@@ -22,19 +21,29 @@
 const char *ssid = SSID;          // WiFi Name
 const char *password = PASSWORD;  // WiFi Password
 
-// MQTT details
-const char *BROKER_ADDRESS = my_IPv4;                    // Broker URL
-const char *SUBSCRIPTION_TOPIC = "LocusImperium/APP/#";  // Topic to subscribe to
-const String CLIENT_ID = "WioTerminal";                  // Client ID used on broker
+// Wi-Fi details
+const char *ssid = SSID;          // WiFi Name
+const char *password = PASSWORD;  // WiFi Password
 
+// MQTT details
+const char *BROKER_ADDRESS = my_IPv4;                        // Broker URL
+const char *SUBSCRIPTION_TOPIC_ALL = "LocusImperium/APP/#";  // Topic to subscribe to
+const String CLIENT_ID = "WioTerminal";                      // Client ID used on broker
+
+// Maximum values topics
 const char *MAX_PEOPLE_TOPIC = "LocusImperium/APP/maxPeopleCount";
+const char *MAX_TEMPERATURE_TOPIC = "LocusImperium/APP/maxTemperature";
+const char *MAX_HUMIDITY_TOPIC = "LocusImperium/APP/maxHumidity";
+const char *MAX_LOUDNESS_TOPIC = "LocusImperium/APP/maxLoudness";
 
 // To not allow attempts to often
 uint32_t whenLastAttemptedReconnect;
 const uint32_t attemptFrequency = 5000;  // Frequency in milliseconds
 
-const char *SUBSCRIPTION_TOPIC = "LocusImperium/APP/#";
-const char *MAX_PEOPLE_TOPIC = "LocusImperium/APP/maxPeopleCount";
+// For alert
+bool haveAlerted;
+bool wifiConnection;
+bool mqttConnection;
 
 WiFiClient wioClient;
 PubSubClient client(wioClient);
@@ -47,9 +56,11 @@ PubSubClient client(wioClient);
 void mqttInit() {
     whenLastAttemptedReconnect = 0;
     Serial.begin(115200);
+    startUpImg("Connecting to WiFi...");
     setupWifi();
     client.setServer(BROKER_ADDRESS, 1883);  // Connect the MQTT Server
     client.setCallback(callback);
+    startUpImg("Connecting to broker...");
     setupMqtt();
     haveAlerted = false;
     wifiConnection = true;
@@ -63,16 +74,12 @@ void mqttInit() {
  * @return void
  */
 void setupWifi() {
-    displayMessage("Connecting to wifi..");
-
     WiFi.begin(ssid, password);  // Connecting WiFi
 
     while (WiFi.status() != WL_CONNECTED) {
         // To not attempt to often.
         timeoutTimer(1000);
     }
-
-    displayMessage("Connected!");
     timeoutTimer(100);
 }
 
@@ -83,19 +90,14 @@ void setupWifi() {
  * @return void
  */
 void setupMqtt() {
-    displayMessage("Connecting to MQTT..");
-
     while (!client.connected()) {
         // Attempt to connect
         if (client.connect(CLIENT_ID.c_str())) {
-            client.subscribe(SUBSCRIPTION_TOPIC);
+            client.subscribe(SUBSCRIPTION_TOPIC_ALL);
         }
         // To not attempt to often.
         timeoutTimer(1000);
     }
-
-    displayMessage("Connected!");
-    timeoutTimer(100);
 }
 
 /**
@@ -126,7 +128,7 @@ boolean mqttLoop() {
 
 /**
  * Whenever a mqtt message is published to the broker that the client is subscribed to, callback() is called automatically.
- * @note So far will display the message on screen, need to be revisited in the future.
+ * When called, will check the topic of the message and set the corresponding value dependent on the topic.
  *
  * @param topic the mqtt topic of the message received.
  * @param payload the payload of the message received.
@@ -134,24 +136,42 @@ boolean mqttLoop() {
  * @return void
  */
 void callback(char *topic, byte *payload, unsigned int length) {
-    Serial.print("Message arrived [");
-    Serial.print(topic);
-    Serial.print("] ");
+    // Convert message from byte to char
     char buff_p[length];
-
     for (int i = 0; i < length; i++) {
         Serial.print((char)payload[i]);
         buff_p[i] = (char)payload[i];
     }
     Serial.println();
-    buff_p[length] = '\0';
-    String msg_p = String(buff_p);
+    buff_p[length] = '\0';  // Message as char
 
-    if(strcmp(topic, MAX_PEOPLE_TOPIC) == 0) { 
+    // Convert message from char to String
+    String msg_p = String(buff_p);  // Message as String
+
+    if (strcmp(topic, MAX_PEOPLE_TOPIC) == 0) {
         setMaxPeople(msg_p.toInt());
     }
-    else {
-        displayMessage("Message: " + msg_p);
+
+    if (strcmp(topic, MAX_TEMPERATURE_TOPIC) == 0) {
+        setMaxTemperature(msg_p.toInt());
+    }
+
+    if (strcmp(topic, MAX_HUMIDITY_TOPIC) == 0) {
+        setMaxHumidity(msg_p.toInt());
+    }
+
+    if (strcmp(topic, MAX_LOUDNESS_TOPIC) == 0) {
+        if (strcmp(buff_p, "Quiet")) {
+            setMaxLoudness(1);
+        }
+
+        if (strcmp(buff_p, "Moderate")) {
+            setMaxLoudness(2);
+        }
+
+        if (strcmp(buff_p, "Loud")) {
+            setMaxLoudness(3);
+        }
     }
 }
 
@@ -163,24 +183,28 @@ void callback(char *topic, byte *payload, unsigned int length) {
  * @return void
  */
 void reconnect() {
-    // If WiFi is not connected, reconnect to it first instead.
-    if (WiFi.status() != WL_CONNECTED) {
-        displayMessage("Reconnecting to Wi-Fi");
-        WiFi.reconnect();
-        delay(5000);
-    }
-    else {
-        // Loop until we're reconnected to the broker
-        while (!client.connected()) {
-            displayMessage("Connecting to mqtt broker..");
-            Serial.print("Attempting MQTT connection..");
-            delay(100);
-            // Create a client ID for the broker
-            String clientId = "WioTerminal-";
-            // Attempt to connect
-            if (client.connect(clientId.c_str())) {
-                client.subscribe(SUBSCRIPTION_TOPIC);
-                displayMessage("Connected!");
+    // If reconnect() gets called, mqtt connection is lost-
+    mqttConnection = false;
+
+    // Restricts reconnecting attempts to only every "attemptFrequency"
+    if (getCurrentTime() - whenLastAttemptedReconnect > attemptFrequency) {
+        // Play alert if not already played
+        if (!haveAlerted) {
+            playConnectionLostAlert();
+        }
+
+        // To not allow too frequent reconnect attempts.
+        whenLastAttemptedReconnect = getCurrentTime();
+
+        // If WiFi is not connected, reconnect to it.
+        if (WiFi.status() != WL_CONNECTED) {
+            wifiConnection = false;
+            WiFi.reconnect();
+
+        } else if (!client.connected()) {
+            // Attempt to connect, will loop forever due to how the library works.
+            if (client.connect(CLIENT_ID.c_str())) {
+                client.subscribe(SUBSCRIPTION_TOPIC_ALL);
             }
         }
     }
@@ -218,13 +242,7 @@ void publishMessage(const char *topic, String message) {
  */
 void playConnectionLostAlert() {
     haveAlerted = true;
-    String alertMessage = "Lost connection to ";
-    if (WiFi.status() != WL_CONNECTED) {
-        displayAlert(alertMessage + "WiFi.");
-    } else {
-        displayAlert(alertMessage + "broker.");
-    }
-    buzzerAlert();
+    forceBuzzerAlert();
 }
 
 /**

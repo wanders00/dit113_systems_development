@@ -103,9 +103,18 @@ assembleDebug:
     paths:
       - app/build/outputs/
 
+# Create Test Coverage Report
+reportCoverage:
+  allow_failure: true
+  interruptible: true
+  stage: build
+  script:
+    - ./gradlew createDebugCoverageReport
+
 # Run all tests, if any fails, interrupt the pipeline(fail it)
 debugTests:
   interruptible: true
   stage: test
   script:
-    - ./gradlew -Pci --console=plain :app:testDebug
+    - ./gradlew -Pci --console=plain :app:testDebugUnitTest
+

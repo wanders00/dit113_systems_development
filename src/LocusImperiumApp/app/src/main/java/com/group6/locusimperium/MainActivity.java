@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements  NavigationBarVie
         // Broker connection
         brokerConnection.connectToMqttBroker();
 
+        //check if the app is connected, if not go to the lost connection screen
+        Intent connectionCheck = new Intent(MainActivity.this, NoConnectionActivity.class);
 
         // bottom navigation bar selections
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
@@ -61,6 +63,29 @@ public class MainActivity extends AppCompatActivity implements  NavigationBarVie
                 return true;
         }
 
-        return false;
+            }
+        });
+
+        final Handler handler = new Handler();
+        final int delay = 300; // delay between checks in ms
+
+        Runnable runnable = new Runnable() {
+            /**
+             * checks if the app is connected to the broker, if not go to the lost connection screen
+             * @return void
+             */
+            @Override
+            public void run() {
+                if (!brokerConnection.getConnectionStatus()) {
+                    Intent intent = new Intent(MainActivity.this, NoConnectionActivity.class);
+                    startActivity(intent);
+                } else {
+                    handler.postDelayed(this, delay);
+                }
+            }
+        };
+
+        handler.postDelayed(runnable, delay);
+
     }
 }

@@ -1,18 +1,18 @@
-// Fonts taken from https://github.com/lakshanthad/Wio_Terminal_Classroom_Arduino/blob/main/Classroom%203/Free_Fonts_Example/Free_Fonts.h
-#include "fonts/Free_Fonts.h"
-#include "Settings.hpp"
-
 // Arduino libraries
-#include "TFT_eSPI.h"
+#include <TFT_eSPI.h>
 
 // Local header files
 #include "MqttClient.hpp"
 #include "Screen.hpp"
 #include "Settings.hpp"
+#include "Buzzer.hpp"
 
-const uint32_t BACKGROUND_COLOR = TFT_WHITE;
-const uint32_t TEXT_COLOR = TFT_BLUE;
-const GFXfont *TEXT_FONT_STYLE = FMO12;
+const int SCREEN_WIDTH = 320;
+const int SCREEN_HEIGHT = 240;
+
+bool room_full_iteration;
+uint32_t room_full_iteration_time;
+const uint32_t room_full_iteration_frequency = 2000;
 
 TFT_eSPI tft;
 
@@ -22,82 +22,130 @@ TFT_eSPI tft;
  * @return void
  */
 void screenInit() {
-    // Screen setup
+    room_full_iteration = true;
+    room_full_iteration_time = 0;
     tft.begin();
     tft.setRotation(3);
     tft.setCursor(0, 0);
-    tft.fillScreen(BACKGROUND_COLOR);
-    tft.setTextColor(TEXT_COLOR);
-    tft.setFreeFont(TEXT_FONT_STYLE);
-    tft.drawString("SCREEN INIT", 50, 50);
+    startUpImg();
 }
 
 /**
  * Screen loop.
  *
- * @note So far only shows wifi/mqtt connection
  * @return void
  */
 void updateScreen() {
-    flashScreen();
-    tft.drawString("Wifi status: " + String(getWifiConnection()), 0, 0);
-    tft.drawString("mqtt status: " + String(getMqttConnection()), 0, 30);
-}
+    tft.fillScreen(TFT_WHITE);
+    tft.drawFastHLine(0, 50, 320, TFT_BLACK);
+    tft.drawFastVLine(70, 0, 50, TFT_BLACK);
+    tft.drawFastVLine(140, 0, 50, TFT_BLACK);
 
-/**
- * Display the number of people.
- *
- * @param count Number of people counted.
- * @return void
- */
-void displayPeopleCount(int count) {
-    if (count >= getMaxPeople()) {
-        tft.setTextColor(TFT_WHITE);
-        tft.fillScreen(TFT_RED);
-        tft.setFreeFont(&FreeSansBoldOblique24pt7b);
-        tft.drawString("ROOM IS", 50, 70);
-        tft.drawString("FULL", 50, 120);
+    tft.setTextSize(2);
+    if (getWifiConnection()) {
+        tft.setTextColor(TFT_GREEN);
     } else {
-        flashScreen();
         tft.setTextColor(TFT_RED);
-        tft.drawString(String(count), 50, 70);
-        tft.drawString("People", 50, 120);
+        buzzerAlert();
     }
-}
+    tft.drawString("WiFi", (70 - tft.textWidth("WiFi")) / 2, 15);
 
-/**
- * Display the number of people with debug information (measurements from the sensors).
- *
- * @param count Number of people counted.
- * @param dis1 Distance measured by the first sensor.
- * @param dis2 Distance measured by the second sensor.
- * @return void
- */
-void displayPeopleCountDebug(int count, int dis1, int dis2) {
-    
-    if (count >= getMaxPeople()) {
-        tft.setTextColor(TFT_WHITE);
-        tft.fillScreen(TFT_RED);
-        tft.setFreeFont(&FreeSansBoldOblique24pt7b);
-        tft.drawString("ROOM IS", 50, 70);
-        tft.drawString("FULL", 50, 120);
+    if (getMqttConnection()) {
+        tft.setTextColor(TFT_GREEN);
     } else {
-        tft.fillScreen(TFT_WHITE); //background
-        tft.drawString(String(count), 50, 50);
-        tft.drawString(String(dis1), 50, 100);
-        tft.drawString(String(dis2), 50, 160);
+        tft.setTextColor(TFT_RED);
+        buzzerAlert();
     }
+    tft.drawString("MQTT", (70 - tft.textWidth("MQTT")) / 2 + 70, 15);
+
+    tft.setTextColor(TFT_BLACK);
+    String capacityDisplay = "Capacity:" + String(getMaxPeople());
+    tft.drawString(capacityDisplay, (180 - tft.textWidth(capacityDisplay)) / 2 + 140, 15);
+
+    if (getCurrentTime() - room_full_iteration_time > room_full_iteration_frequency) {
+        room_full_iteration_time = getCurrentTime();
+        room_full_iteration = !room_full_iteration;
+    }
+
+    bool roomTextDrawn = false;
+    tft.setTextColor(TFT_BLACK);
+    tft.setTextSize(4);
+    if (getPeople() >= getMaxPeople()) {
+        tft.fillRect(0, 50, 320, 140, TFT_RED);
+        if (room_full_iteration) {
+            tft.drawString("ROOM IS FULL", (320 - tft.textWidth("ROOM IS FULL")) / 2, 100);
+            roomTextDrawn = true;
+        }
+    }
+
+    if (!roomTextDrawn) {
+        tft.setTextSize(7);
+        tft.drawString(String(getPeople()), (320 - tft.textWidth(String(getPeople()))) / 2 - 40, 100);
+        tft.setTextSize(3);
+        tft.drawString("People", 200, 130);
+    }
+
+    tft.setTextSize(2);
+    tft.drawFastHLine(0, 190, 320, TFT_BLACK);
+    tft.drawFastVLine(106, 190, 50, TFT_BLACK);
+    tft.drawFastVLine(212, 190, 50, TFT_BLACK);
+
+    if (getTemperature() < getMaxTemperature()) {
+        tft.setTextColor(TFT_BLACK);
+    } else {
+        tft.setTextColor(TFT_RED);
+        buzzerAlert();
+    }
+    String temperatureDisplay = "T:" + String(getTemperature()) + (String)(char(248)) + "C";
+    tft.drawString(temperatureDisplay, (106 - tft.textWidth(temperatureDisplay)) / 2, 50 + 140 + 15);
+    // char(248) is the closest to the degree symbol
+
+    if (getHumidity() < getMaxHumidity()) {
+        tft.setTextColor(TFT_BLACK);
+    } else {
+        tft.setTextColor(TFT_RED);
+        buzzerAlert();
+    }
+    String humidityDisplay = "H:" + String(getHumidity()) + "%";
+    tft.drawString(humidityDisplay, (106 - tft.textWidth(humidityDisplay)) / 2 + 106, 50 + 140 + 15);
+
+    if (getLoudness() < getMaxLoudness()) {
+        tft.setTextColor(TFT_BLACK);
+    } else {
+        tft.setTextColor(TFT_RED);
+        buzzerAlert();
+    }
+    String loudnessDisplay = "L:" + String(getLoudness()) + "db";
+    tft.drawString(loudnessDisplay, (106 - tft.textWidth(loudnessDisplay)) / 2 + 212, 50 + 140 + 15);
 }
 
 /**
- * Displays the message argument on the screen.
+ * Startup screen (without display message)
  *
- * @param message The message to be displayed.
  * @return void
  */
-void displayMessage(String message) {
-    flashScreen();
-    tft.drawString(message, 0, 0);
+void startUpImg() {
+    startUpImg("");
+}
+
+/**
+ * Startup screen
+ *
+ * @return void
+ */
+void startUpImg(String displayMessage) {
+    tft.fillScreen(TFT_WHITE);
+    tft.fillRect(0, 50, 320, 140, TFT_PURPLE);
+    tft.setTextColor(TFT_WHITE);
+    tft.setTextSize(5);
+    tft.drawString("Locus", (320 - tft.textWidth("Locus")) / 2, 80);
+    tft.drawString("Imperium", (320 - tft.textWidth("Imperium")) / 2, 120);
+    tft.setTextColor(TFT_BLACK);
+    tft.setTextSize(3);
+    tft.drawString("By: Group 6", (320 - tft.textWidth("By: Group 6")) / 2, 200);
+    tft.setTextSize(2);
+    tft.setTextColor(TFT_BLACK);
+    tft.drawString(displayMessage, (320 - tft.textWidth(displayMessage)) / 2, 15);
 }
 
 /**
@@ -106,18 +154,8 @@ void displayMessage(String message) {
  * @param alertMessage The message to be displayed.
  * @return void
  */
-void displayAlert(String alertMessage) {
-    flashScreen();
-    tft.fillScreen(TFT_RED);
-    tft.drawString(alertMessage, 0, 0);
-}
-
-/**
- * Removes all content on the screen.
- *
- * @return void
- * @note calls tft.fillScreen(TFT_WHITE)
- */
-void flashScreen() {
-    tft.fillScreen(TFT_WHITE);
+void displayAlert() {
+    // flashScreen();
+    // tft.fillScreen(TFT_RED);
+    // tft.drawString(alertMessage, 0, 0);
 }
