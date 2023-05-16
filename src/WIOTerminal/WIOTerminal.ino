@@ -17,6 +17,7 @@
 #include "WifiDetails.h"
 #include "Settings.hpp"
 #include "Buttons.hpp"
+#include "Buttons.hpp"
 
 // Ultrasonic
 int countMain = 0;
@@ -48,6 +49,8 @@ void setup() {
 
     buttonsInit();
 
+    buttonsInit();
+
     lastTimePublished = 0;
     lastTimeScreenUpdated = 0;
     setMaxPeople(10);
@@ -58,7 +61,7 @@ void setup() {
 
 void loop() {
     setCurrentTime(millis());
-
+    
     buzzerLoop();
 
     UltrasonicData data;
