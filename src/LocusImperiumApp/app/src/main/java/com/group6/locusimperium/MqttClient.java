@@ -7,10 +7,12 @@
 package com.group6.locusimperium;
 
 import android.content.Context;
+
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+
 import info.mqtt.android.service.*;
 
 public class MqttClient {
@@ -23,9 +25,9 @@ public class MqttClient {
 
     /**
      * Connects to a mqtt broker.
+     *
      * @param username what the broker will now the device as
      * @param password if a password is desired, otherwise set as empty ("")
-     * @return void
      */
     public void connect(String username, String password, IMqttActionListener connectionCallback, MqttCallback clientCallback) {
 
@@ -42,10 +44,11 @@ public class MqttClient {
             e.printStackTrace();
         }
     }
+
     /**
      * Disconnects from the broker.
+     *
      * @note disconnectionCallback: set as null
-     * @return void
      */
     public void disconnect(IMqttActionListener disconnectionCallback) {
         try {
@@ -57,10 +60,10 @@ public class MqttClient {
 
     /**
      * Subscribes to a specific topic from the mqtt broker.
+     *
      * @param topic topic of the message
-     * @param qos which quality of service to use
+     * @param qos   which quality of service to use
      * @note subscriptionCallback: set as null
-     * @return void
      */
     public void subscribe(String topic, int qos, IMqttActionListener subscriptionCallback) {
         try {
@@ -72,9 +75,9 @@ public class MqttClient {
 
     /**
      * Unsubscribes from a certain topic from the mqtt broker.
+     *
      * @param topic topic of the message
      * @note unsubscriptionCallback: set as null
-     * @return void
      */
     public void unsubscribe(String topic, IMqttActionListener unsubscriptionCallback) {
         try {
@@ -86,11 +89,11 @@ public class MqttClient {
 
     /**
      * Publishes a message to the mqtt broker.
-     * @param topic topic of the message
+     *
+     * @param topic   topic of the message
      * @param message payload of the message
-     * @param qos which mqtt quality of service to use
+     * @param qos     which mqtt quality of service to use
      * @note publishCallback: set as null
-     * @return void
      */
     public void publish(String topic, String message, int qos, IMqttActionListener publishCallback) {
         MqttMessage mqttMessage = new MqttMessage();
