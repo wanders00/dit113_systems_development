@@ -29,10 +29,8 @@ const uint32_t publishDelayTime = 3000;
 uint32_t lastTimePublished;
 
 // MQTT subscription topics
-const char *PEOPLE_COUNT_TOPIC = "LocusImperium/WIO/peopleCount";
-const char *TEMPERATURE_TOPIC = "LocusImperium/WIO/temperatureValue";
-const char *HUMIDITY_TOPIC = "LocusImperium/WIO/humidityValue";
-const char *LOUDNESS_TOPIC = "LocusImperium/WIO/loudnessValue";
+const char *ROOM_DATA_PUBLISH_TOPIC = "LocusImperium/WIO/roomData";
+
 
 void setup() {
     screenInit();
@@ -79,10 +77,7 @@ void loop() {
 
     if (getCurrentTime() - lastTimePublished > publishDelayTime) {
         if (mqttLoop()) {
-            publishMessage(PEOPLE_COUNT_TOPIC, String(getPeople()));
-            publishMessage(TEMPERATURE_TOPIC, String(getTemperature()));
-            publishMessage(HUMIDITY_TOPIC, String(getHumidity()));
-            publishMessage(LOUDNESS_TOPIC, String(getLoudness()));
+            publishMessage(ROOM_DATA_PUBLISH_TOPIC, String(getPeople()) + ',' + String(getHumidity()) + ',' + String(getTemperature()) + ',' + String(getLoudness()));
             lastTimePublished = getCurrentTime();
         }
     }
