@@ -2,6 +2,7 @@ package com.group6.locusimperium;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -44,27 +45,6 @@ public class MainActivity extends AppCompatActivity implements  NavigationBarVie
 
         bottomNavigationView.setSelectedItemId(R.id.homeButton);
         bottomNavigationView.setOnItemSelectedListener(this);
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch(item.getItemId()) {
-            case R.id.homeButton:
-                return true;
-            case R.id.connectButton:
-                Intent intentLoadSettingsActivity = new Intent(MainActivity.this, ConnectActivity.class);
-                startActivity(intentLoadSettingsActivity);
-                CustomIntent.customType(MainActivity.this, "fadein-to-fadeout");
-                return true;
-            case R.id.settingsButton:
-                Intent intentLoadConnectActivity = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(intentLoadConnectActivity);
-                CustomIntent.customType(MainActivity.this, "fadein-to-fadeout");
-                return true;
-        }
-
-            }
-        });
 
         final Handler handler = new Handler();
         final int delay = 300; // delay between checks in ms
@@ -86,6 +66,25 @@ public class MainActivity extends AppCompatActivity implements  NavigationBarVie
         };
 
         handler.postDelayed(runnable, delay);
-
     }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.homeButton:
+                return true;
+            case R.id.connectButton:
+                Intent intentLoadSettingsActivity = new Intent(MainActivity.this, ConnectActivity.class);
+                startActivity(intentLoadSettingsActivity);
+                CustomIntent.customType(MainActivity.this, "fadein-to-fadeout");
+                return true;
+            case R.id.settingsButton:
+                Intent intentLoadConnectActivity = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intentLoadConnectActivity);
+                CustomIntent.customType(MainActivity.this, "fadein-to-fadeout");
+                return true;
+        }
+        return false;
+    }
+
 }
