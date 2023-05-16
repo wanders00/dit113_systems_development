@@ -15,6 +15,11 @@
 #include "Settings.hpp"
 #include "Util.hpp"
 #include "WifiDetails.h"
+#include "Settings.hpp"
+
+// Wi-Fi details
+const char *ssid = SSID;          // WiFi Name
+const char *password = PASSWORD;  // WiFi Password
 
 // Wi-Fi details
 const char *ssid = SSID;          // WiFi Name

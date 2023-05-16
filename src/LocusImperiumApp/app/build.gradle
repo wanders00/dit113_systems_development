@@ -51,6 +51,14 @@ dependencies {
 
     implementation 'androidx.work:work-runtime-ktx:2.8.1'
 
+    // dependency for Material UI
+    implementation 'com.google.android.material:material:1.4.0'
+
+    // dependency for animations
+    implementation 'com.github.hajiyevelnur92:intentanimation:1.0'
+
+
+
     // Espresso
     def androidx_test_espresso = "3.1.0"
 

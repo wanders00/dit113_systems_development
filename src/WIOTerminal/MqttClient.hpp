@@ -15,6 +15,8 @@
 
 void mqttInit();
 
+void mqttInit();
+
 void setupWifi();
 
 void setupMqtt();

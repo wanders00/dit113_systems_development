@@ -25,34 +25,6 @@ public class NoConnectionActivity extends AppCompatActivity {
             }
         });
 
-
-        ImageButton goToConnect = (ImageButton) findViewById(R.id.connectButton);
-
-        goToConnect.setOnClickListener(new View.OnClickListener() {
-            /**
-             * goes to "connect" activity
-             * @return void
-             */
-            @Override
-            public void onClick(View view) {
-                Intent intentLoadConnectActivity = new Intent(NoConnectionActivity.this, ConnectActivity.class);
-                startActivity(intentLoadConnectActivity);
-            }
-        });
-        ImageButton goToSetting = (ImageButton) findViewById(R.id.settingsButton);
-        goToSetting.setOnClickListener(new View.OnClickListener() {
-            /**
-             * goes to "settings" activity
-             * @return void
-             */
-            @Override
-            public void onClick(View view) {
-                Intent intentLoadSettingsActivity = new Intent(NoConnectionActivity.this, SettingsActivity.class);
-                startActivity(intentLoadSettingsActivity);
-
-            }
-        });
-
         BrokerConnection brokerConnection = new BrokerConnection(getApplicationContext());
         final Handler handler = new Handler();
         final int delay = 300; // delay between checks in ms
