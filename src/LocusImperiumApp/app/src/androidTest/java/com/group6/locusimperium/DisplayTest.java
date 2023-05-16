@@ -39,24 +39,21 @@ public class DisplayTest{
     public void checkPeopleCounterDisplay(){
         BrokerConnection.setConnectionStatus(true);
         ActivityScenario<MainActivity> activityScenario = ActivityScenario.launch(MainActivity.class);
-        Espresso.onView(withId(R.id.peopleCount)).check(matches(isDisplayed())); //check if the counter is displayed
-        Espresso.onView(withId(R.id.grayPerson)).check(matches(isDisplayed())); //check if the icon is displayed
+        Espresso.onView(withId(R.id.people_textview)).check(matches(isDisplayed())); //check if the counter is displayed
 
     }
     @Test
     public void checkTemperatureDisplay(){
         BrokerConnection.setConnectionStatus(true);
         ActivityScenario<MainActivity> activityScenario = ActivityScenario.launch(MainActivity.class);
-        Espresso.onView(withId(R.id.temperatureValue)).check(matches(ViewMatchers.isDisplayed()));
-        Espresso.onView(withId(R.id.temperature)).check(matches(ViewMatchers.isDisplayed()));
+        Espresso.onView(withId(R.id.temperature_textview)).check(matches(ViewMatchers.isDisplayed()));
     }
 
     @Test
     public void checkHumidityDisplay(){
         BrokerConnection.setConnectionStatus(true);
         ActivityScenario<MainActivity> activityScenario = ActivityScenario.launch(MainActivity.class);
-        Espresso.onView(withId(R.id.humidityValue)).check(matches(ViewMatchers.isDisplayed()));
-        Espresso.onView(withId(R.id.humidity)).check(matches(ViewMatchers.isDisplayed()));
+        Espresso.onView(withId(R.id.humidity_textview)).check(matches(ViewMatchers.isDisplayed()));
     }
 
     @Test
