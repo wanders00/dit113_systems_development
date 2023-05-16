@@ -36,11 +36,9 @@
 
 ### [Wiki page 📖](https://git.chalmers.se/courses/dit113/2023/group-6/group-6/-/wikis/home)
 
-<br>
 
 ### [Intro Video 📽️](https://drive.google.com/file/d/1Pbf4bzjwEkn8IahF9TAhGNku1HNMAWEZ/view?usp=sharing)
 
-<br>
 
 # Introduction
 
@@ -93,8 +91,6 @@
 - [Mbed TLS (3.0.1)](https://github.com/Seeed-Studio/Seeed_Arduino_mbedtls) by Seeed Studio
 
 </details>
-
-<br>
 
 # Installation
 ## Initial setup
