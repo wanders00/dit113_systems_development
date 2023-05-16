@@ -6,15 +6,14 @@
 arduino-cli core install Seeeduino:samd@1.8.3
 
 :: Installing libraries
-arduino-cli lib install "Seeed Arduino rpcWiFi"
-arduino-cli lib install "PubSubClient"
-arduino-cli lib install "Grove Ultrasonic Ranger"
-arduino-cli lib install "Grove Temperature And Humidity Sensor"
-
-:: Dependecies of "Seeed Arduino rpcWiFi" so will be installed by that.
-:: arduino-cli lib install "Seeed Arduino SFUD"
-:: arduino-cli lib install "Seeed Arduino FS"
-:: arduino-cli lib install "Seeed_Arduino_mbedtls"
+arduino-cli lib install "Seeed Arduino rpcWiFi"@1.0.6 --no-deps
+arduino-cli lib install "Seeed Arduino rpcUnified"@2.1.4
+arduino-cli lib install "PubSubClient"@2.8.0
+arduino-cli lib install "Grove Ultrasonic Ranger"@1.0.1
+arduino-cli lib install "Grove Temperature And Humidity Sensor"@2.0.1
+arduino-cli lib install "Seeed Arduino SFUD"@2.0.2
+arduino-cli lib install "Seeed Arduino FS"@2.1.1
+arduino-cli lib install "Seeed_Arduino_mbedtls"@3.0.1
 
 :: Picking WiFi details & mqtt broker address
 echo:

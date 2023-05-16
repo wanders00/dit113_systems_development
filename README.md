@@ -60,113 +60,69 @@
 
 ## Tools we used
 
-- Adobe Express
-
-- Wio Terminal
+- [Adobe Express](https://www.adobe.com/express/)
 
 - [Mosquitto](https://mosquitto.org/)
 
-- Grove sensors & their respective libraries
-  - Buzzer
-  - Loudness
-  - Multi Color Flash
-  - Temperature & Humidity
-  - Ultrasonic Ranger
+- [Seeed Studio Ecosystem & Grove Sensors](https://www.seeedstudio.com/)
 
 # Prerequisites
- - Arduino shell | [Download](https://www.arduino.cc/en/software)
- - Optionally, Arduino IDE instead of the shell | [Download](https://www.arduino.cc/en/software)
+### Hardware
+ - [WIO Terminal](https://wiki.seeedstudio.com/Wio-Terminal-Getting-Started/)
+ - [2x Grove Ultrasonic Sensor](https://wiki.seeedstudio.com/Grove-Ultrasonic_Ranger/)
+ - [Grove Temperature and Humidity Sensor](https://wiki.seeedstudio.com/Grove-TemperatureAndHumidity_Sensor/)
+ - [Grove Buzzer](https://wiki.seeedstudio.com/Grove-Buzzer/)
+
+### Software
  - Valid C++ compiler
  - Java JDK | [Download](https://www.oracle.com/java/technologies/javase-jdk16-downloads.html)
-  ### Dependencies
+  - (Optional) Arduino shell [Download](https://www.arduino.cc/en/software) | OR | Arduino IDE [Download](https://www.arduino.cc/en/software)
+
+  ## Dependencies
   <details>
   <summary> Expand </summary>
-  Please Install the following libraries:
 
-  - Adafruit FONA Library
-  - Adafruit MQTT Library
-  - Adafruit SleepyDog Library
-  - Grove Temperature And Humidity Sensor
-- Grove Ultrasonic Ranger         
-- PubSubClient       
-- Seeed Arduino FS     
-- Seeed Arduino rpcUnified       
-- Seeed Arduino rpcWiFi       
-- Seeed Arduino SFUD         
-- Seeed_Arduino_mbedtls        
-- TFT         
-- WiFi101
+- [Seeeduino SAMD Core (1.8.3)](https://www.seeedstudio.com/) by Seeed Studio
+- [Grove Temperature And Humidity Sensor (2.0.1)](https://github.com/Seeed-Studio/Grove_Temperature_And_Humidity_Sensor) by Seeed Studio
+- [Grove Ultrasonic Ranger (1.0.1)](https://github.com/Seeed-Studio/Seeed_Arduino_UltrasonicRanger) by Seeed Studio
+- [PubSubClient (2.8.0)](https://github.com/knolleary/pubsubclient) by Nick O’Leary
+- [FS (File System) (2.1.1)]() by Seeed Studio
+- [rpcUnified (2.1.4)](https://github.com/Seeed-Studio/Seeed_Arduino_rpcUnified) by Seeed Studio
+- [rpcWiFi (1.0.6)](https://github.com/Seeed-Studio/Seeed_Arduino_rpcWiFi) by Seeed Studio
+- [SFUD (Serial Flash Universal Driver) (2.0.2)](https://github.com/Seeed-Studio/Seeed_Arduino_SFUD) by Seeed Studio
+- [Mbed TLS (3.0.1)](https://github.com/Seeed-Studio/Seeed_Arduino_mbedtls) by Seeed Studio
 
 </details>
+
+<br>
 
 # Installation
 ## Initial setup
 > Before starting, ensure you have following [prerequisites](#prerequisites)
+
+### Setting up WIO Terminal
 1. Clone the repository 
    ```
    git clone https://git.chalmers.se/courses/dit113/2023/group-6/group-6.git
    ```
-2. Open the project in the IDE of your choice
-3. Setup the Wifi-Header file (see [How to create a Wifi-Header file](#how-to-create-a-wifi-header-file))
-4. Connect the Wio Terminal to your computer
-5. Upload the code to the Wio Terminal using the IDE/Shell
-## How to create a Wifi-Header file
+2. Connect the Wio Terminal to your computer
+3. Open the installation folder and select the folder for your operating system.
+4. Execute the  `run` file.
+5. Enter values for your WiFi and broker address. See [how to find your IPv4.](#how-to-find-your-ipv4)
+6. Done
 
-**1. Create a file under [/src/WIOTerminal](/src/WIOTerminal) called [WifiDetails.h](/src/WIOTerminal/WifiDetails.h)**
-
-<br>
-
-**2. Implement this and specify the needed arguments**
-
-```c++
-#define SSID "<WiFi name>" 
-#define PASSWORD "<the WiFi password>" 
-#define my_IPv4 "<ipv4>"
-```
-
-| Argument | Clarification |
-|---|---|
-|SSID | The name of the network. |
-|PASSWORD | The network's password. |
-|my_IPv4 | The IPv4 of the device. |
-<br>
-
-### How to find your IPv4
+#### How to find your IPv4
 <details>
 <summary> Expand </summary>
 
-- Open a terminal, run the command: Windows: `ipconfig ` | MacOS: `/sbin/ifconfig` | Linux: *you know how to do it already*.
-
-or
+- Open a terminal, run the command: Windows: `ipconfig` | MacOS: `/sbin/ifconfig` | Linux: *you know how to do it already*.
 
 - Find and select:
 "Wireless LAN adapter Wi-Fi: IPv4 Address"
 
-
 </details>
-<br>
-
- **3. Done!**
 
 <br>
-
-### Example setup on Windows
-<details>
-<summary> Expand </summary>
-
-![Wifi-Details-Folder](/media/WifiDetailsFolder.png)
-
-With the "WifiDetails.h" file containing this:
-
-```c++
-#define SSID "myNetwork"        // Example name
-#define PASSWORD "123456789"    // Example password
-#define my_IPv4 "192.168.1.1"   // Example IPv4
-```
-
-> NOTE: DO NOT COPY THESE VALUES!
-<br> You have to get your own values for each argument for your network.
-</details>
 
 # Developed by
 
