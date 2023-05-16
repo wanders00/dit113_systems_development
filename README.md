@@ -5,38 +5,29 @@
 
 ### A room controlling device that reads room data attributes such as temperature, humidity and estimates how many people are currently in the room.
 
-<!-- TODO: improve text here ^ -->
-
 </div>
 
 # Table of Contents 
 
-- [Table of Contents](#table-of-contents)
 - [Links](#links)
-    - [Wiki page 📖](#wiki-page-)
-    - [Intro Video 📽️](#intro-video-️)
+  - [Wiki page 📖](#wiki-page-)
+  - [Intro Video 📽️](#intro-video-️)
 - [Introduction](#introduction)
   - [Why the project is useful](#why-the-project-is-useful)
   - [How we will make it](#how-we-will-make-it)
   - [Tools we used](#tools-we-used)
-- [Prerequisites](#prerequisites)
-    - [Dependencies](#dependencies)
 - [Installation](#installation)
+  - [Prerequisites](#prerequisites)
   - [Initial setup](#initial-setup)
-  - [How to create a Wifi-Header file](#how-to-create-a-wifi-header-file)
-    - [How to find your IPv4](#how-to-find-your-ipv4)
-    - [Example setup on Windows](#example-setup-on-windows)
+  - [Setting up WIO Terminal](#setting-up-wio-terminal)
+  - [Setting up Android App](#setting-up-android-app)
 - [Developed by](#developed-by)
-
-
 
 # Links
 
-### [Wiki page 📖](https://git.chalmers.se/courses/dit113/2023/group-6/group-6/-/wikis/home)
+## [Wiki page 📖](https://git.chalmers.se/courses/dit113/2023/group-6/group-6/-/wikis/home)
 
-
-### [Intro Video 📽️](https://drive.google.com/file/d/1Pbf4bzjwEkn8IahF9TAhGNku1HNMAWEZ/view?usp=sharing)
-
+## [Intro Video 📽️](https://drive.google.com/file/d/1Pbf4bzjwEkn8IahF9TAhGNku1HNMAWEZ/view?usp=sharing)
 
 # Introduction
 
@@ -46,9 +37,9 @@
 
 - By knowing how many people are in the room you are able to tell if the safety hazard is broken.
 
-- By knowing the humidity you are able to determine if actions neccessary. Example high humidity leads to mold formation.
+- By knowing the humidity you are able to determine if actions necessary. Example high humidity leads to mold formation.
 
-- This information could be useful to determine a relation between the ammount of people in the room and the air quality.
+- This information could be useful to determine a relation between the amount of people in the room and the air quality.
 
 ## How we will make it
 
@@ -56,27 +47,16 @@
 
 ## Tools we used
 
+- [Android Studio](https://developer.android.com/studio)
+
 - [Adobe Express](https://www.adobe.com/express/)
 
 - [Mosquitto](https://mosquitto.org/)
 
 - [Seeed Studio Ecosystem & Grove Sensors](https://www.seeedstudio.com/)
 
-# Prerequisites
-### Hardware
- - [WIO Terminal](https://wiki.seeedstudio.com/Wio-Terminal-Getting-Started/)
- - [2x Grove Ultrasonic Sensor](https://wiki.seeedstudio.com/Grove-Ultrasonic_Ranger/)
- - [Grove Temperature and Humidity Sensor](https://wiki.seeedstudio.com/Grove-TemperatureAndHumidity_Sensor/)
- - [Grove Buzzer](https://wiki.seeedstudio.com/Grove-Buzzer/)
-
-### Software
- - Valid C++ compiler
- - Java JDK | [Download](https://www.oracle.com/java/technologies/javase-jdk16-downloads.html)
-  - (Optional) Arduino shell [Download](https://www.arduino.cc/en/software) | OR | Arduino IDE [Download](https://www.arduino.cc/en/software)
-
-  ## Dependencies
-  <details>
-  <summary> Expand </summary>
+<details>
+<summary> Libraries used </summary>
 
 - [Seeeduino SAMD Core (1.8.3)](https://www.seeedstudio.com/) by Seeed Studio
 - [Grove Temperature And Humidity Sensor (2.0.1)](https://github.com/Seeed-Studio/Grove_Temperature_And_Humidity_Sensor) by Seeed Studio
@@ -91,10 +71,23 @@
 </details>
 
 # Installation
-## Initial setup
-> Before starting, ensure you have following [prerequisites](#prerequisites)
 
-### Setting up WIO Terminal
+## Prerequisites
+### Hardware
+ - [WIO Terminal](https://wiki.seeedstudio.com/Wio-Terminal-Getting-Started/)
+ - [Grove Ultrasonic Sensor](https://wiki.seeedstudio.com/Grove-Ultrasonic_Ranger/) x 2
+ - [Grove Temperature and Humidity Sensor](https://wiki.seeedstudio.com/Grove-TemperatureAndHumidity_Sensor/)
+ - [Grove Buzzer](https://wiki.seeedstudio.com/Grove-Buzzer/)
+
+### Software
+ - Valid C++ compiler
+ - Java JDK | [Download](https://www.oracle.com/java/technologies/javase-jdk16-downloads.html)
+  - (Optional) Arduino shell [Download](https://www.arduino.cc/en/software) | OR | Arduino IDE [Download](https://www.arduino.cc/en/software)
+
+## Initial setup
+> Before starting, ensure you have the following [prerequisites](#prerequisites)
+
+## Setting up WIO Terminal
 1. Clone the repository 
    ```
    git clone https://git.chalmers.se/courses/dit113/2023/group-6/group-6.git
@@ -105,7 +98,7 @@
 5. Enter values for your WiFi and broker address. See [how to find your IPv4.](#how-to-find-your-ipv4)
 6. Done
 
-#### How to find your IPv4
+### How to find your IPv4
 <details>
 <summary> Expand </summary>
 
@@ -115,6 +108,10 @@
 "Wireless LAN adapter Wi-Fi: IPv4 Address"
 
 </details>
+
+## Setting up Android App
+
+1. TODO
 
 # Developed by
 
