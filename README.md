@@ -10,8 +10,6 @@
 # Table of Contents 
 
 - [Links](#links)
-  - [Wiki page 📖](#wiki-page-)
-  - [Intro Video 📽️](#intro-video-️)
 - [Introduction](#introduction)
   - [Why the project is useful](#why-the-project-is-useful)
   - [How we will make it](#how-we-will-make-it)
@@ -25,9 +23,9 @@
 
 # Links
 
-## [Wiki page 📖](https://git.chalmers.se/courses/dit113/2023/group-6/group-6/-/wikis/home)
+### [Wiki page 📖](https://git.chalmers.se/courses/dit113/2023/group-6/group-6/-/wikis/home)
 
-## [Intro Video 📽️](https://drive.google.com/file/d/1Pbf4bzjwEkn8IahF9TAhGNku1HNMAWEZ/view?usp=sharing)
+### [Intro Video 📽️](https://drive.google.com/file/d/1Pbf4bzjwEkn8IahF9TAhGNku1HNMAWEZ/view?usp=sharing)
 
 # Introduction
 
