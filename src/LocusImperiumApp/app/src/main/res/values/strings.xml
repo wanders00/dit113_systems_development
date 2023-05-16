@@ -22,6 +22,8 @@
     <string name="rawText">Click Below</string>
     <string name="string">Save</string>
     <string name="saveip">Save</string>
+    <string name = "notConnected">The app is not connected to the LocusImperium device</string>
+    <string name = "ReconnectBtn"> Reconnect</string>
     <string-array name="diffrentLoudness">
         <item>Quiet</item>
         <item>Moderate</item>

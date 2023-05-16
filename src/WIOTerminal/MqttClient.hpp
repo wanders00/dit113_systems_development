@@ -11,7 +11,6 @@
 #include "Util.hpp"
 #include "WifiDetails.h"
 #include "Settings.hpp"
-#include "Buzzer.hpp"
 
 void mqttInit();
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,10 +12,15 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 import static com.group6.locusimperium.SettingsActivity.SHARED_PREFS;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class ConnectActivity extends AppCompatActivity {
+import maes.tech.intentanim.CustomIntent;
+
+public class ConnectActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
     Context context;
     private Button saveIPButton;
     private EditText inputIP;
@@ -26,25 +32,6 @@ public class ConnectActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect);
 
-        ImageButton goToMain = (ImageButton) findViewById(R.id.mainButton);
-        goToMain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intentLoadMainActivity = new Intent(ConnectActivity.this, MainActivity.class);
-                startActivity(intentLoadMainActivity);
-
-            }
-        });
-
-        ImageButton goToSetting = (ImageButton) findViewById(R.id.settingsButton);
-        goToSetting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intentLoadSettingsActivity = new Intent(ConnectActivity.this, SettingsActivity.class);
-                startActivity(intentLoadSettingsActivity);
-
-            }
-        });
         inputIP = (EditText) findViewById(R.id.inputIPAddress);
         saveIPButton = (Button) findViewById(R.id.saveIP);
         saveIPButton.setOnClickListener(new View.OnClickListener() {
@@ -60,6 +47,32 @@ public class ConnectActivity extends AppCompatActivity {
 
         loadIP();
         updateIP();
+
+        // bottom navigation bar selections
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+
+        bottomNavigationView.setSelectedItemId(R.id.connectButton);
+        bottomNavigationView.setOnItemSelectedListener(this);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.homeButton:
+                Intent intentLoadMainActivity = new Intent(ConnectActivity.this, MainActivity.class);
+                startActivity(intentLoadMainActivity);
+                CustomIntent.customType(ConnectActivity.this, "fadein-to-fadeout");
+                return true;
+            case R.id.connectButton:
+                return true;
+            case R.id.settingsButton:
+                Intent intentLoadSettingsActivity = new Intent(ConnectActivity.this, SettingsActivity.class);
+                startActivity(intentLoadSettingsActivity);
+                CustomIntent.customType(ConnectActivity.this, "fadein-to-fadeout");
+                return true;
+        }
+
+        return false;
     }
 
     /**

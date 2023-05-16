@@ -1,246 +1,220 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".old">
+    android:backgroundTint="@color/black"
+    android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/GraySound"
-        android:layout_width="87dp"
-        android:layout_height="111dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="22dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
-        android:contentDescription="@string/gray"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.159"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.15"
-        app:srcCompat="@drawable/gray" />
 
-    <ImageView
-        android:id="@+id/grayHumidity"
-        android:layout_width="87dp"
-        android:layout_height="111dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
-        android:contentDescription="@string/gray"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.16"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/grayTemp"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/gray" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_anchor="@id/divider"
+        android:layout_gravity="bottom"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <ImageView
-        android:id="@+id/purpBarBackground"
-        android:layout_width="421dp"
-        android:layout_height="110dp"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/purpleBackground"
-        android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/purpbackground" />
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true">
 
-    <ImageView
-        android:id="@+id/grayPerson"
-        android:layout_width="87dp"
-        android:layout_height="111dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
-        android:contentDescription="@string/gray"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.16"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/GraySound"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/gray" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
 
-    <ImageView
-        android:id="@+id/grayTemp"
-        android:layout_width="87dp"
-        android:layout_height="111dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
-        android:contentDescription="@string/gray"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.16"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/grayPerson"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/gray" />
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="8dp"
+                android:src="@drawable/loudness"/>
 
-    <ImageView
-        android:id="@+id/soundImage"
-        android:layout_width="37dp"
-        android:layout_height="57dp"
-        android:layout_marginStart="14dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="70dp"
-        android:contentDescription="@string/soundimage"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.21"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/GraySound"
-        app:layout_constraintVertical_bias="0.060000002"
-        app:srcCompat="@drawable/volumeicon" />
+            <TextView
+                android:id="@+id/loudness_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_medium"
+                android:textSize="25sp"
+                android:text="15 Db"
+                android:padding="10dp"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
 
-    <ImageView
-        android:id="@+id/person"
-        android:layout_width="61dp"
-        android:layout_height="76dp"
-        android:contentDescription="@string/personicon"
-        app:layout_constraintBottom_toBottomOf="@+id/grayPerson"
-        app:layout_constraintEnd_toEndOf="@+id/grayPerson"
-        app:layout_constraintHorizontal_bias="0.384"
-        app:layout_constraintStart_toStartOf="@+id/grayPerson"
-        app:layout_constraintTop_toBottomOf="@+id/GraySound"
-        app:layout_constraintVertical_bias="0.52"
-        app:srcCompat="@drawable/humanicon" />
+        </LinearLayout>
 
-    <ImageView
-        android:id="@+id/temperature"
-        android:layout_width="56dp"
-        android:layout_height="78dp"
-        android:contentDescription="@string/tempicon"
-        app:layout_constraintBottom_toTopOf="@+id/grayHumidity"
-        app:layout_constraintEnd_toEndOf="@+id/grayTemp"
-        app:layout_constraintHorizontal_bias="0.57"
-        app:layout_constraintStart_toStartOf="@+id/grayTemp"
-        app:layout_constraintTop_toBottomOf="@+id/grayPerson"
-        app:layout_constraintVertical_bias="0.53"
-        app:srcCompat="@drawable/tempicon" />
+    </com.google.android.material.card.MaterialCardView>
 
-    <ImageView
-        android:id="@+id/humidity"
-        android:layout_width="66dp"
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="-"
+                    android:layout_margin="5dp"
+                    android:textColor="@color/white"
+                    android:textSize="23sp"
+                    android:background="@drawable/button_shape"
+                    android:backgroundTint="@color/colorPrimaryDark"
+                    />
+                
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:padding="8dp"
+                    android:src="@drawable/people"/>
+
+                <TextView
+                    android:id="@+id/people_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:textSize="25sp"
+                    android:text="34"
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
+                </LinearLayout>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="+"
+                    android:layout_margin="5dp"
+                    android:textColor="@color/white"
+                    android:textSize="23sp"
+                    android:background="@drawable/button_shape"
+                    android:backgroundTint="@color/colorPrimaryDark"
+                    />
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:padding="8dp"
+                    android:src="@drawable/temperature"/>
+
+                <TextView
+                    android:id="@+id/temperature_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:textSize="25sp"
+                    android:text="20 °C"
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:padding="8dp"
+                    android:src="@drawable/humidity"/>
+
+                <TextView
+                    android:id="@+id/humidity_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:textSize="25sp"
+                    android:text="80%"
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/room_data_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/roboto_bold"
+        android:gravity="center_horizontal"
+        android:text="Room Data"
+        android:textColor="@color/white"
+        android:textSize="30sp" />
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_anchor="@id/room_data_textview"
+        app:layout_anchorGravity="bottom"
+        android:layout_marginTop="80dp"
+        app:dividerInsetStart="16dp"
+        app:dividerInsetEnd="16dp"
+        />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:contentDescription="@string/humidityicon"
-        app:layout_constraintBottom_toBottomOf="@+id/grayHumidity"
-        app:layout_constraintEnd_toEndOf="@+id/grayHumidity"
-        app:layout_constraintHorizontal_bias="0.4"
-        app:layout_constraintStart_toStartOf="@+id/grayHumidity"
-        app:layout_constraintTop_toTopOf="@+id/grayHumidity"
-        app:layout_constraintVertical_bias="0.48000002"
-        app:srcCompat="@drawable/humidicon" />
+        android:layout_gravity="bottom"
+        android:background="@color/colorPrimaryDark"
+        android:backgroundTint="@color/colorPrimaryDark"
+        app:itemIconSize="30dp"
+        app:labelVisibilityMode="unlabeled"
 
-    <TextView
-        android:id="@+id/peopleCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="92dp"
-        android:text="@string/noValue"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.6"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loudnessValue" />
+        app:menu="@menu/bottom_menu" />
 
-    <TextView
-        android:id="@+id/loudnessValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/noValue"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.6"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/CurrentRoomData"
-        app:layout_constraintVertical_bias="0.128" />
-
-    <TextView
-        android:id="@+id/temperatureValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="92dp"
-        android:text="@string/noValue"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.601"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/peopleCount" />
-
-    <TextView
-        android:id="@+id/humidityValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="92dp"
-        android:text="@string/noValue"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.601"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/temperatureValue"
-        app:layout_constraintVertical_bias="0.004" />
-
-    <TextView
-        android:id="@+id/CurrentRoomData"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/Current_Room_Data"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.057" />
-
-    <ImageButton
-        android:id="@+id/settingsButton"
-        android:layout_width="95dp"
-        android:layout_height="77dp"
-        android:background="@null"
-        android:contentDescription="@string/settinIcon"
-        android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.091"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.961"
-        app:srcCompat="@drawable/settingactivityicon" />
-
-    <ImageButton
-        android:id="@+id/mainButton"
-        android:layout_width="95dp"
-        android:layout_height="77dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginBottom="24dp"
-        android:background="@null"
-        android:contentDescription="@string/mainIcon"
-        android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/settingsButton"
-        app:srcCompat="@drawable/mainactivityicon" />
-
-    <ImageButton
-        android:id="@+id/connectButton"
-        android:layout_width="77dp"
-        android:layout_height="77dp"
-        android:layout_marginBottom="24dp"
-        android:background="@null"
-        android:contentDescription="@string/connectIcon"
-        android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toEndOf="@+id/mainButton"
-        app:srcCompat="@drawable/connectactivityicon" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -3,6 +3,7 @@
 #include <Ultrasonic.h>
 
 #include "Arduino.h"
+#include "TFT_eSPI.h"
 
 // Local header files
 #include "Buzzer.hpp"
@@ -14,6 +15,7 @@
 #include "Ultrasonic.hpp"
 #include "Util.hpp"
 #include "WifiDetails.h"
+#include "Settings.hpp"
 
 // Ultrasonic
 int countMain = 0;
@@ -68,6 +70,10 @@ void loop() {
         updateScreen();
         lastTimeScreenUpdated = getCurrentTime();
     }
+
+    /* UltrasonicData data;
+    data = detectMovement(countMain);
+    countMain = data.count; */
 
     if (getCurrentTime() - lastTimePublished > publishDelayTime) {
         if (mqttLoop()) {
