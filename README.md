@@ -73,6 +73,7 @@ All this information could be useful to determine a relation between the amount 
 # Installation
 
 ## Prerequisites
+
 ### Hardware
  - [WIO Terminal](https://wiki.seeedstudio.com/Wio-Terminal-Getting-Started/)
  - [Wio Terminal Chassis Battery](https://wiki.seeedstudio.com/Wio-Terminal-Battery-Chassis/)
@@ -87,38 +88,54 @@ All this information could be useful to determine a relation between the amount 
  </details>
 
 ### Software
+
  - Valid C++ compiler
  - Java JDK | [Download](https://www.oracle.com/java/technologies/javase-jdk16-downloads.html)
   - (Optional) Arduino shell [Download](https://www.arduino.cc/en/software) | OR | Arduino IDE [Download](https://www.arduino.cc/en/software)
 
 ## Initial setup
+
 > Before starting, ensure you have the following [prerequisites](#prerequisites).
 
 ## Setting up WIO Terminal
-1. Clone the repository 
-   ```
-   git clone https://git.chalmers.se/courses/dit113/2023/group-6/group-6.git
-   ```
-2. Connect the Wio Terminal to your computer
-3. Open the installation folder and select the folder for your operating system.
-4. Execute the  `run` file.
-5. Enter values for your WiFi and broker address. See [how to find your IPv4.](#how-to-find-your-ipv4)
-6. Done!
 
-### How to find your IPv4
+How to find your IPv4:
+
 <details>
 <summary> Expand </summary>
 
-- Open a terminal, run the command: Windows: `ipconfig` | MacOS: `/sbin/ifconfig` | Linux: *you know how to do it already*.
+- Open a terminal, run the command: Windows: `ipconfig` | MacOS: `/sbin/ifconfig` | Linux: `ip addr show`.
 
 - Find and select:
 "Wireless LAN adapter Wi-Fi: IPv4 Address"
 
 </details>
 
-## Setting up Android App
 
-<!-- TODO -->
+Install steps:
+
+1. Clone the repository 
+   ```
+   git clone https://git.chalmers.se/courses/dit113/2023/group-6/group-6.git
+   ```
+2. Go to the installation repository
+    ```
+    cd group-6
+    ```
+3. Run the install script adequate for your operative system and follow the instructions. 
+**Note:** the linux script *should* work on Mac also.
+
+    In linux:
+    ```
+    ./linux_install.sh
+    ```
+
+    In windows:
+    ```
+    .\windows_install.bat
+    ```
+4. The scripts generate an apk in src/LocusImperiumApp/app/build/outputs/apk/debug/
+
 
 # Developed by
 
