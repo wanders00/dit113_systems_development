@@ -1,6 +1,6 @@
 package com.group6.locusimperium;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,56 +23,46 @@ import com.google.android.material.navigation.NavigationBarView;
 import maes.tech.intentanim.CustomIntent;
 
 public class SettingsActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
-
     public BrokerConnection brokerConnection;
-    private String [] item = {"Quiet", "Moderate", "Loud"};
+    private final String[] item = {"Quiet", "Moderate", "Loud"};
     private AutoCompleteTextView autoCompleteTextView;
     private ArrayAdapter<String> adapterItems;
     private EditText inputPeople;
     private EditText inputTemp;
     private EditText inputHumidity;
     private Button saveButton;
-
     public static final String SHARED_PREFS = "sharedPrefs";
     public static final String PEOPLE = "people";
     public static final String TEMPERATURE = "temperature";
     public static final String HUMIDITY = "humidity";
     public static final String LOUDNESS = "loudness";
-
     private String people;
     private String temperature;
     private String humidity;
     private String loudness;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        brokerConnection = new BrokerConnection(getApplicationContext());
+        App globalApp = (App) getApplicationContext();
+        brokerConnection = globalApp.getBrokerConnection();
         brokerConnection.connectToMqttBroker();
 
-        SharedPreferences sharedPreferences = getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
-        String peopleValue = sharedPreferences.getString("people", null);
-        String temperatureValue = sharedPreferences.getString("temperature", null);
-        String humidityValue = sharedPreferences.getString("humidity", null);
-        String loudnessValue = sharedPreferences.getString("loudness", null);
-
-        inputTemp = (EditText) findViewById(R.id.inputTemp);
-        inputHumidity = (EditText) findViewById(R.id.inputHumidity);
-        inputPeople = (EditText) findViewById(R.id.inputPeople);
-        saveButton = (Button) findViewById(R.id.savebutton);
+        inputTemp = findViewById(R.id.inputTemp);
+        inputHumidity = findViewById(R.id.inputHumidity);
+        inputPeople = findViewById(R.id.inputPeople);
+        saveButton = findViewById(R.id.savebutton);
         autoCompleteTextView = findViewById(R.id.autoCompleteTextView);
 
         autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             /**
              * when item is clicked open a menu with options from the "item" array
-             * @return void
              */
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String item= adapterView.getItemAtPosition(i).toString();
+                String item = adapterView.getItemAtPosition(i).toString();
                 Toast.makeText(SettingsActivity.this, "Item:" + item, Toast.LENGTH_SHORT).show();
             }
         });
@@ -81,7 +70,6 @@ public class SettingsActivity extends AppCompatActivity implements NavigationBar
         saveButton.setOnClickListener(new View.OnClickListener() {
             /**
              * saves data when save button is clicked
-             * @return void
              */
             @Override
             public void onClick(View view) {
@@ -90,24 +78,20 @@ public class SettingsActivity extends AppCompatActivity implements NavigationBar
         });
         loadData();
         updateViews();
-        adapterItems = new ArrayAdapter<String>(this, R.layout.dropdown_item, item);
+        adapterItems = new ArrayAdapter<>(this, R.layout.dropdown_item, item);
         autoCompleteTextView.setAdapter(adapterItems);
 
         // bottom navigation bar selections
-        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.settingsButton);
         bottomNavigationView.setOnItemSelectedListener(this);
 
-
-        BrokerConnection brokerConnection = new BrokerConnection(getApplicationContext());
         final Handler handler = new Handler();
-        final int delay = 300; // delay between checks in ms
+        final int delay = 1000; // delay between checks in ms
 
         Runnable runnable = new Runnable() {
             /**
              * checks if the app is connected, if not go to the lost connection screen
-             * @return void
              */
             @Override
             public void run() {
@@ -123,9 +107,10 @@ public class SettingsActivity extends AppCompatActivity implements NavigationBar
         handler.postDelayed(runnable, delay);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.connectButton:
                 Intent intentLoadConnectActivity = new Intent(SettingsActivity.this, ConnectActivity.class);
                 startActivity(intentLoadConnectActivity);
@@ -145,7 +130,6 @@ public class SettingsActivity extends AppCompatActivity implements NavigationBar
 
     /**
      * saves data to shared preferences and publishing the settings to the broker.
-     * @return void
      */
     public void saveData() {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
@@ -153,28 +137,26 @@ public class SettingsActivity extends AppCompatActivity implements NavigationBar
         editor.putString(HUMIDITY, inputHumidity.getText().toString());
         editor.putString(TEMPERATURE, inputTemp.getText().toString());
         editor.putString(PEOPLE, inputPeople.getText().toString());
-        editor.putString(LOUDNESS,autoCompleteTextView.getText().toString());
+        editor.putString(LOUDNESS, autoCompleteTextView.getText().toString());
         editor.apply();
         brokerConnection.publishSettings();
 
-
-        Toast.makeText(this,"Data Saved", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Data Saved", Toast.LENGTH_SHORT).show();
     }
 
     /**
      * loads data from shared preferences
-     * @return void
      */
     public void loadData() {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        people = sharedPreferences.getString(PEOPLE,"");
-        temperature = sharedPreferences.getString(TEMPERATURE,"");
-        humidity = sharedPreferences.getString(HUMIDITY,"");
-        loudness = sharedPreferences.getString(LOUDNESS,"");
+        people = sharedPreferences.getString(PEOPLE, "");
+        temperature = sharedPreferences.getString(TEMPERATURE, "");
+        humidity = sharedPreferences.getString(HUMIDITY, "");
+        loudness = sharedPreferences.getString(LOUDNESS, "");
     }
+
     /**
      * updates the views with the data from shared preferences
-     * @return void
      */
     public void updateViews() {
         inputTemp.setText(temperature);
