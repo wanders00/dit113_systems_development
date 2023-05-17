@@ -100,6 +100,14 @@ public class ConnectActivity extends AppCompatActivity implements NavigationBarV
 
         brokerConnection.connectToMqttBroker();
 
+        if(brokerConnection.getConnectionStatus()) {
+            // display a snack-bar to show that the IP address has been saved
+            Snackbar.make(contextView, "Connected!", Snackbar.LENGTH_SHORT).setAnchorView(R.id.bottom_navigation).show();
+        } else {
+            // display a snack-bar to show that the IP address has been saved
+            Snackbar.make(contextView, "Connection failed", Snackbar.LENGTH_SHORT).setAnchorView(R.id.bottom_navigation).show();
+        }
+
         progressBar.setVisibility(View.INVISIBLE);
     }
 
