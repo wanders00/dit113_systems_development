@@ -3,7 +3,7 @@
 
 ![Locus Imperium](/media/LocusImperium.gif)
 
-### A room controlling device that reads room data attributes such as temperature, humidity and estimates how many people are currently in the room.
+### A room controlling device that reads room data attributes such as temperature, humidity, loudness, and estimates how many people are currently in the room.
 
 </div>
 
@@ -11,8 +11,8 @@
 
 - [Links](#links)
 - [Introduction](#introduction)
-  - [Why the project is useful](#why-the-project-is-useful)
-  - [How we will make it](#how-we-will-make-it)
+  - [Purpose & Benefits](#purpose--benefits)
+  - [How the system works](#how-the-system-works)
   - [Tools we used](#tools-we-used)
 - [Installation](#installation)
   - [Prerequisites](#prerequisites)
@@ -29,21 +29,23 @@
 
 # Introduction
 
-## Why the project is useful
+## Purpose & Benefits
 
-- By knowing the room temperature you are able to tell if the temperature is too high or not.
+The purpose of this project is to create a device that reads room data attributes such as temperature, humidity, loudness, and the amount of people in a room. 
 
-- By knowing how many people are in the room you are able to tell if the safety hazard is broken.
+This information allows the user to study the air quality and ensure that they and their peers are in a healthy environment. For example:
 
-- By knowing the humidity you are able to determine if actions necessary. Example high humidity leads to mold formation.
+- Keeping track of the room temperature and being able to regulate it whenever it exceeds the set limit guarantees everybody's comfort.
+- Monitoring the level of humidity in the room and making sure it does not surpass the recommended relative humidity indoors could prevent undesirable conditions such as dry skin, dampness, mold formation, etc.
+- The user can further prevent everyone around them from being in an unpleasant environment by keeping an eye on the loudness level. Any loud noise over a prolonged period of time may damage one's hearing.
 
-- This information could be useful to determine a relation between the amount of people in the room and the air quality.
+All this information could be useful to determine a relation between the amount of people in the room and the air quality.
 
-## How we will make it
+## How the system works
 
 ![Locus Imperium](/media/mqtt.png)
 
-## Tools we used
+## Tools used
 
 - [Android Studio](https://developer.android.com/studio)
 
@@ -73,9 +75,16 @@
 ## Prerequisites
 ### Hardware
  - [WIO Terminal](https://wiki.seeedstudio.com/Wio-Terminal-Getting-Started/)
+ - [Wio Terminal Chassis Battery](https://wiki.seeedstudio.com/Wio-Terminal-Battery-Chassis/)
  - [Grove Ultrasonic Sensor](https://wiki.seeedstudio.com/Grove-Ultrasonic_Ranger/) x 2
  - [Grove Temperature and Humidity Sensor](https://wiki.seeedstudio.com/Grove-TemperatureAndHumidity_Sensor/)
  - [Grove Buzzer](https://wiki.seeedstudio.com/Grove-Buzzer/)
+
+ <details>
+ <summary> Hardware Architecture </summary>
+ 
+![](media/IMG_4191.png)
+ </details>
 
 ### Software
  - Valid C++ compiler
@@ -83,7 +92,7 @@
   - (Optional) Arduino shell [Download](https://www.arduino.cc/en/software) | OR | Arduino IDE [Download](https://www.arduino.cc/en/software)
 
 ## Initial setup
-> Before starting, ensure you have the following [prerequisites](#prerequisites)
+> Before starting, ensure you have the following [prerequisites](#prerequisites).
 
 ## Setting up WIO Terminal
 1. Clone the repository 
@@ -94,7 +103,7 @@
 3. Open the installation folder and select the folder for your operating system.
 4. Execute the  `run` file.
 5. Enter values for your WiFi and broker address. See [how to find your IPv4.](#how-to-find-your-ipv4)
-6. Done
+6. Done!
 
 ### How to find your IPv4
 <details>
@@ -109,7 +118,7 @@
 
 ## Setting up Android App
 
-1. TODO
+<!-- TODO -->
 
 # Developed by
 
