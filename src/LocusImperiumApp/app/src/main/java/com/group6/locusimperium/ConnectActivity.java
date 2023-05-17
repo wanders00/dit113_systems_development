@@ -98,6 +98,8 @@ public class ConnectActivity extends AppCompatActivity implements NavigationBarV
         View contextView = findViewById(R.id.connect);
         Snackbar.make(contextView, "IP address saved", Snackbar.LENGTH_SHORT).setAnchorView(R.id.bottom_navigation).show();
 
+        brokerConnection.connectToMqttBroker();
+
         progressBar.setVisibility(View.INVISIBLE);
     }
 
