@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.snackbar.Snackbar;
 
 import maes.tech.intentanim.CustomIntent;
 
@@ -62,8 +63,7 @@ public class SettingsActivity extends AppCompatActivity implements NavigationBar
              */
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String item = adapterView.getItemAtPosition(i).toString();
-                Toast.makeText(SettingsActivity.this, "Item:" + item, Toast.LENGTH_SHORT).show();
+                String item= adapterView.getItemAtPosition(i).toString();
             }
         });
 
@@ -141,7 +141,8 @@ public class SettingsActivity extends AppCompatActivity implements NavigationBar
         editor.apply();
         brokerConnection.publishSettings();
 
-        Toast.makeText(this, "Data Saved", Toast.LENGTH_SHORT).show();
+        // snackbar to show that the data has been saved
+        Snackbar.make(findViewById(R.id.settings), "Data saved", Snackbar.LENGTH_SHORT).setAnchorView(R.id.bottom_navigation).show();
     }
 
     /**

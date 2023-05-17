@@ -28,6 +28,9 @@ import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import com.google.android.material.snackbar.Snackbar;
+import android.view.View;
+
 public class BrokerConnection extends AppCompatActivity {
     // Global predefined values
     private static final String SUBSCRIPTION_TOPIC = "LocusImperium/WIO/";
@@ -70,7 +73,9 @@ public class BrokerConnection extends AppCompatActivity {
                     isConnected = true;
                     final String successfulConnection = "Connected to MQTT broker";
                     Log.i(CLIENT_ID, successfulConnection);
-                    Toast.makeText(context, successfulConnection, Toast.LENGTH_SHORT).show();
+                    // display a snack-bar to show that the IP address has been saved
+                    View contextView = findViewById(R.id.connect);
+                    Snackbar.make(contextView, "Connected!", Snackbar.LENGTH_SHORT).setAnchorView(R.id.bottom_navigation).show();
                     // Added "+ '#'" to subscribe to all subtopics under the super one.
                     mqttClient.subscribe(SUBSCRIPTION_TOPIC + '#', QOS, null);
                 }
@@ -78,6 +83,9 @@ public class BrokerConnection extends AppCompatActivity {
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     final String failedConnection = "Failed to connect to MQTT broker";
+                    // display a snack-bar to show that the IP address has been saved
+                    View contextView = findViewById(R.id.connect);
+                    Snackbar.make(contextView, "Connection failed!", Snackbar.LENGTH_SHORT).setAnchorView(R.id.bottom_navigation).show();
                     Log.e(CLIENT_ID, failedConnection);
                 }
             }, new MqttCallback() {
@@ -179,7 +187,8 @@ public class BrokerConnection extends AppCompatActivity {
         if (!isConnected) {
             final String notConnected = "Not connected (yet)";
             Log.e(CLIENT_ID, notConnected);
-            Toast.makeText(context, notConnected, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, notConnected, Toast.LENGTH_SHORT).show();
+            return;
         } else {
             final String connected = "Connected";
             Log.e(CLIENT_ID, connected);
