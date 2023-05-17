@@ -1,6 +1,6 @@
 package com.group6.locusimperium;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
 import static com.group6.locusimperium.SettingsActivity.SHARED_PREFS;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -23,7 +24,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import maes.tech.intentanim.CustomIntent;
 
 public class ConnectActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
-    Context context;
     private Button saveIPButton;
     private EditText inputIP;
     private String ipaddress;
@@ -34,12 +34,11 @@ public class ConnectActivity extends AppCompatActivity implements NavigationBarV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect);
 
-        inputIP = (EditText) findViewById(R.id.inputIPAddress);
-        saveIPButton = (Button) findViewById(R.id.saveIP);
+        inputIP = findViewById(R.id.inputIPAddress);
+        saveIPButton = findViewById(R.id.saveIP);
         saveIPButton.setOnClickListener(new View.OnClickListener() {
             /**
              * saves data when save button is clicked
-             * @return void
              */
             @Override
             public void onClick(View view) {
@@ -51,8 +50,7 @@ public class ConnectActivity extends AppCompatActivity implements NavigationBarV
         updateIP();
 
         // bottom navigation bar selections
-        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.connectButton);
         bottomNavigationView.setOnItemSelectedListener(this);
 
@@ -60,9 +58,10 @@ public class ConnectActivity extends AppCompatActivity implements NavigationBarV
         progressBar.setVisibility(View.INVISIBLE);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.homeButton:
                 Intent intentLoadMainActivity = new Intent(ConnectActivity.this, MainActivity.class);
                 startActivity(intentLoadMainActivity);
@@ -82,16 +81,17 @@ public class ConnectActivity extends AppCompatActivity implements NavigationBarV
 
     /**
      * saves IP address to shared preferences and disconnect from broker to reconnect with new IP
-     * @return void
      */
     public void saveIP() {
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        BrokerConnection brokerConnection = new BrokerConnection(getApplicationContext());
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(IPADDRESS, inputIP.getText().toString());
         editor.apply();
+        
+        App globalApp = (App) getApplicationContext();
+        BrokerConnection brokerConnection = globalApp.getBrokerConnection();
         brokerConnection.getMqttClient().disconnect(null);
 
         // display a snack-bar to show that the IP address has been saved
@@ -99,6 +99,8 @@ public class ConnectActivity extends AppCompatActivity implements NavigationBarV
         Snackbar.make(contextView, "IP address saved", Snackbar.LENGTH_SHORT).setAnchorView(R.id.bottom_navigation).show();
 
         brokerConnection.connectToMqttBroker();
+
+        Snackbar.make(contextView, "Connected", Snackbar.LENGTH_SHORT).setAnchorView(R.id.bottom_navigation).show();
 
         progressBar.setVisibility(View.INVISIBLE);
     }

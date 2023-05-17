@@ -29,62 +29,41 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public class BrokerConnection extends AppCompatActivity {
+    // Global predefined values
+    private static final String SUBSCRIPTION_TOPIC = "LocusImperium/WIO/";
+    private static final String PUBLISH_TOPIC = "LocusImperium/APP/";
+    private static final String MAX_SETTINGS_PUBLISH_TOPIC = PUBLISH_TOPIC + "maxSettings";
+    private static final String CLIENT_ID = "LocusImperium-Application";
+    private static final int QOS = 0; // For mqtt messaging; which quality of service to use.
 
-    //Application subscription, will receive everything from this topic.
-    public static final String SUPER_SUBSCRIPTION_TOPIC = "LocusImperium/WIO/";
-    public static final String PUB_TOPIC = "LocusImperium/APP/";
-
-    public static final String MAX_SETTINGS_PUB_TOPIC = PUB_TOPIC + "maxSettings";
-
-    public static String LOCALHOST;
-    public static String MQTT_SERVER;
-    public static final String CLIENT_ID = "LocusImperium-Application";
-    public static final int QOS = 0;
-    private static boolean isConnected = false;
+    //Attributes
+    private boolean isConnected = false;
     private MqttClient mqttClient;
-    Context context;
+    private Context context;
 
-    //TextView elements
+    //TextView elements to update on MainActivity
     public TextView peopleCount;
     public TextView temperatureValue;
     public TextView humidityValue;
     public TextView loudnessValue;
 
-
-    public String getMaxPeople() {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        return sharedPreferences.getString(PEOPLE,"");
-    }
-
-    public String getMaxLoudness() {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        return sharedPreferences.getString(LOUDNESS,"");
-    }
-    public String getMaxHumidity() {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        return sharedPreferences.getString(HUMIDITY,"");
-    }
-
-    public String getMaxTemperature() {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        return sharedPreferences.getString(TEMPERATURE,"");
-    }
     public BrokerConnection(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        LOCALHOST = sharedPreferences.getString(IPADDRESS, "");
-        MQTT_SERVER = "tcp://" + LOCALHOST + ":1883";
         this.context = context;
-        mqttClient = new MqttClient(context, MQTT_SERVER, CLIENT_ID);
         connectToMqttBroker();
     }
 
     /**
      * Establishes connection to the mqtt broker.
+     *
      * @see MqttClient
-     * @return void
      */
     public void connectToMqttBroker() {
         if (!isConnected) {
+            SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+            String LOCALHOST = sharedPreferences.getString(IPADDRESS, "");
+            String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883";
+            mqttClient = new MqttClient(context, MQTT_SERVER, CLIENT_ID);
+
             mqttClient.connect(CLIENT_ID, "", new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
@@ -93,7 +72,7 @@ public class BrokerConnection extends AppCompatActivity {
                     Log.i(CLIENT_ID, successfulConnection);
                     //Toast.makeText(context, successfulConnection, Toast.LENGTH_SHORT).show();
                     // Added "+ '#'" to subscribe to all subtopics under the super one.
-                    mqttClient.subscribe(SUPER_SUBSCRIPTION_TOPIC + '#', QOS, null);
+                    mqttClient.subscribe(SUBSCRIPTION_TOPIC + '#', QOS, null);
                 }
 
                 @Override
@@ -109,6 +88,7 @@ public class BrokerConnection extends AppCompatActivity {
                     final String connectionLost = "Connection to MQTT broker lost";
                     Log.w(CLIENT_ID, connectionLost);
                 }
+
                 @Override
                 public void messageArrived(String topic, MqttMessage message) {
                     String messageMQTT = message.toString();
@@ -127,17 +107,16 @@ public class BrokerConnection extends AppCompatActivity {
             });
         }
     }
+
     /**
      * updates the people counter textview value, color is gray if the value is below the max value, red if above. The max value is set in the settings.
-     * @return void
      */
     public void peopleCountArrived(String message) {
         peopleCount.setText(message);
         if (Integer.parseInt(message) > Integer.parseInt(getMaxPeople())) {
             peopleCount.setText(message);
             peopleCount.setTextColor(Color.RED);
-        }
-        else {
+        } else {
             peopleCount.setText(message);
             peopleCount.setTextColor(Color.GRAY);
         }
@@ -145,15 +124,13 @@ public class BrokerConnection extends AppCompatActivity {
 
     /**
      * updates the humidity textview value, color is gray if the value is below the max value, red if above. The max value is set in the settings.
-     * @return void
      */
     public void humidityValueArrived(String message) {
         humidityValue.setText(message);
         if (Integer.parseInt(message) > Integer.parseInt(getMaxHumidity())) {
             humidityValue.setText(message);
             humidityValue.setTextColor(Color.RED);
-        }
-        else {
+        } else {
             humidityValue.setText(message);
             humidityValue.setTextColor(Color.GRAY);
         }
@@ -161,15 +138,13 @@ public class BrokerConnection extends AppCompatActivity {
 
     /**
      * updates the temperature textview value, color is gray if the value is below the max value, red if above. The max value is set in the settings.
-     * @return void
      */
     public void temperatureValueArrived(String message) {
         temperatureValue.setText(message);
         if (Integer.parseInt(message) > Integer.parseInt(getMaxTemperature())) {
             temperatureValue.setText(message);
             temperatureValue.setTextColor(Color.RED);
-        }
-        else {
+        } else {
             temperatureValue.setText(message);
             temperatureValue.setTextColor(Color.GRAY);
         }
@@ -177,25 +152,21 @@ public class BrokerConnection extends AppCompatActivity {
 
     /**
      * updates the loudness textview value, color is gray if the value is below the max value, red if above. The max value is set in the settings.
-     * @return void
      */
     public void loudnessValueArrived(String message) {
         int loudness = 0;
         if (getMaxLoudness().equals("Quiet")) {
             loudness = 50;
-        }
-        else if (getMaxLoudness().equals("Moderate")) {
+        } else if (getMaxLoudness().equals("Moderate")) {
             loudness = 60;
-        }
-        else if (getMaxLoudness().equals("Loud")) {
+        } else if (getMaxLoudness().equals("Loud")) {
             loudness = 70;
         }
 
         if (Integer.parseInt(message) < loudness) {
             loudnessValue.setText(message);
             loudnessValue.setTextColor(Color.GRAY);
-        }
-        else {
+        } else {
             loudnessValue.setText(message);
             loudnessValue.setTextColor(Color.RED);
         }
@@ -203,7 +174,6 @@ public class BrokerConnection extends AppCompatActivity {
 
     /**
      * Publishes the settings to the broker.
-     * @return void
      */
     public void publishSettings() {
         if (!isConnected) {
@@ -214,17 +184,25 @@ public class BrokerConnection extends AppCompatActivity {
         } else {
             final String connected = "Connected";
             Log.e(CLIENT_ID, connected);
-            mqttClient.publish(MAX_SETTINGS_PUB_TOPIC, getMaxPeople() + "," + getMaxHumidity() + "," + getMaxTemperature() + "," + getMaxLoudness(), QOS, null);
+            mqttClient.publish(MAX_SETTINGS_PUBLISH_TOPIC, getMaxPeople() + "," + getMaxHumidity() + "," + getMaxTemperature() + "," + getMaxLoudness(), QOS, null);
         }
+    }
+
+    /**
+     * Gets the corresponding MqttClient object of the BrokerConnection object.
+     *
+     * @return MqttClient object
+     */
+    public MqttClient getMqttClient() {
+        return mqttClient;
     }
 
     // Methods to link TextView object to actual element on the screen on startup.
 
-
     /**
      * Updates the text of the peopleCount TextView.
+     *
      * @param textView the new text
-     * @return void 
      */
     public void setPeopleCount(TextView textView) {
         this.peopleCount = textView;
@@ -232,8 +210,8 @@ public class BrokerConnection extends AppCompatActivity {
 
     /**
      * Updates the text of the temperatureValue TextView.
+     *
      * @param textView the new text
-     * @return void
      */
     public void setTemperatureValue(TextView textView) {
         this.temperatureValue = textView;
@@ -241,8 +219,8 @@ public class BrokerConnection extends AppCompatActivity {
 
     /**
      * Updates the text of the humidityValue TextView.
+     *
      * @param textView the new text
-     * @return void
      */
     public void setHumidityValue(TextView textView) {
         this.humidityValue = textView;
@@ -250,33 +228,69 @@ public class BrokerConnection extends AppCompatActivity {
 
     /**
      * Updates the text of the loudnessValue TextView.
+     *
      * @param textView the new text
-     * @return void
      */
-    public void setLoudnessValue(TextView textView) { this.loudnessValue = textView; }
+    public void setLoudnessValue(TextView textView) {
+        this.loudnessValue = textView;
+    }
 
-
-
-
-
-
+    // Helper methods to calculate if current readings are above maximum values.
 
     /**
-     * Gets the corresponding MqttClient object of the BrokerConnection object.
-     * @return MqttClient object
+     * Gets the maximumed allowed of people from the SharedPreferences interface.
+     *
+     * @return String
      */
-    public MqttClient getMqttClient() {
-        return mqttClient;
+    public String getMaxPeople() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        return sharedPreferences.getString(PEOPLE, "");
+    }
+
+    /**
+     * Gets the maximumed allowed loudness from the SharedPreferences interface.
+     *
+     * @return String
+     */
+    public String getMaxLoudness() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        return sharedPreferences.getString(LOUDNESS, "");
+    }
+
+    /**
+     * Gets the maximumed allowed humidity from the SharedPreferences interface.
+     *
+     * @return String
+     */
+    public String getMaxHumidity() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        return sharedPreferences.getString(HUMIDITY, "");
+    }
+
+    /**
+     * Gets the maximumed allowed temperature from the SharedPreferences interface.
+     *
+     * @return String
+     */
+    public String getMaxTemperature() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        return sharedPreferences.getString(TEMPERATURE, "");
     }
 
     /**
      * Gets the current connection status
+     *
      * @return boolean
      */
-    public boolean getConnectionStatus() {return isConnected; }
+    public boolean getConnectionStatus() {
+        return isConnected;
+    }
 
     /**
-     * Sets the connection status used ONLY for testing
+     * Sets the connection status.
+     * Only used by tests to "manipulate" the connection. This since the display changes dependant on if it is connected or not.
      */
-    public static void setConnectionStatus(boolean status){isConnected = status; } //made isConnection static
+    public void setConnectionStatus(boolean status) {
+        isConnected = status;
+    }
 }

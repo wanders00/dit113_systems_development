@@ -16,6 +16,8 @@
 #include "Util.hpp"
 #include "WifiDetails.h"
 #include "Settings.hpp"
+#include "Buttons.hpp"
+#include "Buttons.hpp"
 
 // Ultrasonic
 int countMain = 0;
@@ -43,8 +45,11 @@ void setup() {
 
     buzzerInit();
 
-    lastTimePublished = 0;
+    buttonsInit();
 
+    buttonsInit();
+
+    lastTimePublished = 0;
     lastTimeScreenUpdated = 0;
 
     setMaxPeople(10);
@@ -55,7 +60,6 @@ void setup() {
 
 void loop() {
     setCurrentTime(millis());
-
     buzzerLoop();
 
     UltrasonicData data;
@@ -66,14 +70,32 @@ void loop() {
     setHumidity(measureHumidity());
     setLoudness(loudnessMapped());
 
+    if(digitalRead(WIO_KEY_A) == LOW) {
+        setPeople(getPeople() + 1);
+    }
+
+    if(digitalRead(WIO_KEY_B) == LOW) {
+        if(getPeople() > 0){
+            setPeople(getPeople() - 1);
+        }else{setPeople(0); }
+    }
+
     if (getCurrentTime() - lastTimeScreenUpdated > screenUpdateFrequency) {
         updateScreen();
         lastTimeScreenUpdated = getCurrentTime();
     }
 
-    /* UltrasonicData data;
-    data = detectMovement(countMain);
-    countMain = data.count; */
+    if (getCurrentTime() - lastTimePublished > publishDelayTime) {
+        if (mqttLoop()) {
+            publishMessage(PEOPLE_COUNT_TOPIC, String(getPeople()));
+            publishMessage(TEMPERATURE_TOPIC, String(getTemperature()));
+            publishMessage(HUMIDITY_TOPIC, String(getHumidity()));
+            publishMessage(LOUDNESS_TOPIC, String(getLoudness()));
+        }
+    }
+    // UltrasonicData data;
+    // data = detectMovement(countMain);
+    // countMain = data.count;
 
     if (getCurrentTime() - lastTimePublished > publishDelayTime) {
         if (mqttLoop()) {
@@ -82,3 +104,4 @@ void loop() {
         }
     }
 }
+
