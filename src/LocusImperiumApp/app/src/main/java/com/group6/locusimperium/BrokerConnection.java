@@ -29,6 +29,7 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import com.google.android.material.snackbar.Snackbar;
+import android.view.View;
 
 public class BrokerConnection extends AppCompatActivity {
     // Global predefined values
