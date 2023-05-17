@@ -28,6 +28,8 @@ import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import com.google.android.material.snackbar.Snackbar;
+
 public class BrokerConnection extends AppCompatActivity {
     // Global predefined values
     private static final String SUBSCRIPTION_TOPIC = "LocusImperium/WIO/";
