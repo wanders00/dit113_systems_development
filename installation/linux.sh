@@ -7,7 +7,7 @@ then
     exit 1
 fi
 
-readonly wifi_details_path="../../src/WIOTerminal/WifiDetails.h"
+readonly wifi_details_path="../src/WIOTerminal/WifiDetails.h"
 
 
 #Install libraries
@@ -55,4 +55,4 @@ read_param "Please select the port to use: "
 arduino-cli cache clean
 
 #Compile and upload to the WIO
-arduino-cli compile -b Seeeduino:samd:seeed_wio_terminal -p "$user_answer" ../../src/WIOTerminal --upload
+arduino-cli compile -b Seeeduino:samd:seeed_wio_terminal -p "$user_answer" ../src/WIOTerminal --upload

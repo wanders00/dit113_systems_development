@@ -25,9 +25,9 @@ set /p wifiPassword=Enter WiFi password:
 echo:
 set /p ipv4=Enter your desired broker ipv4: 
 
-echo #define SSID "%wifiName%" > ../../src/WIOTerminal/WifiDetails.h
-echo #define PASSWORD "%wifiPassword%" >> ../../src/WIOTerminal/WifiDetails.h
-echo #define brokerAddress "%ipv4%" >> ../../src/WIOTerminal/WifiDetails.h
+echo #define SSID "%wifiName%" > ../src/WIOTerminal/WifiDetails.h
+echo #define PASSWORD "%wifiPassword%" >> ../src/WIOTerminal/WifiDetails.h
+echo #define brokerAddress "%ipv4%" >> ../src/WIOTerminal/WifiDetails.h
 
 :: Picking port
 echo:
@@ -35,7 +35,7 @@ arduino-cli board list
 set /p port=Please select the port to use: 
 
 :: Compiling and uploading
-arduino-cli compile -b Seeeduino:samd:seeed_wio_terminal -p %port% ../../src/WIOTerminal --upload
+arduino-cli compile -b Seeeduino:samd:seeed_wio_terminal -p %port% ../src/WIOTerminal --upload
 
 :: Cleaning cache
 arduino-cli cache clean
