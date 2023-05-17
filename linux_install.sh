@@ -3,7 +3,7 @@
 #Check that arduino-cli is accessible for the script
 
 
-readonly wifi_details_path="../src/WIOTerminal/WifiDetails.h"
+readonly wifi_details_path="src/WIOTerminal/WifiDetails.h"
 
 
 #Install libraries
@@ -54,12 +54,12 @@ printf '%s\n' "Installing Locus Imperium in the WioTerminal"
 arduino-cli cache clean
 
 #Compile and upload to the WIO
-arduino-cli compile -b Seeeduino:samd:seeed_wio_terminal -p "$user_answer" ../src/WIOTerminal --upload
+arduino-cli compile -b Seeeduino:samd:seeed_wio_terminal -p "$user_answer" src/WIOTerminal --upload
 
 printf '%s\n' "Building the app"
 
 #Build the app
-cd ../src/LocusImperiumApp/ || return
+cd src/LocusImperiumApp/ || return
 
 ./gradlew assembleDebug
 
