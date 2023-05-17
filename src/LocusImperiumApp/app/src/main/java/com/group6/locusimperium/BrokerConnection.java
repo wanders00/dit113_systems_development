@@ -98,7 +98,7 @@ public class BrokerConnection extends AppCompatActivity {
                     isConnected = true;
                     final String successfulConnection = "Connected to MQTT broker";
                     Log.i(CLIENT_ID, successfulConnection);
-                    Toast.makeText(context, successfulConnection, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, successfulConnection, Toast.LENGTH_SHORT).show();
                     // Added "+ '#'" to subscribe to all subtopics under the super one.
                     mqttClient.subscribe(SUPER_SUBSCRIPTION_TOPIC + '#', QOS, null);
                 }
@@ -258,7 +258,7 @@ public class BrokerConnection extends AppCompatActivity {
         if (!isConnected) {
             final String notConnected = "Not connected (yet)";
             Log.e(CLIENT_ID, notConnected);
-            Toast.makeText(context, notConnected, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, notConnected, Toast.LENGTH_SHORT).show();
             return;
         } else {
             final String connected = "Connected";
