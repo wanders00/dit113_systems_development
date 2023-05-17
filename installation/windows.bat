@@ -34,13 +34,17 @@ echo:
 arduino-cli board list
 set /p port=Please select the port to use: 
 
-:: Compiling and uploading
-arduino-cli compile -b Seeeduino:samd:seeed_wio_terminal -p %port% ../src/WIOTerminal --upload
+echo "Installing Locus Imperium in the WioTerminal"
 
 :: Cleaning cache
 arduino-cli cache clean
 
-:: Building and installing the app
+:: Compiling and uploading
+arduino-cli compile -b Seeeduino:samd:seeed_wio_terminal -p %port% ../src/WIOTerminal --upload
+
+echo "Building the app"
+
+:: Building the app
 cd ../src/LocusImperiumApp/
 
 gradlew assembleDebug

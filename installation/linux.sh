@@ -1,11 +1,7 @@
 #!/bin/bash
 
 #Check that arduino-cli is accessible for the script
-if ! command -v arduino-cli &> /dev/null
-then
-    echo "arduino-cli is not installed or has not been added to path"
-    exit 1
-fi
+
 
 readonly wifi_details_path="../src/WIOTerminal/WifiDetails.h"
 
@@ -48,16 +44,21 @@ echo "#define PASSWORD $user_answer" >> $wifi_details_path
 read_param "Enter your desired broker ipv4: "
 echo "#define brokerAddress $user_answer" >> $wifi_details_path
 
+arduino-cli board list >> /dev/tty
 
 #Pick port
 read_param "Please select the port to use: "
+
+printf '%s\n' "Installing Locus Imperium in the WioTerminal"
 
 arduino-cli cache clean
 
 #Compile and upload to the WIO
 arduino-cli compile -b Seeeduino:samd:seeed_wio_terminal -p "$user_answer" ../src/WIOTerminal --upload
 
-#Build and install the app
+printf '%s\n' "Building the app"
+
+#Build the app
 cd ../src/LocusImperiumApp/ || return
 
 ./gradlew assembleDebug
