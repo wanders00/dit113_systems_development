@@ -9,6 +9,4 @@ int loudnessRaw();
 
 int loudnessMapped();
 
-int loudnessLevel();
-
 #endif

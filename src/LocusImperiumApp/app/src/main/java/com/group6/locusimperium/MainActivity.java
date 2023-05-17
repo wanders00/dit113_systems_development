@@ -1,20 +1,20 @@
 package com.group6.locusimperium;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageButton;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
+
 import maes.tech.intentanim.CustomIntent;
 
-public class MainActivity extends AppCompatActivity implements  NavigationBarView.OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
     public BrokerConnection brokerConnection;
 
     @Override
@@ -22,37 +22,29 @@ public class MainActivity extends AppCompatActivity implements  NavigationBarVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        brokerConnection = new BrokerConnection(getApplicationContext());
+        App globalApp = (App) getApplicationContext();
+        brokerConnection = globalApp.getBrokerConnection();
 
         // TextView elements setup
         brokerConnection.setPeopleCount(findViewById(R.id.loudness_textview));
         brokerConnection.setTemperatureValue(findViewById(R.id.people_textview));
         brokerConnection.setHumidityValue(findViewById(R.id.temperature_textview));
         brokerConnection.setLoudnessValue(findViewById(R.id.humidity_textview));
-        //brokerConnection.setMaxPeopleCount(findViewById(R.id.maxPeopleCount));
-        //brokerConnection.setMaxTemperatureValue(findViewById(R.id.maxTemperature));
-        //brokerConnection.setMaxHumidityValue(findViewById(R.id.maxHumidity));
-        //brokerConnection.setMaxLoudnessValue(findViewById(R.id.maxLoudness));
 
         // Broker connection
         brokerConnection.connectToMqttBroker();
 
-        //check if the app is connected, if not go to the lost connection screen
-        Intent connectionCheck = new Intent(MainActivity.this, NoConnectionActivity.class);
-
         // bottom navigation bar selections
-        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.homeButton);
         bottomNavigationView.setOnItemSelectedListener(this);
 
         final Handler handler = new Handler();
-        final int delay = 300; // delay between checks in ms
+        final int delay = 1000; // delay between checks in ms
 
         Runnable runnable = new Runnable() {
             /**
              * checks if the app is connected to the broker, if not go to the lost connection screen
-             * @return void
              */
             @Override
             public void run() {
@@ -68,9 +60,10 @@ public class MainActivity extends AppCompatActivity implements  NavigationBarVie
         handler.postDelayed(runnable, delay);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.homeButton:
                 return true;
             case R.id.connectButton:

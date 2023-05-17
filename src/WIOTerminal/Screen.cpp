@@ -115,7 +115,7 @@ void updateScreen() {
         tft.setTextColor(TFT_RED);
         buzzerAlert();
     }
-    String loudnessDisplay = "L:" + String(getLoudness()) + "db";
+    String loudnessDisplay = "L:" + String(getLoudness()) + "%";
     tft.drawString(loudnessDisplay, (106 - tft.textWidth(loudnessDisplay)) / 2 + 212, 50 + 140 + 15);
 }
 
