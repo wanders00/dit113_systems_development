@@ -100,8 +100,6 @@ public class ConnectActivity extends AppCompatActivity implements NavigationBarV
 
         brokerConnection.connectToMqttBroker();
 
-        Snackbar.make(contextView, "Connected", Snackbar.LENGTH_SHORT).setAnchorView(R.id.bottom_navigation).show();
-
         progressBar.setVisibility(View.INVISIBLE);
     }
 
