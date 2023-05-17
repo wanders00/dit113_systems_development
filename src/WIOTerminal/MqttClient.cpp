@@ -22,7 +22,7 @@ const char *ssid = SSID;          // WiFi Name
 const char *password = PASSWORD;  // WiFi Password
 
 // MQTT details
-const char *BROKER_ADDRESS = my_IPv4;                        // Broker URL
+const char *BROKER_ADDRESS = brokerAddress;                        // Broker URL
 const char *SUBSCRIPTION_TOPIC_ALL = "LocusImperium/APP/#";  // Topic to subscribe to
 const String CLIENT_ID = "WioTerminal";                      // Client ID used on broker
 
