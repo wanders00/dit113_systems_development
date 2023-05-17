@@ -9,6 +9,15 @@
     android:backgroundTint="@color/black"
     android:layout_height="match_parent">
 
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:layout_width="match_parent"
+        android:id="@+id/progressBar"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:indeterminate="true"
+        app:showAnimationBehavior="inward"
+        />
+
     <TextView
         android:id="@+id/room_data_textview"
         android:layout_width="match_parent"

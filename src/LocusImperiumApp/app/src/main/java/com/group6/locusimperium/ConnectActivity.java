@@ -9,11 +9,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import static com.group6.locusimperium.SettingsActivity.SHARED_PREFS;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -53,6 +55,9 @@ public class ConnectActivity extends AppCompatActivity implements NavigationBarV
 
         bottomNavigationView.setSelectedItemId(R.id.connectButton);
         bottomNavigationView.setOnItemSelectedListener(this);
+
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -80,13 +85,20 @@ public class ConnectActivity extends AppCompatActivity implements NavigationBarV
      * @return void
      */
     public void saveIP() {
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         BrokerConnection brokerConnection = new BrokerConnection(getApplicationContext());
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(IPADDRESS, inputIP.getText().toString());
         editor.apply();
         brokerConnection.getMqttClient().disconnect(null);
-        Toast.makeText(this, "Saved IP", Toast.LENGTH_SHORT).show();
+
+        // display a snack-bar to show that the IP address has been saved
+        View contextView = findViewById(R.id.connect);
+        Snackbar.make(contextView, "IP address saved", Snackbar.LENGTH_SHORT).setAnchorView(R.id.bottom_navigation).show();
+
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     public void loadIP() {
