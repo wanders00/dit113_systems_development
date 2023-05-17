@@ -98,8 +98,6 @@ public class SettingsActivity extends AppCompatActivity implements NavigationBar
                 if (!brokerConnection.getConnectionStatus()) {
                     Intent intent = new Intent(SettingsActivity.this, NoConnectionActivity.class);
                     startActivity(intent);
-                } else {
-                    handler.postDelayed(this, delay);
                 }
             }
         };

@@ -57,8 +57,6 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                 if (!brokerConnection.getConnectionStatus()) {
                     Intent intent = new Intent(MainActivity.this, NoConnectionActivity.class);
                     startActivity(intent);
-                } else {
-                    handler.postDelayed(this, delay);
                 }
             }
         };
