@@ -33,6 +33,7 @@ public class BrokerConnection extends AppCompatActivity {
     private static final String SUBSCRIPTION_TOPIC = "LocusImperium/WIO/";
     private static final String PUBLISH_TOPIC = "LocusImperium/APP/";
     private static final String MAX_SETTINGS_PUBLISH_TOPIC = PUBLISH_TOPIC + "maxSettings";
+    private static final String ADJUST_PEOPLE_COUNTER_TOPIC = PUBLISH_TOPIC + "AdjustPeopleCounter";
     private static final String CLIENT_ID = "LocusImperium-Application";
     private static final int QOS = 0; // For mqtt messaging; which quality of service to use.
 
@@ -171,7 +172,21 @@ public class BrokerConnection extends AppCompatActivity {
             loudnessValue.setTextColor(Color.RED);
         }
     }
+    /**
+     * Publishes the people counter adjustment to the broker.
+     */
 
+    public void publishPeopleCounter(String adjustment) {
+        if (!isConnected) {
+            final String notConnected = "Not connected (yet)";
+            Log.e(CLIENT_ID, notConnected);
+            Toast.makeText(context, notConnected, Toast.LENGTH_SHORT).show();
+        } else {
+            final String connected = "Connected";
+            Log.e(CLIENT_ID, connected);
+            mqttClient.publish(ADJUST_PEOPLE_COUNTER_TOPIC, adjustment, QOS, null);
+        }
+    }
     /**
      * Publishes the settings to the broker.
      */

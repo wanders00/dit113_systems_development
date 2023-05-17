@@ -15,7 +15,6 @@
 #include "Settings.hpp"
 #include "Util.hpp"
 #include "WifiDetails.h"
-#include "Settings.hpp"
 
 // Wi-Fi details
 const char *ssid = SSID;          // WiFi Name
@@ -25,6 +24,10 @@ const char *password = PASSWORD;  // WiFi Password
 const char *BROKER_ADDRESS = my_IPv4;                        // Broker URL
 const char *SUBSCRIPTION_TOPIC_ALL = "LocusImperium/APP/#";  // Topic to subscribe to
 const String CLIENT_ID = "WioTerminal";                      // Client ID used on broker
+
+// topics
+const char *MAX_SETTINGS_PUBLISH_TOPIC = "LocusImperium/APP/maxSettings";
+const char *ADJUST_PEOPLE_COUNTER_TOPIC = "LocusImperium/APP/AdjustPeopleCounter";
 
 // To not allow attempts to often
 uint32_t whenLastAttemptedReconnect;
@@ -135,31 +138,39 @@ void callback(char *topic, byte *payload, unsigned int length) {
     // Convert message from char to String
     String msg_p = String(buff_p);  // Message as String
 
-    String topicArray[4];
-    int topicSize = sizeof(topicArray) / sizeof(String); // Size of array
+    if (strcmp(topic, ADJUST_PEOPLE_COUNTER_TOPIC) == 0) {
+        if(getPeople() + msg_p.toInt() >= 0) {
+            setPeople(getPeople()+msg_p.toInt());
+        }
+        
+    }
 
-    for (int i = 0; i < topicSize; i++) {
-        if (msg_p.indexOf(",")) {
-            topicArray[i] = msg_p.substring(0, msg_p.indexOf(","));
-            msg_p = msg_p.substring(msg_p.indexOf(",") + 1);
-        } else {
-            topicArray[i] = msg_p;
+    if (strcmp(topic, MAX_SETTINGS_PUBLISH_TOPIC) == 0) {
+        String topicArray[4];
+        int topicSize = sizeof(topicArray) / sizeof(String);  // Size of array
+
+        for (int i = 0; i < topicSize; i++) {
+            if (msg_p.indexOf(",")) {
+                topicArray[i] = msg_p.substring(0, msg_p.indexOf(","));
+                msg_p = msg_p.substring(msg_p.indexOf(",") + 1);
+            } else {
+                topicArray[i] = msg_p;
+            }
+        }
+        // The position of the different settings values are predefined in the array.
+        setMaxPeople(topicArray[0].toInt());
+        setMaxHumidity(topicArray[1].toInt());
+        setMaxTemperature(topicArray[2].toInt());
+
+        if (topicArray[3].equals("Quiet")) {
+            setMaxLoudness(50);
+        } else if (topicArray[3].equals("Moderate")) {
+            setMaxLoudness(60);
+        } else if (topicArray[3].equals("Loud")) {
+            setMaxLoudness(70);
         }
     }
-    //The position of the different settings values are predefined in the array.
-    setMaxPeople(topicArray[0].toInt());
-    setMaxHumidity(topicArray[1].toInt());
-    setMaxTemperature(topicArray[2].toInt());
-
-    if (topicArray[3].equals("Quiet")) {
-        setMaxLoudness(50);
-    } else if (topicArray[3].equals("Moderate")) {
-        setMaxLoudness(60);
-    } else if (topicArray[3].equals("Loud")) {
-        setMaxLoudness(70);
-    }
 }
-
 /**
  * Attemps to:
  * First reconnect to the Wi-Fi if not connected.
