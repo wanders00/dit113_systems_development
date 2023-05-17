@@ -56,3 +56,10 @@ arduino-cli cache clean
 
 #Compile and upload to the WIO
 arduino-cli compile -b Seeeduino:samd:seeed_wio_terminal -p "$user_answer" ../src/WIOTerminal --upload
+
+#Build and install the app
+cd ../src/LocusImperiumApp/ || return
+
+./gradlew assembleDebug
+
+./gradlew installDebug

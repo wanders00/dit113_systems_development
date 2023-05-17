@@ -40,5 +40,12 @@ arduino-cli compile -b Seeeduino:samd:seeed_wio_terminal -p %port% ../src/WIOTer
 :: Cleaning cache
 arduino-cli cache clean
 
+:: Building and installing the app
+cd ../src/LocusImperiumApp/
+
+gradlew assembleDebug
+
+gradlew installDebug
+
 :: Closing
 set /p close=Press any key to close... 
