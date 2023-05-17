@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +18,8 @@ import maes.tech.intentanim.CustomIntent;
 
 public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
     public BrokerConnection brokerConnection;
+    private Button increasePeopleCountButton;
+    private Button decreasePeopleCountButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,10 +30,12 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         brokerConnection = globalApp.getBrokerConnection();
 
         // TextView elements setup
-        brokerConnection.setPeopleCount(findViewById(R.id.loudness_textview));
-        brokerConnection.setTemperatureValue(findViewById(R.id.people_textview));
-        brokerConnection.setHumidityValue(findViewById(R.id.temperature_textview));
-        brokerConnection.setLoudnessValue(findViewById(R.id.humidity_textview));
+        brokerConnection.setPeopleCount(findViewById(R.id.people_textview));
+        brokerConnection.setTemperatureValue(findViewById(R.id.temperature_textview));
+        brokerConnection.setHumidityValue(findViewById(R.id.humidity_textview));
+        brokerConnection.setLoudnessValue(findViewById(R.id.loudness_textview));
+        increasePeopleCountButton = (Button) findViewById(R.id.increasePeople);
+        decreasePeopleCountButton = (Button) findViewById(R.id.decreasePeople);
 
         // Broker connection
         brokerConnection.connectToMqttBroker();
@@ -58,7 +64,39 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         };
 
         handler.postDelayed(runnable, delay);
+
+        increasePeopleCountButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * increases the people count when the button is clicked
+             * @return void
+             */
+            @Override
+            public void onClick(View view) {
+                int updatedPeopleCount = (Integer.parseInt(brokerConnection.peopleCount.getText().toString()) + 1);
+                brokerConnection.publishPeopleCounter("1");
+                brokerConnection.peopleCount.setText(Integer.toString(updatedPeopleCount));
+
+            }
+        });
+
+        decreasePeopleCountButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * decreases the people count when the button is clicked
+             * @return void
+             */
+            @Override
+            public void onClick(View view) {
+                if(Integer.parseInt(brokerConnection.peopleCount.getText().toString()) > 0) {
+                    int updatedPeopleCount = (Integer.parseInt(brokerConnection.peopleCount.getText().toString()) + -1);
+                    brokerConnection.peopleCount.setText(Integer.toString(updatedPeopleCount));
+                    brokerConnection.publishPeopleCounter("-1");
+                }
+            }
+        });
+
     }
+
+
 
     @SuppressLint("NonConstantResourceId")
     @Override

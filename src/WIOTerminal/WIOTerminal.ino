@@ -87,18 +87,6 @@ void loop() {
 
     if (getCurrentTime() - lastTimePublished > publishDelayTime) {
         if (mqttLoop()) {
-            publishMessage(PEOPLE_COUNT_TOPIC, String(getPeople()));
-            publishMessage(TEMPERATURE_TOPIC, String(getTemperature()));
-            publishMessage(HUMIDITY_TOPIC, String(getHumidity()));
-            publishMessage(LOUDNESS_TOPIC, String(getLoudness()));
-        }
-    }
-    // UltrasonicData data;
-    // data = detectMovement(countMain);
-    // countMain = data.count;
-
-    if (getCurrentTime() - lastTimePublished > publishDelayTime) {
-        if (mqttLoop()) {
             publishMessage(ROOM_DATA_PUBLISH_TOPIC, String(getPeople()) + ',' + String(getHumidity()) + ',' + String(getTemperature()) + ',' + String(getLoudness()));
             lastTimePublished = getCurrentTime();
         }
