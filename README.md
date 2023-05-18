@@ -1,4 +1,3 @@
-
 <div align="center">
 
 ![Locus Imperium](/media/LocusImperium.gif)
@@ -17,15 +16,16 @@
 - [Installation](#installation)
   - [Prerequisites](#prerequisites)
   - [Initial setup](#initial-setup)
-  - [Setting up WIO Terminal](#setting-up-wio-terminal)
-  - [Setting up Android App](#setting-up-android-app)
+  - [Installation steps](#installation-steps)
 - [Developed by](#developed-by)
 
 # Links
 
-### [Wiki page 📖](https://git.chalmers.se/courses/dit113/2023/group-6/group-6/-/wikis/home)
+### [Wiki page 📚](https://git.chalmers.se/courses/dit113/2023/group-6/group-6/-/wikis/home)
 
 ### [Intro Video 📽️](https://drive.google.com/file/d/1Pbf4bzjwEkn8IahF9TAhGNku1HNMAWEZ/view?usp=sharing)
+
+### [User Manual 📖](https://git.chalmers.se/courses/dit113/2023/group-6/group-6/-/wikis/user-manual)
 
 # Introduction
 
@@ -53,6 +53,8 @@ All this information could be useful to determine a relation between the amount 
 
 - [Mosquitto](https://mosquitto.org/)
 
+- [Arduino CLI](https://arduino.github.io/arduino-cli/0.32/)
+
 - [Seeed Studio Ecosystem & Grove Sensors](https://www.seeedstudio.com/)
 
 <details>
@@ -75,6 +77,7 @@ All this information could be useful to determine a relation between the amount 
 ## Prerequisites
 
 ### Hardware
+
  - [WIO Terminal](https://wiki.seeedstudio.com/Wio-Terminal-Getting-Started/)
  - [Wio Terminal Chassis Battery](https://wiki.seeedstudio.com/Wio-Terminal-Battery-Chassis/)
  - [Grove Ultrasonic Sensor](https://wiki.seeedstudio.com/Grove-Ultrasonic_Ranger/) x 2
@@ -84,37 +87,24 @@ All this information could be useful to determine a relation between the amount 
  <details>
  <summary> Hardware Architecture </summary>
  
-![](media/IMG_4191.png)
+![Hardware Architecture](media/IMG_4191.png)
  </details>
 
 ### Software
 
- - Valid C++ compiler
- - Java JDK | [Download](https://www.oracle.com/java/technologies/javase-jdk16-downloads.html)
-  - (Optional) Arduino shell [Download](https://www.arduino.cc/en/software) | OR | Arduino IDE [Download](https://www.arduino.cc/en/software)
+  - [Arduino CLI](https://arduino.github.io/arduino-cli/0.32/) properly installed (in System Environment Variables: Path for Windows or $PATH for linux)
+
+  - If you desire to host your own broker, a WiFi connection that supports MQTT is required. Make sure to connect the WIO, App and broker device to the same network.
 
 ## Initial setup
 
 > Before starting, ensure you have the following [prerequisites](#prerequisites).
 
-## Setting up WIO Terminal
+## Installation steps
 
-How to find your IPv4:
+Installing **Locus Imperium** on the **WIO Terminal** and your **Android Device**
 
-<details>
-<summary> Expand </summary>
-
-- Open a terminal, run the command: Windows: `ipconfig` | MacOS: `/sbin/ifconfig` | Linux: `ip addr show`.
-
-- Find and select:
-"Wireless LAN adapter Wi-Fi: IPv4 Address"
-
-</details>
-
-
-Install steps:
-
-1. Clone the repository 
+1. Open your terminal and clone the repository 
    ```
    git clone https://git.chalmers.se/courses/dit113/2023/group-6/group-6.git
    ```
@@ -122,26 +112,94 @@ Install steps:
     ```
     cd group-6
     ```
-3. Run the install script adequate for your operative system and follow the instructions. 
-**Note:** the linux script *should* work on Mac also.
+3. Connect the **WIO Terminal** and your **Android Device** to your computer with USB or USB Type C
+4. Run the install script adequate for your operative system and follow the instructions
+**Note:** the linux script *should* work on Mac as well
 
-    In linux:
+    In Linux:
     ```
     ./linux_install.sh
     ```
 
-    In windows:
+    In Windows:
     ```
     .\windows_install.bat
     ```
-4. The scripts generate an apk in src/LocusImperiumApp/app/build/outputs/apk/debug/
+5. Follow the steps on the install script.
+6. Done!
 
+## (Optional) Installing **Mosquitto** on your dedicated broker machine
+
+1. Download [Mosquitto](https://mosquitto.org/download/) and follow the installation.
+
+2. Go to the mosquitto folder and open `mosquitto.config` file in your computer, below "General configuration" add:
+
+    ```
+    listener 1883 0.0.0.0
+    allow_anonymous true
+    ```
+3. Open a terminal in the folder and enter the following script:
+
+    In Windows and Linux:
+    ```
+    mosquitto -c mosquitto.conf -v
+    ```
+    In MacOS:
+    ```
+    brew services start mosquitto
+    ```
+
+4. Done! The broker is now online on the network your device is connected to!
+
+<details>
+<summary> How to find your IPv4: </summary>
+
+1. Open a terminal and run:
+
+    In Windows
+    ```
+    ipconfig
+    ```
+    In Linux
+    ```
+    ip addr show
+    ```
+    In MacOS:
+    ```
+    cat /sbin/ifconfig
+    ```
+
+2. Find and select: 
+<br> `Wireless LAN adapter Wi-Fi: IPv4 Address`
+
+</details>
+
+**Note:** On Windows: If you receive "Error: Only one usage of each socket address", terminate the already running mosquitto process
+  - Open Task Manager (ctrl+shift+esc) and under processes kill `mosquitto.exe`
 
 # Developed by
 
-- William Andersson :flag_se:
-- Joshua Chiu Falck :flag_se:
-- Carlos Campos Herrera :flag_es:
-- Marcelo Santibáñez :flag_cl:
-- Andrii Demchenko :flag_ua:
-- Vasilena Karaivanova :flag_bg:
+### William Andersson
+
+- Implemented the mqtt connection and how each part of the different systems should communicate with each other. Also was a part of developing the GUI for the WIO and the automated build script. Furthermore, worked on alerts, bugfixes, and general things.
+
+### Joshua Chiu Falck
+
+- Created the the android application functionality with the initial design. Functionality such as save & load settings, alerts, connecting with a different IP, displaying data from the broker as well as manually updating the people counter. Also assisted in the mqtt connection through the two systems and contributed to the wiki
+ 
+
+### Carlos Campos Herrera
+
+- Mainly worked on the WIO Terminal and the pipeline. Contributed to the readme, the wiki and the android app.
+
+### Marcelo Santibáñez
+
+- Firstly worked on MQTT connection. Implemented functionalities on the WIO terminal, screens on the Android app and also GUI and unit tests for the Java code of the app. Edited all the videos of the project.
+
+### Andrii Demchenko 
+
+- Developed the people movement detection algorithm, loudness measurement, and redesigned the mobile app. Also worked on test coverage reporting and contributed to the documentation.
+
+### Vasilena Karaivanova 
+
+- Contributed to the functionality of some sensors. Worked on the WIO Terminal for the most part, in terms of GUI and alerts. Additionally, worked on documentation & wiki-page.
