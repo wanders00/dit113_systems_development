@@ -51,6 +51,8 @@ public class BrokerConnection extends AppCompatActivity {
     public TextView humidityValue;
     public TextView loudnessValue;
 
+    public ConnectActivity connectActivity;
+
     public BrokerConnection(Context context) {
         this.context = context;
         connectToMqttBroker();
@@ -74,6 +76,10 @@ public class BrokerConnection extends AppCompatActivity {
                     isConnected = true;
                     final String successfulConnection = "Connected to MQTT broker";
                     Log.i(CLIENT_ID, successfulConnection);
+                    if(connectActivity != null){
+                        connectActivity.displaySnackbar("Connected successfully");
+                        connectActivity.stopProgressBar();
+                    }
                     // Added "+ '#'" to subscribe to all subtopics under the super one.
                     mqttClient.subscribe(SUBSCRIPTION_TOPIC + '#', QOS, null);
                 }
@@ -81,13 +87,17 @@ public class BrokerConnection extends AppCompatActivity {
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     final String failedConnection = "Failed to connect to MQTT broker";
+                    if (connectActivity != null)
+                    {
+                        connectActivity.displaySnackbar("Failed to connect");
+                        connectActivity.stopProgressBar();
+                    }
                     Log.e(CLIENT_ID, failedConnection);
                 }
             }, new MqttCallback() {
                 @Override
                 public void connectionLost(Throwable cause) {
                     isConnected = false;
-
                     final String connectionLost = "Connection to MQTT broker lost";
                     Log.w(CLIENT_ID, connectionLost);
                 }
