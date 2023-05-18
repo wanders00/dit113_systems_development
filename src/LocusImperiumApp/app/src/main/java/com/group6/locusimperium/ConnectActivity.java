@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import maes.tech.intentanim.CustomIntent;
 
 public class ConnectActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
+    private BrokerConnection brokerConnection;
     private Button saveIPButton;
     private EditText inputIP;
     private String ipaddress;
@@ -33,6 +34,10 @@ public class ConnectActivity extends AppCompatActivity implements NavigationBarV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect);
+
+        App globalApp = (App) getApplicationContext();
+        brokerConnection = globalApp.getBrokerConnection();
+        brokerConnection.connectActivity = this;
 
         inputIP = findViewById(R.id.inputIPAddress);
         saveIPButton = findViewById(R.id.saveIP);
@@ -61,19 +66,23 @@ public class ConnectActivity extends AppCompatActivity implements NavigationBarV
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.homeButton:
-                Intent intentLoadMainActivity = new Intent(ConnectActivity.this, MainActivity.class);
-                startActivity(intentLoadMainActivity);
-                CustomIntent.customType(ConnectActivity.this, "fadein-to-fadeout");
-                return true;
-            case R.id.connectButton:
-                return true;
-            case R.id.settingsButton:
-                Intent intentLoadSettingsActivity = new Intent(ConnectActivity.this, SettingsActivity.class);
-                startActivity(intentLoadSettingsActivity);
-                CustomIntent.customType(ConnectActivity.this, "fadein-to-fadeout");
-                return true;
+        if(brokerConnection.getConnectionStatus()) {
+            switch (item.getItemId()) {
+                case R.id.homeButton:
+                    Intent intentLoadMainActivity = new Intent(ConnectActivity.this, MainActivity.class);
+                    startActivity(intentLoadMainActivity);
+                    CustomIntent.customType(ConnectActivity.this, "fadein-to-fadeout");
+                    return true;
+                case R.id.connectButton:
+                    return true;
+                case R.id.settingsButton:
+                    Intent intentLoadSettingsActivity = new Intent(ConnectActivity.this, SettingsActivity.class);
+                    startActivity(intentLoadSettingsActivity);
+                    CustomIntent.customType(ConnectActivity.this, "fadein-to-fadeout");
+                    return true;
+            }
+        } else {
+            displaySnackbar("Not connected to broker yet");
         }
 
         return false;
@@ -89,9 +98,7 @@ public class ConnectActivity extends AppCompatActivity implements NavigationBarV
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(IPADDRESS, inputIP.getText().toString());
         editor.apply();
-        
-        App globalApp = (App) getApplicationContext();
-        BrokerConnection brokerConnection = globalApp.getBrokerConnection();
+
         brokerConnection.getMqttClient().disconnect(null);
 
         // display a snack-bar to show that the IP address has been saved
@@ -99,16 +106,6 @@ public class ConnectActivity extends AppCompatActivity implements NavigationBarV
         Snackbar.make(contextView, "IP address saved", Snackbar.LENGTH_SHORT).setAnchorView(R.id.bottom_navigation).show();
 
         brokerConnection.connectToMqttBroker();
-
-        if(brokerConnection.getConnectionStatus()) {
-            // display a snack-bar to show that the IP address has been saved
-            Snackbar.make(contextView, "Connected!", Snackbar.LENGTH_SHORT).setAnchorView(R.id.bottom_navigation).show();
-        } else {
-            // display a snack-bar to show that the IP address has been saved
-            Snackbar.make(contextView, "Connection failed", Snackbar.LENGTH_SHORT).setAnchorView(R.id.bottom_navigation).show();
-        }
-
-        progressBar.setVisibility(View.INVISIBLE);
     }
 
     public void loadIP() {
@@ -118,6 +115,35 @@ public class ConnectActivity extends AppCompatActivity implements NavigationBarV
 
     public void updateIP() {
         inputIP.setText(ipaddress);
+    }
+
+    public void displaySnackbar(String message) {
+        try {
+            View contextView = findViewById(R.id.connect);
+            Snackbar.make(contextView, message, Snackbar.LENGTH_SHORT).setAnchorView(R.id.bottom_navigation).show();
+        } catch (Exception e) {
+            return;
+        }
+
+    }
+
+    public void startProgressBar() {
+        try {
+            ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+            progressBar.setVisibility(View.VISIBLE);
+        } catch (Exception e) {
+            return;
+        }
+
+    }
+
+    public void stopProgressBar() {
+        try {
+            ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+            progressBar.setVisibility(View.INVISIBLE);
+        } catch (Exception e) {
+            return;
+        }
     }
 
 }
