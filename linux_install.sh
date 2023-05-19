@@ -41,13 +41,13 @@ echo "#define SSID $user_answer" > $wifi_details_path
 read_param "Enter WIFI password: "
 echo "#define PASSWORD $user_answer" >> $wifi_details_path
 
-read_param "Enter your desired broker ipv4: "
+read_param "Enter broker address (ipv4): "
 echo "#define brokerAddress $user_answer" >> $wifi_details_path
 
 arduino-cli board list >> /dev/tty
 
 #Pick port
-read_param "Please select the port to use: "
+read_param "Enter the port the WIO Terminal is connected to: "
 
 printf '%s\n' "Installing Locus Imperium in the WioTerminal"
 
@@ -56,11 +56,9 @@ arduino-cli cache clean
 #Compile and upload to the WIO
 arduino-cli compile -b Seeeduino:samd:seeed_wio_terminal -p "$user_answer" src/WIOTerminal --upload
 
-printf '%s\n' "Building the app"
+printf '%s\n' "Installing the App on your Android device"
 
 #Build the app
 cd src/LocusImperiumApp/ || return
-
-./gradlew assembleDebug
 
 ./gradlew installDebug
