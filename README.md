@@ -2,7 +2,7 @@
 
 ![Locus Imperium](/media/LocusImperium.gif)
 
-### A room controlling device that reads room data attributes such as temperature, humidity, loudness, and estimates how many people are currently in the room.
+### A room controlling device that reads room data attributes such as temperature, humidity, loudness, and estimates how many people are in the room at any given moment.
 
 </div>
 
@@ -10,26 +10,24 @@
 
 - [Links](#links)
 - [Introduction](#introduction)
-  - [Purpose & Benefits](#purpose--benefits)
+  - [Purpose & Benefits](#purpose-and-benefits)
   - [How the system works](#how-the-system-works)
-  - [Tools we used](#tools-we-used)
+  - [Tools used](#tools-used)
 - [Installation](#installation)
   - [Prerequisites](#prerequisites)
-  - [Initial setup](#initial-setup)
   - [Installation steps](#installation-steps)
+- [User Manual](#user-manual)
 - [Developed by](#developed-by)
 
 # Links
 
-### [Wiki page 📚](https://git.chalmers.se/courses/dit113/2023/group-6/group-6/-/wikis/home)
+### [Wiki Page 📚](https://git.chalmers.se/courses/dit113/2023/group-6/group-6/-/wikis/home)
 
-### [Intro Video 📽️](https://drive.google.com/file/d/1Pbf4bzjwEkn8IahF9TAhGNku1HNMAWEZ/view?usp=sharing)
-
-### [User Manual 📖](https://git.chalmers.se/courses/dit113/2023/group-6/group-6/-/wikis/user-manual)
+### [Showcase Video 📽️](https://www.youtube.com/watch?v=5KdoOFKNgRQ)
 
 # Introduction
 
-## Purpose & Benefits
+## Purpose and Benefits
 
 The purpose of this project is to create a device that reads room data attributes such as temperature, humidity, loudness, and the amount of people in a room. 
 
@@ -43,19 +41,37 @@ All this information could be useful to determine a relation between the amount 
 
 ## How the system works
 
-![Locus Imperium](/media/mqtt.png)
+ <details>
+ <summary> Hardware Architecture </summary>
+ 
+![Hardware Architecture](media/IMG_4191.png)
+ </details>
+ 
+ <details>
+ <summary> Software Architecture </summary>
+ 
+ ### MQTT Architecture
+ ![Locus Imperium](/media/mqtt.png)
+
+ ### Sequence Diagram
+ ![Locus Imperium](/media/SequenceDiagram.jpg)
+
+ </details>
 
 ## Tools used
-
-- [Android Studio](https://developer.android.com/studio)
-
-- [Adobe Express](https://www.adobe.com/express/)
 
 - [Mosquitto](https://mosquitto.org/)
 
 - [Arduino CLI](https://arduino.github.io/arduino-cli/0.32/)
 
+- [Miro Boards](https://miro.com)
+
+- [Adobe Express](https://www.adobe.com/express/)
+
+- [Android Studio](https://developer.android.com/studio)
+
 - [Seeed Studio Ecosystem & Grove Sensors](https://www.seeedstudio.com/)
+
 
 <details>
 <summary> Libraries used </summary>
@@ -76,6 +92,14 @@ All this information could be useful to determine a relation between the amount 
 
 ## Prerequisites
 
+### System Requirements
+
+- OS: Windows/Linux
+
+- Internet Access: Required
+
+**Note:** *We believe that the system should also work on Mac OS, however it has not been tested.*
+
 ### Hardware
 
  - [WIO Terminal](https://wiki.seeedstudio.com/Wio-Terminal-Getting-Started/)
@@ -84,37 +108,35 @@ All this information could be useful to determine a relation between the amount 
  - [Grove Temperature and Humidity Sensor](https://wiki.seeedstudio.com/Grove-TemperatureAndHumidity_Sensor/)
  - [Grove Buzzer](https://wiki.seeedstudio.com/Grove-Buzzer/)
 
- <details>
- <summary> Hardware Architecture </summary>
- 
-![Hardware Architecture](media/IMG_4191.png)
- </details>
-
 ### Software
 
-  - [Arduino CLI](https://arduino.github.io/arduino-cli/0.32/) properly installed (in System Environment Variables: Path for Windows or $PATH for linux)
+  - [Git](https://git-scm.com/) installed.
 
-  - If you desire to host your own broker, a WiFi connection that supports MQTT is required. Make sure to connect the WIO, App and broker device to the same network.
+  - [Java JDK](https://www.oracle.com/se/java/technologies/downloads/) properly installed.
 
-## Initial setup
+  - [Arduino CLI](https://arduino.github.io/arduino-cli/0.32/) properly installed.
 
-> Before starting, ensure you have the following [prerequisites](#prerequisites).
+  **Note:** *'properly installed'* means that it is in System Environment Variables: Path for Windows or $PATH for Linux.  
+
+If you desire to host your own broker, a WiFi connection that supports MQTT is required. Make sure to connect the WIO, app and broker device to the same network.
 
 ## Installation steps
 
-Installing **Locus Imperium** on the **WIO Terminal** and your **Android Device**
+> Before starting, ensure you have the following [prerequisites](#prerequisites).
 
-1. Open your terminal and clone the repository 
+### Installing **Locus Imperium** on the **WIO Terminal** and your **Android Device**
+
+1. Open your terminal and clone the repository.
    ```
    git clone https://git.chalmers.se/courses/dit113/2023/group-6/group-6.git
    ```
-2. Go to the installation repository
+2. Go to the installation repository.
     ```
     cd group-6
     ```
-3. Connect the **WIO Terminal** and your **Android Device** to your computer with USB or USB Type C
-4. Run the install script adequate for your operative system and follow the instructions
-**Note:** the linux script *should* work on Mac as well
+3. Connect the **WIO Terminal** and your **Android Device** to your computer with USB or USB Type C.
+4. Run the install script adequate for your operating system and follow the instructions.
+**Note:** the linux script *should* also work on Mac OS.
 
     In Linux:
     ```
@@ -128,7 +150,7 @@ Installing **Locus Imperium** on the **WIO Terminal** and your **Android Device*
 5. Follow the steps on the install script.
 6. Done!
 
-## (Optional) Installing **Mosquitto** on your dedicated broker machine
+### (Optional) Installing **Mosquitto** on your dedicated broker machine
 
 1. Download [Mosquitto](https://mosquitto.org/download/) and follow the installation.
 
@@ -174,8 +196,46 @@ Installing **Locus Imperium** on the **WIO Terminal** and your **Android Device*
 
 </details>
 
-**Note:** On Windows: If you receive "Error: Only one usage of each socket address", terminate the already running mosquitto process
-  - Open Task Manager (ctrl+shift+esc) and under processes kill `mosquitto.exe`
+**Note:** On Windows, if you receive "Error: Only one usage of each socket address", terminate the already running mosquitto process:
+  - Open Task Manager (ctrl+shift+esc) and under processes kill `mosquitto.exe`.
+
+# User Manual
+
+## WIO Terminal
+
+Make sure to look into the official [WIO Terminal User Manual](https://files.seeedstudio.com/wiki/Wio-Terminal/res/Wio-Terminal-User-Manual.pdf) by Seeed Studio!
+
+### 1. Connecting all the sensors
+- For more information, check out the [hardware architecture](#how-the-system-works).
+
+<img width="100" alt="WIO Buttons" src="media/WIOButtons.jpg" align="right">
+
+### 2. Button functionality (*see image*)
+
+ - A - Decrease the number of people by 1.
+
+ - B - Increase the number of people by 1.
+
+## Android Application
+
+### 1. Home Tab
+
+ - Displays all room data in the following order:
+
+    1. Loudness level
+    2. Number of people
+    3. Temperature level
+    4. Humidity level
+
+ - The "plus" and "minus" buttons will respectively adjust the people counter in accordance with the number of button presses.
+
+### 2. Connect Tab
+
+- Allows the user to insert an IP address and pressing the "Connect" button to connect to the broker.
+
+### 3. Settings Tab
+
+- Allows the user to change alert thresholds by inserting values and hitting the “Save” button.
 
 # Developed by
 
@@ -202,4 +262,4 @@ Installing **Locus Imperium** on the **WIO Terminal** and your **Android Device*
 
 ### Vasilena Karaivanova 
 
-- Contributed to the functionality of some sensors. Worked on the WIO Terminal for the most part, in terms of GUI and alerts. Additionally, worked on documentation & wiki-page.
+- Contributed to the functionality of some sensors. Worked on the WIO Terminal for the most part, in terms of GUI and alerts. Additionally, worked on documentation, readme & wiki-page.
