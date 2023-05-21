@@ -27,6 +27,11 @@ workflow:
     # When committing run the pipeline
     - if: $CI_COMMIT_BRANCH
 
+stages:
+  - build
+  - test
+  - testCoverage
+
 variables:
 
   # ANDROID_COMPILE_SDK is the version of Android you're compiling with.
@@ -105,7 +110,7 @@ assembleDebug:
 reportCoverage:
   allow_failure: true
   interruptible: true
-  stage: build
+  stage: testCoverage
   script:
     - ./gradlew createDebugCoverageReport
 
