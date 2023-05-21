@@ -28,6 +28,7 @@ public class ConnectActivity extends AppCompatActivity implements NavigationBarV
     private Button saveIPButton;
     private EditText inputIP;
     private String ipaddress;
+    
     public static final String IPADDRESS = "ipaddress";
 
     @Override
@@ -35,10 +36,12 @@ public class ConnectActivity extends AppCompatActivity implements NavigationBarV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect);
 
+        // get broker connection from global app
         App globalApp = (App) getApplicationContext();
         brokerConnection = globalApp.getBrokerConnection();
         brokerConnection.connectActivity = this;
 
+        // get IP address from shared preferences
         inputIP = findViewById(R.id.inputIPAddress);
         saveIPButton = findViewById(R.id.saveIP);
         saveIPButton.setOnClickListener(new View.OnClickListener() {
@@ -51,6 +54,7 @@ public class ConnectActivity extends AppCompatActivity implements NavigationBarV
             }
         });
 
+        // load IP address from shared preferences
         loadIP();
         updateIP();
 
@@ -59,6 +63,7 @@ public class ConnectActivity extends AppCompatActivity implements NavigationBarV
         bottomNavigationView.setSelectedItemId(R.id.connectButton);
         bottomNavigationView.setOnItemSelectedListener(this);
 
+        // set up the progress bar
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
     }
@@ -66,7 +71,9 @@ public class ConnectActivity extends AppCompatActivity implements NavigationBarV
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        // if connected to broker, allow navigation
         if(brokerConnection.getConnectionStatus()) {
+            // navigation bar selections
             switch (item.getItemId()) {
                 case R.id.homeButton:
                     Intent intentLoadMainActivity = new Intent(ConnectActivity.this, MainActivity.class);
@@ -117,6 +124,10 @@ public class ConnectActivity extends AppCompatActivity implements NavigationBarV
         inputIP.setText(ipaddress);
     }
 
+    /**
+     * displays a snackbar message
+     * @param message
+     */
     public void displaySnackbar(String message) {
         try {
             View contextView = findViewById(R.id.connect);
@@ -127,6 +138,9 @@ public class ConnectActivity extends AppCompatActivity implements NavigationBarV
 
     }
 
+    /** 
+     * Starts the progress bar
+     */
     public void startProgressBar() {
         try {
             ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -137,6 +151,9 @@ public class ConnectActivity extends AppCompatActivity implements NavigationBarV
 
     }
 
+    /**
+     * Stops the progress bar
+     */
     public void stopProgressBar() {
         try {
             ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);

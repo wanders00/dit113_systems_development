@@ -96,9 +96,11 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
 
 
+    // bottom navigation bar selection control
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        // if connected to broker, allow navigation
         switch (item.getItemId()) {
             case R.id.homeButton:
                 return true;
