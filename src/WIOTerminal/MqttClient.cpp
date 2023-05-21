@@ -21,20 +21,21 @@ const char *ssid = SSID;          // WiFi Name
 const char *password = PASSWORD;  // WiFi Password
 
 // MQTT details
-const char *BROKER_ADDRESS = brokerAddress;                        // Broker URL
+const char *BROKER_ADDRESS = brokerAddress;                  // Broker URL
 const char *SUBSCRIPTION_TOPIC_ALL = "LocusImperium/APP/#";  // Topic to subscribe to
 const String CLIENT_ID = "WioTerminal";                      // Client ID used on broker
 
-// topics
+// MQTT subscription topics
 const char *MAX_SETTINGS_PUBLISH_TOPIC = "LocusImperium/APP/maxSettings";
 const char *ADJUST_PEOPLE_COUNTER_TOPIC = "LocusImperium/APP/AdjustPeopleCounter";
 
-// To not allow attempts to often
-uint32_t whenLastAttemptedReconnect;
-const uint32_t attemptFrequency = 5000;  // Frequency in milliseconds
+// MQTT publish topics
+const char *ROOM_DATA_PUBLISH_TOPIC = "LocusImperium/WIO/roomData";
 
 // For alert
 bool haveAlerted;
+
+// State of connection, used to draw it on the screen.
 bool wifiConnection;
 bool mqttConnection;
 
@@ -47,7 +48,6 @@ PubSubClient client(wioClient);
  * @return void
  */
 void mqttInit() {
-    whenLastAttemptedReconnect = 0;
     Serial.begin(115200);
     startUpImg("Connecting to WiFi...");
     setupWifi();
@@ -71,13 +71,13 @@ void setupWifi() {
 
     while (WiFi.status() != WL_CONNECTED) {
         // To not attempt to often.
-        timeoutTimer(1000);
+        delay(1000);
     }
-    timeoutTimer(100);
+    delay(100);
 }
 
 /**
- * Sets up the mqtt connection to the broker specified in the WifiDetails.h file (ipv4).
+ * Sets up the mqtt connection to the broker specified in the WifiDetails.h file.
  * Will loop until it is successful.
  *
  * @return void
@@ -89,21 +89,20 @@ void setupMqtt() {
             client.subscribe(SUBSCRIPTION_TOPIC_ALL);
         }
         // To not attempt to often.
-        timeoutTimer(1000);
+        delay(1000);
     }
 }
 
 /**
  * Check if client is still connected to the broker, if not, calls reconnect().
- * Otherwise, proceeds to run the mqtt client loop.
+ * Otherwise, proceeds to run the mqtt client loop and publishes room data.
  *
- * @return boolean, true if client is connected, false if not.
+ * @return void
  */
-boolean mqttLoop() {
+void mqttLoop() {
     if (!client.connected()) {
         // Reconnect if not connected.
         reconnect();
-        return false;
     } else {
         // Connection works.
         wifiConnection = true;
@@ -112,9 +111,11 @@ boolean mqttLoop() {
         // Too play alert if it loses connection.
         haveAlerted = false;
 
-        // Mqtt loop
+        // Mqtt loop for the library.
         client.loop();
-        return true;
+
+        // Publish room data.
+        publishMessage(ROOM_DATA_PUBLISH_TOPIC, String(getPeople()) + ',' + String(getHumidity()) + ',' + String(getTemperature()) + ',' + String(getLoudness()));
     }
 }
 
@@ -139,10 +140,9 @@ void callback(char *topic, byte *payload, unsigned int length) {
     String msg_p = String(buff_p);  // Message as String
 
     if (strcmp(topic, ADJUST_PEOPLE_COUNTER_TOPIC) == 0) {
-        if(getPeople() + msg_p.toInt() >= 0) {
-            setPeople(getPeople()+msg_p.toInt());
+        if (getPeople() + msg_p.toInt() >= 0) {
+            setPeople(getPeople() + msg_p.toInt());
         }
-        
     }
 
     if (strcmp(topic, MAX_SETTINGS_PUBLISH_TOPIC) == 0) {
@@ -179,28 +179,22 @@ void callback(char *topic, byte *payload, unsigned int length) {
  * @return void
  */
 void reconnect() {
-    // If reconnect() gets called, mqtt connection is lost-
+    // If reconnect() gets called, mqtt connection have already been lost.
     mqttConnection = false;
 
-    // Restricts reconnecting attempts to only every "attemptFrequency"
-    if (getCurrentTime() - whenLastAttemptedReconnect > attemptFrequency) {
-        // Play alert if not already played
-        if (!haveAlerted) {
-            playConnectionLostAlert();
-        }
+    // Play alert if not already played
+    if (!haveAlerted) {
+        playConnectionLostAlert();
+    }
 
-        // To not allow too frequent reconnect attempts.
-        whenLastAttemptedReconnect = getCurrentTime();
-
-        // If WiFi is not connected, reconnect to it.
-        if (WiFi.status() != WL_CONNECTED) {
-            wifiConnection = false;
-            WiFi.reconnect();
-        } else if (!client.connected()) {
-            // Attempt to connect, will loop forever due to how the library works.
-            if (client.connect(CLIENT_ID.c_str())) {
-                client.subscribe(SUBSCRIPTION_TOPIC_ALL);
-            }
+    // If WiFi is not connected, reconnect to it.
+    if (WiFi.status() != WL_CONNECTED) {
+        wifiConnection = false;
+        WiFi.reconnect();
+    } else if (!client.connected()) {
+        // Attempt to connect to the broker, will loop forever due to how the library works.
+        if (client.connect(CLIENT_ID.c_str())) {
+            client.subscribe(SUBSCRIPTION_TOPIC_ALL);
         }
     }
 }
@@ -230,14 +224,20 @@ void publishMessage(const char *topic, String message) {
 }
 
 /**
- * Plays an alert that the connection has been lost, either to the Wi-Fi or the broker.
- * Calls displayAlert() and buzzerAlert().
+ * Plays an alert sound with the buzzer if connection is lost.
  *
  * @return void
  */
 void playConnectionLostAlert() {
+    /*
+    Unfortunately, due to how the mqtt library works, we cannot use the ordinary alert method (buzzerLoop()).
+    Since the mqtt reconnecting loop is blocking (it is a infinite loop til it succeeds),
+    we cannot call the alert method from the loop. Instead, we have to directly call turnOnBuzzer() and turnOffBuzzer().
+    */
     haveAlerted = true;
-    forceBuzzerAlert();
+    turnOnBuzzer();
+    delay(500);
+    turnOffBuzzer();
 }
 
 /**

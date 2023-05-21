@@ -1,5 +1,8 @@
-#include "Loudness.hpp"
+// Arduino libraries
 #include "Arduino.h"
+
+// Local header files
+#include "Loudness.hpp"
 
 /**
  * Initialize the loudness input.

@@ -18,7 +18,7 @@ void setupWifi();
 
 void setupMqtt();
 
-boolean mqttLoop();
+void mqttLoop();
 
 void playConnectionLostAlert();
 

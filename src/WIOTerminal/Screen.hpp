@@ -6,7 +6,6 @@
 
 // Local header files
 #include "MqttClient.hpp"
-#include "Screen.hpp"
 #include "Settings.hpp"
 #include "Buzzer.hpp"
 
@@ -17,7 +16,5 @@ void updateScreen();
 void startUpImg();
 
 void startUpImg(String displayMessage);
-
-void displayAlert();
 
 #endif

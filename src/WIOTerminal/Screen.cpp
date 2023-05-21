@@ -2,13 +2,10 @@
 #include <TFT_eSPI.h>
 
 // Local header files
+#include "Buzzer.hpp"
 #include "MqttClient.hpp"
 #include "Screen.hpp"
 #include "Settings.hpp"
-#include "Buzzer.hpp"
-
-const int SCREEN_WIDTH = 320;
-const int SCREEN_HEIGHT = 240;
 
 bool room_full_iteration;
 uint32_t room_full_iteration_time;
@@ -18,7 +15,6 @@ TFT_eSPI tft;
 
 /**
  * Initialize the screen.
- *
  * @return void
  */
 void screenInit() {
@@ -36,11 +32,13 @@ void screenInit() {
  * @return void
  */
 void updateScreen() {
+    // Set background and draws the upper lines to separate sections
     tft.fillScreen(TFT_WHITE);
     tft.drawFastHLine(0, 50, 320, TFT_BLACK);
     tft.drawFastVLine(70, 0, 50, TFT_BLACK);
     tft.drawFastVLine(140, 0, 50, TFT_BLACK);
 
+    // Wifi, if connected, will be green, otherwise red
     tft.setTextSize(2);
     if (getWifiConnection()) {
         tft.setTextColor(TFT_GREEN);
@@ -50,6 +48,7 @@ void updateScreen() {
     }
     tft.drawString("WiFi", (70 - tft.textWidth("WiFi")) / 2, 15);
 
+    // MQTT, if connected, will be green, otherwise red
     if (getMqttConnection()) {
         tft.setTextColor(TFT_GREEN);
     } else {
@@ -58,16 +57,22 @@ void updateScreen() {
     }
     tft.drawString("MQTT", (70 - tft.textWidth("MQTT")) / 2 + 70, 15);
 
+    // Room capacity
     tft.setTextColor(TFT_BLACK);
     String capacityDisplay = "Capacity:" + String(getMaxPeople());
     tft.drawString(capacityDisplay, (180 - tft.textWidth(capacityDisplay)) / 2 + 140, 15);
 
+    // For when the room is full:
+    // To iterate between "ROOM IS FULL" and displaying the number of people in the room every "room_full_iteration_frequency" milliseconds
     if (getCurrentTime() - room_full_iteration_time > room_full_iteration_frequency) {
         room_full_iteration_time = getCurrentTime();
         room_full_iteration = !room_full_iteration;
     }
 
+    // Used to only draw one of the two iterations
     bool roomTextDrawn = false;
+
+    // Iteration 1: "ROOM IS FULL"
     tft.setTextColor(TFT_BLACK);
     tft.setTextSize(4);
     if (getPeople() >= getMaxPeople()) {
@@ -78,6 +83,8 @@ void updateScreen() {
         }
     }
 
+    // Iteration 2: Number of people in the room
+    // Also the regular one when the room is not full
     if (!roomTextDrawn) {
         tft.setTextSize(7);
         tft.drawString(String(getPeople()), (320 - tft.textWidth(String(getPeople()))) / 2 - 40, 100);
@@ -86,10 +93,12 @@ void updateScreen() {
     }
 
     tft.setTextSize(2);
+    // Draw lower lines to separate sections
     tft.drawFastHLine(0, 190, 320, TFT_BLACK);
     tft.drawFastVLine(106, 190, 50, TFT_BLACK);
     tft.drawFastVLine(212, 190, 50, TFT_BLACK);
 
+    // Temperature, if below max, will be black, otherwise red
     if (getTemperature() < getMaxTemperature()) {
         tft.setTextColor(TFT_BLACK);
     } else {
@@ -100,6 +109,7 @@ void updateScreen() {
     tft.drawString(temperatureDisplay, (106 - tft.textWidth(temperatureDisplay)) / 2, 50 + 140 + 15);
     // char(248) is the closest to the degree symbol
 
+    // Humidity, if below max, will be black, otherwise red
     if (getHumidity() < getMaxHumidity()) {
         tft.setTextColor(TFT_BLACK);
     } else {
@@ -109,6 +119,7 @@ void updateScreen() {
     String humidityDisplay = "H:" + String(getHumidity()) + "%";
     tft.drawString(humidityDisplay, (106 - tft.textWidth(humidityDisplay)) / 2 + 106, 50 + 140 + 15);
 
+    // Loudness, if below max, will be black, otherwise red
     if (getLoudness() < getMaxLoudness()) {
         tft.setTextColor(TFT_BLACK);
     } else {
@@ -146,16 +157,4 @@ void startUpImg(String displayMessage) {
     tft.setTextSize(2);
     tft.setTextColor(TFT_BLACK);
     tft.drawString(displayMessage, (320 - tft.textWidth(displayMessage)) / 2, 15);
-}
-
-/**
- * Displays the message argument on the screen and sets the background to red.
- *
- * @param alertMessage The message to be displayed.
- * @return void
- */
-void displayAlert() {
-    // flashScreen();
-    // tft.fillScreen(TFT_RED);
-    // tft.drawString(alertMessage, 0, 0);
 }

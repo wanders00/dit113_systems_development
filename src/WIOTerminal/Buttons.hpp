@@ -1,9 +1,14 @@
 #ifndef BUTTONS_HPP
 #define BUUTTONS_HPP
 
-#include <TFT_eSPI.h>
+// Arduino libraries
+#include "Arduino.h"
+
+// Local header files
 #include "Settings.hpp"
 
 void buttonsInit();
+
+void buttonsLoop();
 
 #endif
