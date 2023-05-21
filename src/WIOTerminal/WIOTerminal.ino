@@ -1,11 +1,8 @@
 // Arduino libraries
-#include <DHT.h>
-#include <Ultrasonic.h>
-
 #include "Arduino.h"
-#include "TFT_eSPI.h"
 
 // Local header files
+#include "Buttons.hpp"
 #include "Buzzer.hpp"
 #include "Loudness.hpp"
 #include "MqttClient.hpp"
@@ -14,27 +11,23 @@
 #include "TempHumidity.hpp"
 #include "Ultrasonic.hpp"
 #include "Util.hpp"
-#include "WifiDetails.h"
-#include "Settings.hpp"
-#include "Buttons.hpp"
-#include "Buttons.hpp"
 
-// Ultrasonic
-int countMain = 0;
+// MQTT publish frequency values
+const uint32_t mqttLoopFrequency = 3000;
+uint32_t lastTimeMqttLoop;
 
 // Screen update
 const uint32_t screenUpdateFrequency = 1000;
 uint32_t lastTimeScreenUpdated;
 
-// MQTT publish frequency values
-const uint32_t publishDelayTime = 3000;
-uint32_t lastTimePublished;
-
-// MQTT subscription topics
-const char *ROOM_DATA_PUBLISH_TOPIC = "LocusImperium/WIO/roomData";
-
-
+/**
+ * Calls each initialization function for each component.
+ * Also initializes variables used for the loop().
+ *
+ * @return void
+ */
 void setup() {
+    // Initialize all components
     screenInit();
 
     mqttInit();
@@ -47,49 +40,51 @@ void setup() {
 
     buttonsInit();
 
-    buttonsInit();
-
-    lastTimePublished = 0;
+    // Initialize loop variables
+    lastTimeMqttLoop = 0;
     lastTimeScreenUpdated = 0;
 
+    // Set arbitrary max values since they will be updated by the app
     setMaxPeople(10);
-    setMaxTemperature(30);
-    setMaxHumidity(30);
+    setMaxTemperature(50);
+    setMaxHumidity(50);
     setMaxLoudness(50);
 }
 
+/**
+ * Main loop of the program.
+ * Calls each loop function for each component.
+ *
+ * @return void
+ */
 void loop() {
     setCurrentTime(millis());
-    buzzerLoop();
 
+    // Get data from ultrasonic sensors
     UltrasonicData data;
     data = detectMovement(getPeople());
 
+    // Update locally stored data to sensor readings
     setPeople(data.count);
     setTemperature(measureTemperature());
     setHumidity(measureHumidity());
     setLoudness(loudnessMapped());
 
-    if(digitalRead(WIO_KEY_A) == LOW) {
-        setPeople(getPeople() + 1);
-    }
+    // Calling the loop function for each component
 
-    if(digitalRead(WIO_KEY_B) == LOW) {
-        if(getPeople() > 0){
-            setPeople(getPeople() - 1);
-        }else{setPeople(0); }
-    }
+    buzzerLoop();
 
+    buttonsLoop();
+
+    // Updates the screen every "screenUpdateFrequency" milliseconds
     if (getCurrentTime() - lastTimeScreenUpdated > screenUpdateFrequency) {
         updateScreen();
         lastTimeScreenUpdated = getCurrentTime();
     }
 
-    if (getCurrentTime() - lastTimePublished > publishDelayTime) {
-        if (mqttLoop()) {
-            publishMessage(ROOM_DATA_PUBLISH_TOPIC, String(getPeople()) + ',' + String(getHumidity()) + ',' + String(getTemperature()) + ',' + String(getLoudness()));
-            lastTimePublished = getCurrentTime();
-        }
+    // Does the MQTT loop every "mqttLoopFrequency" milliseconds
+    if (getCurrentTime() - lastTimeMqttLoop > mqttLoopFrequency) {
+        mqttLoop();
+        lastTimeMqttLoop = getCurrentTime();
     }
 }
-
