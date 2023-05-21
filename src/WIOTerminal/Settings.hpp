@@ -3,7 +3,6 @@
 
 // Local header files
 #include "Settings.hpp"
-#include "WifiDetails.h"
 
 int getPeople();
 

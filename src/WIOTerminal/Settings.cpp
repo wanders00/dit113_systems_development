@@ -10,7 +10,6 @@ int temperature;
 int humidity;
 int loudness;
 
-// getters and setters for the settings
 /**
  * Get the value for the temperature in the room.
  *

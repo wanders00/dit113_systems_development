@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_medium"
                 android:textSize="25sp"
-                android:text="15 Db"
+                android:text=" "
                 android:padding="10dp"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
@@ -93,7 +93,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_medium"
                     android:textSize="25sp"
-                    android:text="34"
+                    android:text=" "
                     android:padding="10dp"
                     android:gravity="center"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
@@ -138,7 +138,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_medium"
                     android:textSize="25sp"
-                    android:text="20 °C"
+                    android:text=" "
                     android:padding="10dp"
                     android:gravity="center"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
@@ -172,7 +172,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_medium"
                     android:textSize="25sp"
-                    android:text="80%"
+                    android:text=" "
                     android:padding="10dp"
                     android:gravity="center"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />

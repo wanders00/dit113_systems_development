@@ -1,6 +1,8 @@
 #ifndef ULTRASONIC_HPP
 #define ULTRASONIC_HPP
 
+#include "Settings.hpp"
+#include "Buzzer.hpp"
 #include <Ultrasonic.h>
 
 struct UltrasonicData {

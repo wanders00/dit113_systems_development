@@ -24,6 +24,7 @@ import com.google.android.material.snackbar.Snackbar;
 import maes.tech.intentanim.CustomIntent;
 
 public class SettingsActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
+
     public BrokerConnection brokerConnection;
     private final String[] item = {"Quiet", "Moderate", "Loud"};
     private AutoCompleteTextView autoCompleteTextView;
@@ -32,11 +33,13 @@ public class SettingsActivity extends AppCompatActivity implements NavigationBar
     private EditText inputTemp;
     private EditText inputHumidity;
     private Button saveButton;
+
     public static final String SHARED_PREFS = "sharedPrefs";
     public static final String PEOPLE = "people";
     public static final String TEMPERATURE = "temperature";
     public static final String HUMIDITY = "humidity";
     public static final String LOUDNESS = "loudness";
+
     private String people;
     private String temperature;
     private String humidity;
@@ -47,6 +50,7 @@ public class SettingsActivity extends AppCompatActivity implements NavigationBar
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        // get broker connection from global app
         App globalApp = (App) getApplicationContext();
         brokerConnection = globalApp.getBrokerConnection();
         brokerConnection.connectToMqttBroker();
@@ -105,6 +109,7 @@ public class SettingsActivity extends AppCompatActivity implements NavigationBar
         handler.postDelayed(runnable, delay);
     }
 
+    // bottom navigation bar selections
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {

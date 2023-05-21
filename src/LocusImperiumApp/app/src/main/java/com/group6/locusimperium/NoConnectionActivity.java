@@ -16,6 +16,7 @@ public class NoConnectionActivity extends AppCompatActivity {
 
         Button reconnect = findViewById(R.id.reconnectButton);
         reconnect.setOnClickListener(new View.OnClickListener() {
+            // reconnect button sends user back to connect activity
             @Override
             public void onClick(View view) {
                 Intent intentGoToConnectionActivity = new Intent(NoConnectionActivity.this, ConnectActivity.class);

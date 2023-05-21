@@ -8,6 +8,8 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // Create a new broker connection
         brokerConnection = new BrokerConnection(getApplicationContext());
     }
 

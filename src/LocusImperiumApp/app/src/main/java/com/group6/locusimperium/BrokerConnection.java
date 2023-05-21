@@ -6,6 +6,8 @@
 
 package com.group6.locusimperium;
 
+// includes for the mqtt client
+
 import static com.group6.locusimperium.ConnectActivity.IPADDRESS;
 import static com.group6.locusimperium.SettingsActivity.HUMIDITY;
 import static com.group6.locusimperium.SettingsActivity.LOUDNESS;
@@ -32,6 +34,7 @@ import com.google.android.material.snackbar.Snackbar;
 import android.view.View;
 
 public class BrokerConnection extends AppCompatActivity {
+
     // Global predefined values
     private static final String SUBSCRIPTION_TOPIC = "LocusImperium/WIO/";
     private static final String PUBLISH_TOPIC = "LocusImperium/APP/";
@@ -53,6 +56,11 @@ public class BrokerConnection extends AppCompatActivity {
 
     public ConnectActivity connectActivity;
 
+    /**
+     * Constructor for BrokerConnection.
+     *
+     * @param context the context of the application
+     */
     public BrokerConnection(Context context) {
         this.context = context;
         connectToMqttBroker();
@@ -64,14 +72,20 @@ public class BrokerConnection extends AppCompatActivity {
      * @see MqttClient
      */
     public void connectToMqttBroker() {
+        // If not connected, connect to the broker.
         if (!isConnected) {
+
+            // Get the IP address from the SharedPreferences interface.
             SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
             String LOCALHOST = sharedPreferences.getString(IPADDRESS, "");
             String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883";
             mqttClient = new MqttClient(context, MQTT_SERVER, CLIENT_ID);
 
+            // Connect to the broker.
             mqttClient.connect(CLIENT_ID, "", new IMqttActionListener() {
                 @Override
+
+                // If the connection is successful, subscribe to the topic.
                 public void onSuccess(IMqttToken asyncActionToken) {
                     isConnected = true;
                     final String successfulConnection = "Connected to MQTT broker";
@@ -84,6 +98,7 @@ public class BrokerConnection extends AppCompatActivity {
                     mqttClient.subscribe(SUBSCRIPTION_TOPIC + '#', QOS, null);
                 }
 
+                // If the connection is unsuccessful, display a failure message.
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     final String failedConnection = "Failed to connect to MQTT broker";
@@ -104,6 +119,7 @@ public class BrokerConnection extends AppCompatActivity {
 
                 @Override
                 public void messageArrived(String topic, MqttMessage message) {
+                    // The message is in the form of a string, with the values separated by commas.
                     String messageMQTT = message.toString();
                     String[] topicArray = messageMQTT.split(",");
                     //The position of the different settings values are predefined in the array.
@@ -122,10 +138,12 @@ public class BrokerConnection extends AppCompatActivity {
     }
 
     /**
-     * updates the people counter textview value, color is gray if the value is below the max value, red if above. The max value is set in the settings.
+     * Updates the people count textview value, color is gray if the value is below the max value, red if above. The max value is set in the settings.
+     * @param message the message to be displayed
      */
     public void peopleCountArrived(String message) {
         peopleCount.setText(message);
+        // If the people count is above the max value, set the text color to red.
         if (Integer.parseInt(message) > Integer.parseInt(getMaxPeople())) {
             peopleCount.setText(message);
             peopleCount.setTextColor(Color.RED);
@@ -136,10 +154,12 @@ public class BrokerConnection extends AppCompatActivity {
     }
 
     /**
-     * updates the humidity textview value, color is gray if the value is below the max value, red if above. The max value is set in the settings.
+     * Updates the humidity textview value, color is gray if the value is below the max value, red if above. The max value is set in the settings.
+     * @param message the message to be displayed
      */
     public void humidityValueArrived(String message) {
         humidityValue.setText(message);
+        // If the humidity is above the max value, set the text color to red.
         if (Integer.parseInt(message) > Integer.parseInt(getMaxHumidity())) {
             humidityValue.setText(message);
             humidityValue.setTextColor(Color.RED);
@@ -150,10 +170,12 @@ public class BrokerConnection extends AppCompatActivity {
     }
 
     /**
-     * updates the temperature textview value, color is gray if the value is below the max value, red if above. The max value is set in the settings.
+     * Updates the temperature textview value, color is gray if the value is below the max value, red if above. The max value is set in the settings.
+     * @param message the message to be displayed
      */
     public void temperatureValueArrived(String message) {
         temperatureValue.setText(message);
+        // If the temperature is above the max value, set the text color to red.
         if (Integer.parseInt(message) > Integer.parseInt(getMaxTemperature())) {
             temperatureValue.setText(message);
             temperatureValue.setTextColor(Color.RED);
@@ -164,7 +186,8 @@ public class BrokerConnection extends AppCompatActivity {
     }
 
     /**
-     * updates the loudness textview value, color is gray if the value is below the max value, red if above. The max value is set in the settings.
+     * Updates the loudness textview value, color is gray if the value is below the max value, red if above. The max value is set in the settings.
+     * @param message the message to be displayed
      */
     public void loudnessValueArrived(String message) {
         int loudness = 0;
@@ -184,11 +207,13 @@ public class BrokerConnection extends AppCompatActivity {
             loudnessValue.setTextColor(Color.RED);
         }
     }
+    
     /**
-     * Publishes the people counter adjustment to the broker.
+     * Publishes the adjustment to the people counter to the broker.
+     * @param adjustment the adjustment to be published
      */
-
     public void publishPeopleCounter(String adjustment) {
+        // If not connected, display a message.
         if (!isConnected) {
             final String notConnected = "Not connected (yet)";
             Log.e(CLIENT_ID, notConnected);
@@ -199,8 +224,9 @@ public class BrokerConnection extends AppCompatActivity {
             mqttClient.publish(ADJUST_PEOPLE_COUNTER_TOPIC, adjustment, QOS, null);
         }
     }
+    
     /**
-     * Publishes the settings to the broker.
+     * Publishes the maximum settings to the broker.
      */
     public void publishSettings() {
         if (!isConnected) {

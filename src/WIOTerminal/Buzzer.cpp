@@ -16,8 +16,8 @@ uint32_t alertFrequency = 10000;
  */
 void buzzerInit() {
     shouldTurnOffAt = 0;
-    // pinMode(WIO_BUZZER, OUTPUT);
-    pinMode(BUZZER_PIN, OUTPUT);
+    // pinMode(WIO_BUZZER, OUTPUT); // To use inbuilt buzzer
+    pinMode(BUZZER_PIN, OUTPUT); // Grove buzzer
     isTurnedOn = false;
 }
 
@@ -60,8 +60,8 @@ void forceBuzzerAlert() {
  * @return void
  */
 void turnOnBuzzer() {
-    // digitalWrite(WIO_BUZZER, 100);
-    digitalWrite(BUZZER_PIN, HIGH);
+    // digitalWrite(WIO_BUZZER, 100); // To use inbuilt buzzer
+    digitalWrite(BUZZER_PIN, HIGH); // Grove buzzer
     isTurnedOn = true;
 }
 
@@ -71,7 +71,7 @@ void turnOnBuzzer() {
  * @return void
  */
 void turnOffBuzzer() {
-    // digitalWrite(WIO_BUZZER, 0);
-    digitalWrite(BUZZER_PIN, LOW);
+    // digitalWrite(WIO_BUZZER, 0); // To use inbuilt buzzer
+    digitalWrite(BUZZER_PIN, LOW); // Grove buzzer
     isTurnedOn = false;
 }
