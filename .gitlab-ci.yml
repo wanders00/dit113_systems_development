@@ -111,6 +111,7 @@ reportCoverage:
   allow_failure: true
   interruptible: true
   stage: testCoverage
+  needs: []
   script:
     - ./gradlew createDebugCoverageReport
 
