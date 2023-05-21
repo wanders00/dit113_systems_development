@@ -208,13 +208,17 @@ Make sure to look into the official [WIO Terminal User Manual](https://files.see
 ### 1. Connecting all the sensors
 - For more information, check out the [hardware architecture](#how-the-system-works).
 
-<img width="100" alt="WIO Buttons" src="media/WIOButtons.jpg" align="right">
+### 2. Button functionality (*click the menu below*)
 
-### 2. Button functionality (*see image*)
+<details>
+<summary> Click to expand </summary>
 
  - A - Decrease the number of people by 1.
 
  - B - Increase the number of people by 1.
+
+ ![Buttons](/media/WIOButtons.jpg)
+</details>
 
 ## Android Application
 
