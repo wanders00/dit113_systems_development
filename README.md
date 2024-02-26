@@ -21,7 +21,7 @@
 
 # Links
 
-### [Wiki Page 📚](https://git.chalmers.se/courses/dit113/2023/group-6/group-6/-/wikis/home)
+### [Wiki Page 📚](/../../wiki)
 
 ### [Showcase Video 📽️](https://www.youtube.com/watch?v=5KdoOFKNgRQ)
 
